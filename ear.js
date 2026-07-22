@@ -14,14 +14,14 @@ var AZ = {
   spd:LED+"/Channel 1", spdBr:LED+"/Channel 1 Brightness", dir:LED+"/Channel 2",
   fb:MCM+"/Input 3 counter", limMin:LED+"/Input 1 Counter", limMax:LED+"/Input 2 Counter",
   dirToMax:false, homeToMax:true, homeLimLvl:LED+"/Input 2",   // увеличение=по часовой; 0=IN1(CCW), 330=IN2(CW); home/park->330=IN2
-  rangeTicks:6868, minDeg:0, spanDeg:330, homeTimeoutMs:120000
+  rangeTicks:6868, minDeg:0, spanDeg:330, homeTimeMs:65000    // хоминг завершается: концевик IN2 (раньше) ЛИБО по этому времени
 };
 var EL = {
   key:"el", slider:"elevation",
   spd:LED+"/Channel 3", spdBr:LED+"/Channel 3 Brightness", dir:LED+"/Channel 4",
   fb:MCM+"/Input 2 counter", limMin:LED+"/Input 3 Counter", limMax:LED+"/Input 4 Counter",
   dirToMax:false, homeToMax:true, homeLimLvl:LED+"/Input 4",    // home -> IN4 (90 deg), вверх
-  rangeTicks:1242, minDeg:35, spanDeg:55, homeTimeoutMs:30000
+  rangeTicks:1242, minDeg:35, spanDeg:55, homeTimeMs:20000     // хоминг: концевик IN4 (раньше) ЛИБО по времени (сейчас без ремня — по времени)
 };
 
 function newAxis(cfg){ return { cfg:cfg, ticks:0, lastRaw:null, homed:false, job:"none", target:0,
@@ -73,12 +73,12 @@ function controlAxis(a){
     return;
   }
 
-  if(a.job==="home" && a.jobMs>c.homeTimeoutMs){ stopAxis(a); a.job="none"; a.err=c.key+": park/home timeout"; return; }
+  if(a.job==="home" && a.jobMs>c.homeTimeMs){ a.homed=true; a.ticks=(c.homeToMax?c.rangeTicks:0); stopAxis(a); a.job="none"; return; }  // хоминг по времени: доехали до референса
 
-  if(a.driving && a.stallMs>=STALL_MS){
-    // seek к самому концу хода — упор считаем приездом; иначе (в т.ч. home) — реальный заклин = ОШИБКА
-    if(a.job==="seek" && !a.toMax && a.target<=NEAR){ onLimitAxis(a,false); return; }
-    if(a.job==="seek" &&  a.toMax && a.target>=c.rangeTicks-NEAR){ onLimitAxis(a,true); return; }
+  // stall только для seek (home завершается по концевику/времени, не по stall)
+  if(a.job==="seek" && a.driving && a.stallMs>=STALL_MS){
+    if(!a.toMax && a.target<=NEAR){ onLimitAxis(a,false); return; }        // seek к самому краю -> упор = приезд
+    if( a.toMax && a.target>=c.rangeTicks-NEAR){ onLimitAxis(a,true); return; }
     stopAxis(a); a.job="none"; a.err=c.key+": motor not turning (stall)"; return;
   }
 
@@ -108,6 +108,7 @@ function setSliderRO(a, ro){
 // пользователь двинул ползунок -> новая цель
 function onSliderCmd(a, nv){
   if(a.job!=="none") return;            // в движении ползунок readonly -> изменения = наше эхо, игнор
+  if(!a.homed){ opMode="need home"; return; }   // сначала хоминг (он завершается и по времени)
   var deg=Math.round(nv);
   if(deg===a.shown) return;             // совпадает с показанным (наш апдейт) -> не команда
   activity(); a.err=""; a.jobMs=0;
