@@ -7,7 +7,7 @@
 var LED = "wb-led_71";
 var MCM = "wb-mcm8_46";
 var SPEED = 2;
-var DEAD = 15, NEAR = 80, STALL_MS = 3000, LOOP_MS = 250, IDLE_PARK_MS = 5 * 60 * 1000;
+var DEAD = 40, NEAR = 80, STALL_MS = 3000, LOOP_MS = 250, IDLE_PARK_MS = 5 * 60 * 1000;
 
 var AZ = {
   key:"az", slider:"azimuth",
@@ -84,9 +84,9 @@ function controlAxis(a){
 
   if(a.job==="seek"){
     var err=a.target-a.ticks, m=err<0?-err:err;
-    if(m<=DEAD){ stopAxis(a); a.job="none"; return; }
+    if(m<=DEAD){ stopAxis(a); a.job="none"; return; }                            // в зоне цели -> стоп
     var want=(err>0);
-    // переподтверждаем ТОЛЬКО когда модуль выключил скорость (сход с концевика) или сменилось направление
+    if(a.cmdMax!==null && want!==a.cmdMax){ stopAxis(a); a.job="none"; return; } // чуть переехали -> стоп, назад НЕ дёргаем
     if(!dev[c.spd] || a.cmdMax!==want) driveAxis(a, want, SPEED);
   } else if(a.job==="home"){
     if(dev[c.homeLimLvl]===true){ onLimitAxis(a, c.homeToMax); return; }  // уже на целевом концевике
@@ -110,7 +110,7 @@ function onSliderCmd(a, nv){
   var deg=Math.round(nv);
   if(deg===a.shown) return;             // наш эхо-апдейт (в т.ч. показ текущего при хоминге) -> игнор
   if(!a.homed){ opMode="need home"; return; }   // сначала хоминг (завершается и по времени)
-  activity(); a.err=""; a.jobMs=0;
+  activity(); a.err=""; a.jobMs=0; a.cmdMax=null;
   a.target=d2t(a.cfg, deg);
   a.job="seek"; opMode="moving";
 }
