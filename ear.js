@@ -108,7 +108,6 @@ function setSliderRO(a, ro){
 // пользователь двинул ползунок -> новая цель
 function onSliderCmd(a, nv){
   if(a.job!=="none") return;            // в движении ползунок readonly -> изменения = наше эхо, игнор
-  if(!a.homed){ opMode="need home"; return; }
   var deg=Math.round(nv);
   if(deg===a.shown) return;             // совпадает с показанным (наш апдейт) -> не команда
   activity(); a.err=""; a.jobMs=0;
