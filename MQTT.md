@@ -25,8 +25,13 @@
 
 ## Примеры (с любого компа в локалке)
 
-Указываем брокер контроллера `192.168.69.106` (порт 1883). На компе нужен `mosquitto-clients`
-(Linux: `apt install mosquitto-clients`; Windows: клиенты из установки Mosquitto).
+Указываем брокер контроллера `192.168.69.106` (порт 1883). На компе нужны утилиты
+`mosquitto_pub` / `mosquitto_sub`:
+- **Linux:** `apt install mosquitto-clients`.
+- **Windows:** отдельного пакета клиентов нет — поставить Mosquitto для Windows
+  (https://mosquitto.org/download/); `mosquitto_pub.exe` / `mosquitto_sub.exe` окажутся в папке
+  установки (обычно `C:\Program Files\mosquitto\`). Сам брокер запускать не нужно — нужны только эти exe.
+
 Если на брокере включены логин/пароль — добавляй `-u <user> -P <pass>`.
 
 Прочитать текущий азимут (одно значение):
