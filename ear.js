@@ -96,8 +96,7 @@ function controlAxis(a){
 
 // объединённый ползунок: показать текущее (эхо помечаем)
 function showSlider(a){
-  if(!a.homed) return;                       // до хоминга позиция неизвестна, ползунок не трогаем
-  var deg=Math.round(t2d(a.cfg, a.ticks));
+  var deg=Math.round(t2d(a.cfg, a.ticks));   // показываем текущее всегда, в т.ч. во время хоминга
   if(deg!==a.shown){ a.shown=deg; dev["ear/"+a.cfg.slider]=deg; }
 }
 // readonly ползунка во время движения
@@ -108,9 +107,9 @@ function setSliderRO(a, ro){
 // пользователь двинул ползунок -> новая цель
 function onSliderCmd(a, nv){
   if(a.job!=="none") return;            // в движении ползунок readonly -> изменения = наше эхо, игнор
-  if(!a.homed){ opMode="need home"; return; }   // сначала хоминг (он завершается и по времени)
   var deg=Math.round(nv);
-  if(deg===a.shown) return;             // совпадает с показанным (наш апдейт) -> не команда
+  if(deg===a.shown) return;             // наш эхо-апдейт (в т.ч. показ текущего при хоминге) -> игнор
+  if(!a.homed){ opMode="need home"; return; }   // сначала хоминг (завершается и по времени)
   activity(); a.err=""; a.jobMs=0;
   a.target=d2t(a.cfg, deg);
   a.job="seek"; opMode="moving";
