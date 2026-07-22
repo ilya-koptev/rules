@@ -1,7 +1,7 @@
 # Управление «Ухом» по MQTT
 
-Виртуальное устройство **`ear`** на контроллере Wiren Board `192.168.69.106`
-(брокер mosquitto на самом контроллере, `127.0.0.1:1883`).
+Виртуальное устройство **`ear`** на контроллере Wiren Board `192.168.69.106`.
+Брокер mosquitto — на этом контроллере, из локалки обращаемся по `192.168.69.106:1883`.
 
 Соглашение Wiren Board:
 - **текущее значение** читается из `/devices/ear/controls/<control>`;
@@ -23,36 +23,40 @@
 Система координат азимута: **увеличение = по часовой**; `0°` = против-часовой конец (концевик IN1), `330°` = по-часовой упор (IN2).
 Элевация: `35°` = низ (IN3), `90°` = верх (IN4).
 
-## Примеры (выполнять на контроллере или против его брокера)
+## Примеры (с любого компа в локалке)
+
+Указываем брокер контроллера `192.168.69.106` (порт 1883). На компе нужен `mosquitto-clients`
+(Linux: `apt install mosquitto-clients`; Windows: клиенты из установки Mosquitto).
+Если на брокере включены логин/пароль — добавляй `-u <user> -P <pass>`.
 
 Прочитать текущий азимут (одно значение):
 ```sh
-mosquitto_sub -h 127.0.0.1 -t '/devices/ear/controls/azimuth' -C 1
+mosquitto_sub -h 192.168.69.106 -t '/devices/ear/controls/azimuth' -C 1
 ```
 
 Ехать в азимут 120°:
 ```sh
-mosquitto_pub -h 127.0.0.1 -t '/devices/ear/controls/azimuth/on' -m 120
+mosquitto_pub -h 192.168.69.106 -t '/devices/ear/controls/azimuth/on' -m 120
 ```
 
 Ехать в элевацию 60°:
 ```sh
-mosquitto_pub -h 127.0.0.1 -t '/devices/ear/controls/elevation/on' -m 60
+mosquitto_pub -h 192.168.69.106 -t '/devices/ear/controls/elevation/on' -m 60
 ```
 
 Хоминг / парковка (az→330, el→90):
 ```sh
-mosquitto_pub -h 127.0.0.1 -t '/devices/ear/controls/home/on' -m "$(date +%s)"
+mosquitto_pub -h 192.168.69.106 -t '/devices/ear/controls/home/on' -m "$(date +%s)"
 ```
 
 Аварийный стоп:
 ```sh
-mosquitto_pub -h 127.0.0.1 -t '/devices/ear/controls/stop/on' -m "$(date +%s)"
+mosquitto_pub -h 192.168.69.106 -t '/devices/ear/controls/stop/on' -m "$(date +%s)"
 ```
 
 Следить за статусом и позициями в реальном времени:
 ```sh
-mosquitto_sub -h 127.0.0.1 -v \
+mosquitto_sub -h 192.168.69.106 -v \
   -t '/devices/ear/controls/status' \
   -t '/devices/ear/controls/azimuth' \
   -t '/devices/ear/controls/elevation' \
