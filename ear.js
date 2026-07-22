@@ -27,7 +27,7 @@ var EL = {
 function newAxis(cfg){ return { cfg:cfg, ticks:0, lastRaw:null, homed:false, job:"none", target:0,
   toMax:true, cmdMax:null, driving:false, stallMs:0, jobMs:0, err:"", echo:false, shown:-999, ro:null, moveTicks:0 }; }
 var A = { az:newAxis(AZ), el:newAxis(EL) };
-var parked = false, idleMs = 0, opMode = "idle";
+var parked = false, idleMs = 0, opMode = "idle", homeActive = false;
 
 var _pub = {};
 function putc(c, v){ if (_pub[c] !== v){ _pub[c] = v; dev["ear/" + c] = v; } }
@@ -116,8 +116,8 @@ function onSliderCmd(a, nv){
   a.job="seek"; opMode="moving";
 }
 
-function homeAll(label){ activity(); A.az.err=""; A.el.err=""; A.az.jobMs=0; A.el.jobMs=0; A.az.job="home"; A.el.job="home"; opMode=label||"homing"; }
-function stopAll(){ activity(); A.az.err=""; A.el.err=""; A.az.job="none"; A.el.job="none"; stopAxis(A.az); stopAxis(A.el); opMode="stopped"; }
+function homeAll(label){ activity(); A.az.err=""; A.el.err=""; A.az.jobMs=0; A.el.jobMs=0; A.az.job="home"; A.el.job="home"; opMode=label||"homing"; homeActive=true; }
+function stopAll(){ activity(); A.az.err=""; A.el.err=""; A.az.job="none"; A.el.job="none"; stopAxis(A.az); stopAxis(A.el); opMode="stopped"; homeActive=false; }
 
 // --- виртуальное устройство ---
 defineVirtualDevice("ear", {
@@ -158,6 +158,8 @@ setInterval(function(){
   putc("elTicks", A.el.moveTicks);
 
   var busy = (A.az.job!=="none" || A.el.job!=="none");
+  // Home отработал (в т.ч. с ошибкой) -> сброс счётчиков MCM8
+  if(!busy && homeActive){ dev[MCM+"/Reset all counters"]=1; A.az.lastRaw=null; A.el.lastRaw=null; homeActive=false; }
   var errs = A.az.err || A.el.err;
   if(busy){ putc("status", opMode + (errs ? " (" + errs + ")" : "")); }
   else if(errs){ putc("status", "ERROR: " + errs); }
