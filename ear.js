@@ -25,7 +25,8 @@ var EL = {
 };
 
 function newAxis(cfg){ return { cfg:cfg, ticks:0, lastRaw:null, homed:false, job:"none", target:0,
-  toMax:true, cmdMax:null, driving:false, stallMs:0, jobMs:0, err:"", echo:false, shown:-999, ro:null, moveTicks:0 }; }
+  toMax:true, cmdMax:null, driving:false, stallMs:0, jobMs:0, err:"", echo:false, shown:-999, ro:null, moveTicks:0,
+  startTicks:0, hold:false }; }
 var A = { az:newAxis(AZ), el:newAxis(EL) };
 var parked = false, idleMs = 0, opMode = "idle", homeActive = false;
 
@@ -85,6 +86,7 @@ function controlAxis(a){
   if(a.job==="seek"){
     var err=a.target-a.ticks, m=err<0?-err:err;
     if(m<=DEAD){ stopAxis(a); a.job="none"; return; }                            // в зоне цели -> стоп
+    if(a.hold){ if(dev[c.spd]) stopAxis(a); return; }                            // придержан ради синхронного прихода
     var want=(err>0);
     if(a.cmdMax!==null && want!==a.cmdMax){ stopAxis(a); a.job="none"; return; } // чуть переехали -> стоп, назад НЕ дёргаем
     if(!dev[c.spd] || a.cmdMax!==want) driveAxis(a, want, SPEED);
@@ -111,8 +113,29 @@ function onSliderCmd(a, nv){
   if(deg===a.shown) return;             // наш эхо-апдейт (в т.ч. показ текущего при хоминге) -> игнор
   if(!a.homed){ opMode="need home"; return; }   // сначала хоминг (завершается и по времени)
   activity(); a.err=""; a.jobMs=0; a.cmdMax=null;
+  a.startTicks=a.ticks; a.hold=false;
   a.target=d2t(a.cfg, deg);
   a.job="seek"; opMode="moving";
+}
+
+// --- согласованное ведение двух осей: обе приходят в цель одновременно ---
+// Скорость фиксированная 2 % (ниже мотор не стартует), поэтому «замедляем» ось придерживанием:
+// та, что ушла вперёд по ДОЛЕ пути, паузится, пока вторая догоняет. В координатах az/el — прямая.
+var COORD_HI = 0.03;   // ушёл вперёд больше чем на 3 % пути -> придержать
+var COORD_LO = 0.01;   // отставание сократилось до 1 % -> отпустить
+function fracOf(a){
+  var total = a.target - a.startTicks; if(total<0) total = -total;
+  if(total < 1) return 1;
+  var done = a.ticks - a.startTicks; if(done<0) done = -done;
+  return done/total;
+}
+function coordinate(){
+  var a=A.az, b=A.el;
+  if(!dev["ear/sync"] || a.job!=="seek" || b.job!=="seek"){ a.hold=false; b.hold=false; return; }
+  var fa=fracOf(a), fb=fracOf(b), d=fa-fb;
+  if(d >  COORD_HI){ a.hold=true;  b.hold=false; }
+  else if(d < -COORD_HI){ b.hold=true;  a.hold=false; }
+  else if(d < COORD_LO && d > -COORD_LO){ a.hold=false; b.hold=false; }
 }
 
 function homeAll(label){ activity(); A.az.err=""; A.el.err=""; A.az.jobMs=0; A.el.jobMs=0; A.az.job="home"; A.el.job="home"; opMode=label||"homing"; homeActive=true; }
@@ -146,6 +169,7 @@ function scenLoad(){
 }
 function seekAxisTo(a, deg){
   activity(); a.err=""; a.jobMs=0; a.cmdMax=null;
+  a.startTicks=a.ticks; a.hold=false;
   a.target = d2t(a.cfg, Math.round(deg));
   a.job = "seek";
 }
@@ -198,6 +222,7 @@ defineVirtualDevice("ear", {
     home:  { type:"pushbutton", order:3, title:"Home" },
     stop:  { type:"pushbutton", order:4, title:"Stop" },
     scenario: { type:"pushbutton", order:5, title:"Run scenario" },
+    sync: { type:"switch", value:true, order:6, title:"Sync axes (arrive together)" },
     homed: { type:"switch", value:false, readonly:true, order:6, title:"Homed" },
     status:{ type:"text", value:"idle", readonly:true, order:7, title:"Status" },
     scenarioSteps: { type:"text", value:"", order:8, title:"Scenario (JSON)" },
@@ -228,6 +253,7 @@ scenLoad();
 setInterval(function(){
   integrateAxis(A.az); integrateAxis(A.el);
   scenTick();
+  coordinate();
   if(!A.az.err) controlAxis(A.az);
   if(!A.el.err) controlAxis(A.el);
   showSlider(A.az); showSlider(A.el);
