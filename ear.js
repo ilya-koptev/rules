@@ -150,7 +150,7 @@ function stopAll(){ activity(); A.az.err=""; A.el.err=""; A.az.job="none"; A.el.
 //   {"pause":5}           — пауза 5 секунд (после остановки)
 //   {"home":true}         — хоминг/парковка (az 330°, el 90°)
 // Демонстрационный сценарий по умолчанию: обзор горизонта с проходами по высоте.
-var SCEN_DEFAULT = '[{"az":250,"el":60},{"pause":3},{"az":120},{"pause":2},{"el":45},{"az":40},{"pause":3},{"el":75},{"az":200},{"pause":2},{"home":true}]';
+var SCEN_DEFAULT = '[{"az":250,"el":60},{"pause":3},{"az":120},{"pause":2},{"el":45},{"az":40},{"pause":3},{"el":75},{"az":200},{"pause":2}]';
 var ps = new PersistentStorage("ear", { global: true });
 var scen = { steps: [], idx: 0, active: false, started: false, waitMs: 0, err: "" };
 
@@ -202,7 +202,11 @@ function scenSwallowErrors(){
 }
 function scenTick(){
   if(!scen.active) return;
-  if(scen.idx >= scen.steps.length){ scen.active=false; opMode = scen.err ? ("scenario done [" + scen.err + "]") : "scenario done"; return; }
+  if(scen.idx >= scen.steps.length){          // сценарий доигран -> ВСЕГДА уходим в парковку
+    scen.active=false;
+    homeAll(scen.err ? ("scenario home [" + scen.err + "]") : "scenario home");
+    return;
+  }
   var st = scen.steps[scen.idx];
   if(!scen.started){
     scen.started = true;
@@ -282,7 +286,7 @@ setInterval(function(){
   else if(busy){ putc("status", opMode + (errs ? " (" + errs + ")" : "")); }
   else {
     if(opMode==="moving"||opMode==="scenario"||opMode.indexOf("scenario done")===0) opMode="idle";
-    else if(opMode==="homing"||opMode==="autopark"||opMode==="scenario home"){ parked=true; opMode="parked"; }
+    else if(opMode==="homing"||opMode==="autopark"||opMode.indexOf("scenario home")===0){ parked=true; opMode="parked"; }
     putc("status", opMode);
   }
 
