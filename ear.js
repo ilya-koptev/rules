@@ -58,8 +58,9 @@ function integrateAxis(a){
 }
 // концевик сработал: фиксируем позицию, но скорость НЕ трогаем — откат делает сам модуль (ВБЛЕД)
 function onLimitAxis(a, atMax){
-  if(a.job==="home" && atMax !== a.cfg.homeToMax) return;   // при хоминге игнор «уезжаемого» концевика
-  a.homed=true; a.ticks=atMax?a.cfg.rangeTicks:0; a.job="postlimit"; a.jobMs=0;
+  a.homed=true; a.ticks=atMax?a.cfg.rangeTicks:0;            // позиция обновляется от ЛЮБОГО концевика
+  if(a.job==="home" && atMax !== a.cfg.homeToMax) return;    // встречный концевик хоминг не завершает
+  a.job="postlimit"; a.jobMs=0;
 }
 
 function controlAxis(a){
@@ -151,7 +152,7 @@ function stopAll(){ activity(); A.az.err=""; A.el.err=""; A.az.job="none"; A.el.
 // Демонстрационный сценарий по умолчанию: обзор горизонта с проходами по высоте.
 var SCEN_DEFAULT = '[{"az":250,"el":60},{"pause":3},{"az":120},{"pause":2},{"el":45},{"az":40},{"pause":3},{"el":75},{"az":200},{"pause":2},{"home":true}]';
 var ps = new PersistentStorage("ear", { global: true });
-var scen = { steps: [], idx: 0, active: false, started: false, waitMs: 0 };
+var scen = { steps: [], idx: 0, active: false, started: false, waitMs: 0, err: "" };
 
 function scenParse(txt){
   try{
@@ -178,7 +179,7 @@ function scenStart(){
   if(!scen.steps.length){ opMode="scenario empty"; return; }
   if(!A.az.homed || !A.el.homed){ opMode="need home"; return; }
   activity(); A.az.err=""; A.el.err="";
-  scen.idx=0; scen.active=true; scen.started=false; scen.waitMs=0;
+  scen.idx=0; scen.active=true; scen.started=false; scen.waitMs=0; scen.err="";
   opMode="scenario";
 }
 function scenAbort(){ scen.active=false; scen.started=false; scen.waitMs=0; }
@@ -188,12 +189,20 @@ function scenLabel(){
   var what = st.pause!==undefined ? ("pause " + Math.ceil(scen.waitMs/1000) + "s")
            : st.home ? "home"
            : ((st.az!==undefined ? "az "+st.az : "") + (st.el!==undefined ? (st.az!==undefined?" / ":"")+"el "+st.el : ""));
-  return "scenario " + (scen.idx+1) + "/" + scen.steps.length + ": " + what;
+  return "scenario " + (scen.idx+1) + "/" + scen.steps.length + ": " + what + (scen.err ? " [" + scen.err + "]" : "");
+}
+// ошибка оси НЕ останавливает сценарий: запоминаем, ось закрываем, идём дальше
+function scenSwallowErrors(){
+  if(!scen.active) return;
+  var ax=[A.az, A.el];
+  for(var i=0;i<ax.length;i++){
+    var a=ax[i];
+    if(a.err){ scen.err=a.err; a.err=""; stopAxis(a); a.job="none"; }
+  }
 }
 function scenTick(){
   if(!scen.active) return;
-  if(scen.idx >= scen.steps.length){ scen.active=false; opMode="scenario done"; return; }
-  if(A.az.err || A.el.err){ scen.active=false; return; }   // ошибка оси — сценарий прерываем
+  if(scen.idx >= scen.steps.length){ scen.active=false; opMode = scen.err ? ("scenario done [" + scen.err + "]") : "scenario done"; return; }
   var st = scen.steps[scen.idx];
   if(!scen.started){
     scen.started = true;
@@ -252,6 +261,7 @@ scenLoad();
 
 setInterval(function(){
   integrateAxis(A.az); integrateAxis(A.el);
+  scenSwallowErrors();
   scenTick();
   coordinate();
   if(!A.az.err) controlAxis(A.az);
@@ -265,13 +275,13 @@ setInterval(function(){
 
   var busy = (A.az.job!=="none" || A.el.job!=="none");
   // Home отработал (в т.ч. с ошибкой) -> сброс счётчиков MCM8
-  if(!busy && homeActive){ dev[MCM+"/Reset all counters"]=1; A.az.lastRaw=null; A.el.lastRaw=null; homeActive=false; }
+  if(!busy && homeActive){ publish("/devices/"+MCM+"/controls/Reset all counters/on", "1", 1, false); A.az.lastRaw=null; A.el.lastRaw=null; homeActive=false; }
   var errs = A.az.err || A.el.err;
   if(errs && !busy){ putc("status", "ERROR: " + errs); }
   else if(scen.active){ putc("status", scenLabel() + (errs ? " (" + errs + ")" : "")); }
   else if(busy){ putc("status", opMode + (errs ? " (" + errs + ")" : "")); }
   else {
-    if(opMode==="moving"||opMode==="scenario"||opMode==="scenario done") opMode="idle";
+    if(opMode==="moving"||opMode==="scenario"||opMode.indexOf("scenario done")===0) opMode="idle";
     else if(opMode==="homing"||opMode==="autopark"||opMode==="scenario home"){ parked=true; opMode="parked"; }
     putc("status", opMode);
   }
