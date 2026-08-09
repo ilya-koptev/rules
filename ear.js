@@ -232,7 +232,7 @@ defineVirtualDevice("ear", {
     stop:  { type:"pushbutton", order:4, title:"Stop" },
     scenario: { type:"pushbutton", order:5, title:"Run scenario" },
     sync: { type:"switch", value:true, order:6, title:"Sync axes (arrive together)" },
-    scenarioSteps: { type:"text", value:"", readonly:false, order:7, title:"Scenario (JSON)" },
+    scenarioSteps: { type:"text", value:"", readonly:true, order:7, title:"Scenario (JSON)" },
     homed: { type:"switch", value:false, readonly:true, order:8, title:"Homed" },
     status:{ type:"text", value:"idle", readonly:true, order:9, title:"Status" },
     azTicks:{ type:"value", value:0, readonly:true, order:10, title:"Az ticks" },
