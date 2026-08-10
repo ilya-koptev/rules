@@ -106,6 +106,10 @@ for (var i = 0; i < CELLS.length; i++) {
 }
 controls['status'] = { type: 'text', value: '', title: 'Состояние',
                        order: CELLS.length + 1, readonly: true };
+controls['poll'] = { type: 'switch', value: false, title: 'Опрос шлюзов',
+                     order: 0, readonly: false };
+controls['pollStatus'] = { type: 'text', value: '', title: 'Опрос',
+                           order: 0.5, readonly: true };
 
 defineVirtualDevice('svet', { title: 'Свет макета', cells: controls });
 
@@ -127,17 +131,73 @@ function makeRule(id) {
 }
 
 for (var j = 0; j < CELLS.length; j++) makeRule(CELLS[j][0]);
+
+// --- опрос макета ---
+// Выключенный опрос освобождает ВСЕ шлюзы Ebyte (макет и «Ухо»): по ним можно
+// работать напрямую, мимо контроллера. Порты из конфига не исчезают, у них лишь
+// снимается enabled. Пока опрос выключен, «Ухо» тоже недоступно.
+var pollSyncing = false;
+
+defineRule('svet_poll', {
+  whenChanged: 'svet/poll',
+  then: function (newValue) {
+    if (pollSyncing) return;
+    // Переключение перезапускает wb-mqtt-serial, а это пауза в опросе ВСЕГО,
+    // включая «Ухо». Пока Ухо едет — не трогаем, иначе оно потеряет тики и встанет.
+    var ear = dev['ear'] && dev['ear']['status'];
+    if (ear && ear !== 'idle' && ear !== 'parked' && ear.indexOf('ERROR') !== 0) {
+      pollSyncing = true;
+      dev['svet']['poll'] = !newValue;          // возвращаем переключатель назад
+      pollSyncing = false;
+      dev['svet']['pollStatus'] = 'Ухо в движении (' + ear + ') — переключить нельзя';
+      return;
+    }
+    dev['svet']['pollStatus'] = newValue ? 'включаю опрос…' : 'выключаю опрос…';
+    runShellCommand('/usr/local/bin/svet-poll ' + (newValue ? 'on' : 'off'), {
+      captureOutput: true,
+      exitCallback: function (code, out) {
+        dev['svet']['pollStatus'] = code === 0
+          ? (newValue ? 'опрос идёт' : 'выключен — шлюзы свободны, Ухо недоступно')
+          : 'ошибка: ' + out;
+      }
+    });
+  }
+});
+
+// при старте правила показываем, как есть на самом деле
+runShellCommand('/usr/local/bin/svet-poll state', {
+  captureOutput: true,
+  exitCallback: function (code, out) {
+    var st = (out || '').replace(/\s+$/, '');
+    var on = st.indexOf('on') === 0;
+    pollSyncing = true;
+    dev['svet']['poll'] = on;
+    pollSyncing = false;
+    if (st.indexOf('mixed') === 0) {
+      var m = st.split(' ');
+      dev['svet']['pollStatus'] = 'частично: опрашивается ' + m[1] + ' шлюз(ов) из ' + m[2];
+    } else {
+      dev['svet']['pollStatus'] = on
+        ? 'опрос идёт'
+        : 'выключен — шлюзы свободны, Ухо недоступно';
+    }
+  }
+});
 '''.replace('__CH__', json.dumps(rows, ensure_ascii=False, separators=(',', ':')))     .replace('__CELLS__', json.dumps(cells, ensure_ascii=False))
 
 io.open('svet-gruppy.js', 'w', encoding='utf-8', newline='\n').write(js)
 print('правило:', len(js), 'символов')
 
-# --- отдельная панель «Группы» после городов ---
+# --- отдельная панель «Управление» после городов ---
 dash = json.load(io.open('light_dashboards.json', encoding='utf-8'))
 dash['widgets'] = [w for w in dash['widgets'] if not w['id'].startswith('w_light_groups_')]
 dash['dashboards'] = [d for d in dash['dashboards'] if d['id'] != 'dash_light_groups']
 
 widgets = [{
+    "id": "w_light_groups_poll", "name": "Опрос шлюзов", "description": "", "compact": False,
+    "cells": [{"id": "svet/poll", "type": "switch", "extra": {}},
+              {"id": "svet/pollStatus", "type": "text", "extra": {}}],
+}, {
     "id": "w_light_groups_all", "name": "Весь макет", "description": "", "compact": False,
     "cells": [{"id": "svet/all", "type": "switch", "extra": {}},
               {"id": "svet/lamps", "type": "switch", "extra": {}},
@@ -155,7 +215,7 @@ for c in CITY_ORDER:
 
 dash['widgets'] += widgets
 dash['dashboards'].append({
-    "id": "dash_light_groups", "name": "Группы", "isSvg": False, "options": {},
+    "id": "dash_light_groups", "name": "Управление", "isSvg": False, "options": {},
     "widgets": [w["id"] for w in widgets],
 })
 

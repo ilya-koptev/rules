@@ -150,10 +150,11 @@
     },
     {
       "id": "dash_light_groups",
-      "name": "Группы",
+      "name": "Управление",
       "isSvg": false,
       "options": {},
       "widgets": [
+        "w_light_groups_poll",
         "w_light_groups_all",
         "w_light_groups_kalyazin",
         "w_light_groups_uglich",
@@ -5498,6 +5499,24 @@
         {
           "id": "ld58_56_162/8_pwm",
           "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_poll",
+      "name": "Опрос шлюзов",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/poll",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/pollStatus",
+          "type": "text",
           "extra": {}
         }
       ]

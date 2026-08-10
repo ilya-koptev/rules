@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Опрос шлюзов Ebyte вкл/выкл: флаг enabled у всех портов Modbus-over-TCP на 8886.
+
+Это и 38 шлюзов макета, и шлюз «Уха» (.35): выключенный опрос освобождает шину,
+по ней можно работать напрямую, мимо контроллера. Пока опрос выключен, «Ухо»
+тоже недоступно — им нельзя управлять.
+
+Состав конфига не меняется, порты остаются на месте. Последовательные порты
+(/dev/tty*) и прочие TCP-порты не трогаются.
+
+    svet-poll on | off | state
+"""
+import json, os, subprocess, sys
+
+CONF = os.path.realpath('/etc/wb-mqtt-serial.conf')
+
+
+def gateway(port):
+    return port.get('port_type') == 'tcp' and int(port.get('port') or 0) == 8886
+
+
+cmd = (sys.argv[1] if len(sys.argv) > 1 else 'state').lower()
+cfg = json.load(open(CONF, encoding='utf-8'))
+ports = [p for p in cfg.get('ports', []) if gateway(p)]
+
+if cmd == 'state':
+    on = sum(1 for p in ports if p.get('enabled'))
+    if not ports or not on:
+        print('off')
+    elif on == len(ports):
+        print('on')
+    else:
+        print('mixed %d %d' % (on, len(ports)))   # часть шлюзов опрашивается
+    sys.exit(0)
+
+if cmd not in ('on', 'off'):
+    sys.exit('нужно on, off или state')
+
+if not ports:
+    sys.exit('шлюзов в конфиге нет')
+
+want = (cmd == 'on')
+changed = 0
+for p in ports:
+    if p.get('enabled') != want:
+        p['enabled'] = want
+        changed += 1
+
+if changed:
+    tmp = CONF + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as fh:
+        json.dump(cfg, fh, ensure_ascii=False, indent=2)
+    json.load(open(tmp, encoding='utf-8'))          # проверка валидности
+    os.replace(tmp, CONF)
+    subprocess.run(['systemctl', 'restart', 'wb-mqtt-serial'])
+
+print('шлюзов: %d, изменено: %d, опрос %s'
+      % (len(ports), changed, 'включён' if want else 'выключен'))
