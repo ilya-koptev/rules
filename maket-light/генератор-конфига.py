@@ -85,7 +85,9 @@ for eb in sorted(by_gw, key=lambda x: int(x)):
                 ch_cfg.append({"name": title, "id": f"{n}", "reg_type": "holding",
                                "address": f"0x{base+2:04X}", "type": "switch",
                                "on_value": "0xFFFF", "off_value": "0x0000"})
-                if r['режим'] == 'ШИМ':
+                # яркость и частота есть у каждого 7-го и 8-го канала — это железо
+                # модуля, независимо от того, помечен канал в таблице как ШИМ или нет
+                if True:
                     ch_cfg.append({"name": f'{adr} яркость', "id": f"{n}_pwm", "reg_type": "holding",
                                    "address": f"0x{base+1:04X}", "type": "range",
                                    "min": 0, "max": 100})

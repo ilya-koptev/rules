@@ -225,6 +225,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[12·221·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[12·221·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -410,6 +428,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[12·223·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[12·223·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[12·223·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -417,6 +453,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[12·223·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[12·223·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -488,6 +542,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[12·224·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[12·224·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[12·224·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -495,6 +567,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[12·224·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[12·224·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -576,6 +666,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[14·208·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[14·208·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[14·208·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -583,6 +691,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[14·208·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[14·208·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -778,6 +904,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[15·212·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[15·212·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[15·212·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -785,6 +929,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[15·212·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[15·212·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -866,6 +1028,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[17·155·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[17·155·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[17·155·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -873,6 +1053,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[17·155·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[17·155·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -969,6 +1167,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[17·156·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[17·156·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -1164,6 +1380,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[18·151·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[18·151·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[18·151·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -1171,6 +1405,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[18·151·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[18·151·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -2298,6 +2550,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[22·167·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[22·167·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[22·167·8] Музей Столицы лоцманов. Краеведческий музей",
               "id": "8",
               "reg_type": "holding",
@@ -2305,6 +2575,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[22·167·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[22·167·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -2401,6 +2689,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[22·168·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[22·168·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -2497,6 +2803,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[22·169·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[22·169·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -2727,6 +3051,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[24·170·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[24·170·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -2806,6 +3148,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[25·157·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[25·157·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             },
             {
               "name": "[25·157·8] городские",
@@ -3390,6 +3750,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[29·177·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[29·177·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[29·177·8] городские",
               "id": "8",
               "reg_type": "holding",
@@ -3952,6 +4330,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[30·188·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[30·188·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[30·188·8] жд стрелка перед станцией Савелово, 4ый путь — жд белый",
               "id": "8",
               "reg_type": "holding",
@@ -3959,6 +4355,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[30·188·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[30·188·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -4055,6 +4469,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[30·189·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[30·189·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -4151,6 +4583,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[30·190·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[30·190·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -4361,6 +4811,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[30·192·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[30·192·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -4591,6 +5059,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[32·199·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[32·199·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -4687,6 +5173,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[32·200·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[32·200·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -4897,6 +5401,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[32·202·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[32·202·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -5206,6 +5728,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[36·198·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[36·198·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[36·198·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -5213,6 +5753,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[36·198·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[36·198·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -5319,6 +5877,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[37·140·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[37·140·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -5390,6 +5966,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[37·141·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[37·141·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[37·141·8] жд пути станции Углич — синий 4",
               "id": "8",
               "reg_type": "holding",
@@ -5397,6 +5991,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[37·141·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[37·141·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -5493,6 +6105,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[37·142·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[37·142·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -5589,6 +6219,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[37·143·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[37·143·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -6047,6 +6695,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[39·158·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[39·158·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -6277,6 +6943,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[41·121·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[41·121·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -6383,6 +7067,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[42·203·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[42·203·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -6464,6 +7166,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[44·138·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[44·138·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[44·138·8] канал 8",
               "id": "8",
               "reg_type": "holding",
@@ -6471,6 +7191,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[44·138·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[44·138·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -6666,6 +7404,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[45·173·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[45·173·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[45·173·8] ДОЛ Орленок",
               "id": "8",
               "reg_type": "holding",
@@ -6787,6 +7543,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[45·174·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[45·174·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -6893,6 +7667,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[46·175·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[46·175·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -6989,6 +7781,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[46·176·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[46·176·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -7095,6 +7905,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[47·131·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[47·131·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -7543,6 +8371,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[48·128·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[48·128·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -7639,6 +8485,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[48·129·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[48·129·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -7735,6 +8599,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[48·130·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[48·130·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -8044,6 +8926,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[49·124·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[49·124·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[49·124·8] перед жд развязкой в Калязине (в Кашин) — жд красный",
               "id": "8",
               "reg_type": "holding",
@@ -8051,6 +8951,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[49·124·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[49·124·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -8261,6 +9179,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[49·126·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[49·126·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -8367,6 +9303,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[50·171·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[50·171·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
@@ -8694,6 +9648,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[53·205·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[53·205·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             },
             {
               "name": "[53·205·8] вокруг пруда в парке",
@@ -9169,6 +10141,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[54·164·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[54·164·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         },
@@ -9592,6 +10582,24 @@
               "off_value": "0x0000"
             },
             {
+              "name": "[55·160·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[55·160·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
+            },
+            {
               "name": "[55·160·8] мемориал ВОВ",
               "id": "8",
               "reg_type": "holding",
@@ -9696,6 +10704,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[56·161·7] яркость",
+              "id": "7_pwm",
+              "reg_type": "holding",
+              "address": "0x0061",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[56·161·7] частота, Гц",
+              "id": "7_freq",
+              "reg_type": "holding",
+              "address": "0x0060",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             },
             {
               "name": "[56·161·8] вокруг ДК",
@@ -9819,6 +10845,24 @@
               "type": "switch",
               "on_value": "0xFFFF",
               "off_value": "0x0000"
+            },
+            {
+              "name": "[56·162·8] яркость",
+              "id": "8_pwm",
+              "reg_type": "holding",
+              "address": "0x0071",
+              "type": "range",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "[56·162·8] частота, Гц",
+              "id": "8_freq",
+              "reg_type": "holding",
+              "address": "0x0070",
+              "type": "value",
+              "min": 1,
+              "max": 20000
             }
           ]
         }
