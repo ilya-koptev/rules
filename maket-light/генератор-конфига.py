@@ -72,10 +72,11 @@ for eb in sorted(by_gw, key=lambda x: int(x)):
         for r in chans:
             n = int(r['канал'])
             nm = name_of(r)
-            # подпись = адрес канала + человеческое имя: 23|193|1|Аэродром
-            title = f'{eb}|{ld}|{n}|{nm}'
+            # подпись = адрес канала в скобках + человеческое имя: [23·193·1] Аэродром
+            adr = f'[{eb}·{ld}·{n}]'
+            title = f'{adr} {nm}'
             if r['назначение'] in ('---', ''):
-                title = f'{eb}|{ld}|{n}|(свободен)'
+                title = f'{adr} (свободен)'
             if n <= 6:
                 ch_cfg.append({"name": title, "id": f"{n}", "reg_type": "holding",
                                "address": f"0x0080:{n-1}:1", "type": "switch"})
@@ -85,10 +86,10 @@ for eb in sorted(by_gw, key=lambda x: int(x)):
                                "address": f"0x{base+2:04X}", "type": "switch",
                                "on_value": "0xFFFF", "off_value": "0x0000"})
                 if r['режим'] == 'ШИМ':
-                    ch_cfg.append({"name": f'{eb}|{ld}|{n}|ШИМ %', "id": f"{n}_pwm", "reg_type": "holding",
+                    ch_cfg.append({"name": f'{adr} ШИМ %', "id": f"{n}_pwm", "reg_type": "holding",
                                    "address": f"0x{base+1:04X}", "type": "range",
                                    "min": 0, "max": 100})
-                    ch_cfg.append({"name": f'{eb}|{ld}|{n}|Частота Гц', "id": f"{n}_freq", "reg_type": "holding",
+                    ch_cfg.append({"name": f'{adr} Частота Гц', "id": f"{n}_freq", "reg_type": "holding",
                                    "address": f"0x{base:04X}", "type": "value",
                                    "min": 1, "max": 20000})
             mapping.append({
