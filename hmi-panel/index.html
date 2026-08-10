@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Насосная — пульт</title>
+<style>
+  :root {
+    /* Полоса-«подглядывание» соседней страницы.
+       Панель 1280 px ≈ 180 мм по ширине (180 dpi), значит 10 мм ≈ 71 px. */
+    --strip: 71px;
+
+    --bg: #0e1013;
+    --card: #171a1f;
+    --card-2: #1d2127;
+    --line: #262b33;
+    --txt: #e9ebef;
+    --dim: #7d848f;
+    --dim-2: #565d68;
+    --ok: #3ec46d;
+    --run: #35b6ff;
+    --warn: #e8a33d;
+    --bad: #e0474c;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
+    overscroll-behavior: none;
+    background: var(--bg); color: var(--txt);
+    font-family: system-ui, "Roboto", sans-serif;
+    -webkit-user-select: none; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* ================= лента страниц ================= */
+  #track {
+    position: fixed; inset: 0; display: flex; align-items: stretch;
+    transition: transform .34s cubic-bezier(.2,.72,.2,1);
+    will-change: transform;
+  }
+  .panel {
+    width: calc(100vw - var(--strip)); flex: none; display: flex;
+    border-right: 1px solid #05070a;
+  }
+  .panel .body { flex: 1; min-width: 0; display: flex; gap: 9px; padding: 9px; }
+
+  /* «корешок» страницы: её собственное имя на левом краю.
+     Он же торчит справа у предыдущей страницы — это и есть кнопка перехода. */
+  .tab {
+    width: var(--strip); flex: none;
+    background: linear-gradient(to right, #1b1f26, #14171c);
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    color: var(--dim); font-size: 12.5px;
+  }
+  .tab .vert { writing-mode: vertical-rl; letter-spacing: .16em; font-weight: 600; }
+  .tab .chev { font-size: 15px; line-height: 1; color: var(--dim-2); }
+  .tab:active { background: #202530; }
+
+  /* кликабельная зона поверх торчащего справа корешка соседней страницы */
+  #peek {
+    position: fixed; top: 0; right: 0; bottom: 0; width: var(--strip); z-index: 5;
+    background: linear-gradient(to right, rgba(14,16,19,.35), rgba(14,16,19,0) 55%);
+  }
+  #peek:active { background: rgba(255,255,255,.05); }
+
+  .col { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+  #col-tanks { flex: 1.5; }
+  #col-pumps { flex: 1; }
+  #col-side  { width: 250px; flex: none; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 11px;
+    padding: 9px 12px; display: flex; flex-direction: column; min-height: 0;
+  }
+  .card.pending { border-style: dashed; border-color: #232830; background: #14161a; }
+  .card-h {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    font-size: 14px; color: var(--dim); flex: none;
+  }
+
+  .tank { flex: 1; }
+  .tank-val { display: flex; align-items: baseline; gap: 8px; flex: none; margin: 1px 0 2px; }
+  .tank-num { font-size: 34px; font-weight: 650; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .tank-unit { font-size: 14px; color: var(--dim); }
+  .tank-sp { margin-left: auto; font-size: 11.5px; color: var(--dim); text-align: right; line-height: 1.4; }
+  .chart-wrap { position: relative; flex: 1; min-height: 0; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ph { flex: 1; display: flex; align-items: center; justify-content: center;
+        font-size: 13px; color: var(--dim-2); text-align: center; }
+
+  .pump { flex: 1; }
+  .pump-body { display: flex; align-items: center; gap: 13px; flex: 1; min-height: 0; }
+  .impeller { flex: none; }
+  .impeller svg { display: block; }
+  .rotor { transform-origin: 50px 50px; }
+  .rotor.spin { animation: spin var(--spin, 1s) linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .pump-figs { display: flex; flex-direction: column; gap: 2px; font-variant-numeric: tabular-nums; }
+  .fig-row { display: flex; align-items: baseline; gap: 6px; }
+  .fig-v { font-size: 23px; font-weight: 600; }
+  .fig-u { font-size: 12px; color: var(--dim); }
+  .pump-meta { font-size: 11.5px; color: var(--dim); flex: none; margin-top: 4px; }
+  .manual { display: flex; align-items: center; gap: 9px; flex: none; margin-top: 6px; }
+  .mbtn {
+    border: 1px solid #3a424e; background: var(--card-2); color: var(--txt);
+    border-radius: 8px; padding: 6px 14px; font-family: inherit; font-size: 12.5px; font-weight: 600;
+  }
+  .mbtn:active { background: #262c36; }
+  .mbtn.stop { border-color: rgba(224,71,76,.5); color: #ff9a9d; }
+  .mleft { font-size: 11.5px; color: var(--warn); font-variant-numeric: tabular-nums; }
+  .state { font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 999px;
+           background: var(--card-2); color: var(--dim); white-space: nowrap; }
+  .state.run  { background: rgba(53,182,255,.16); color: var(--run); }
+  .state.idle { background: rgba(125,132,143,.16); color: var(--dim); }
+  .state.bad  { background: rgba(224,71,76,.16);  color: var(--bad); }
+  .state.warn { background: rgba(232,163,61,.16); color: var(--warn); }
+  .state.off  { background: transparent; color: var(--dim-2); border: 1px dashed #2c323b; }
+
+  #mode {
+    position: relative; border: 1px solid var(--line); border-radius: 11px; padding: 13px 10px;
+    background: var(--card); color: var(--txt); font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; flex: none; overflow: hidden;
+  }
+  #mode .lbl { font-size: 11.5px; color: var(--dim); letter-spacing: .1em; }
+  #mode .val { font-size: 27px; font-weight: 700; letter-spacing: .04em; }
+  #mode.auto .val { color: var(--ok); }
+  #mode.man  .val { color: var(--warn); }
+  #mode .hint { font-size: 11px; color: var(--dim-2); }
+  #mode-fill { position: absolute; left: 0; bottom: 0; height: 3px; width: 0%;
+               background: var(--txt); transition: width .05s linear; }
+
+  .status { font-size: 12px; line-height: 1.7; color: var(--dim); }
+  .status b { color: var(--txt); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .status .row { display: flex; justify-content: space-between; gap: 8px; }
+
+  #alarms { flex: none; display: flex; flex-direction: column; gap: 4px; }
+  .alarm { font-size: 11.5px; padding: 5px 8px; border-radius: 7px; line-height: 1.35;
+           background: rgba(224,71,76,.14); color: #ff9a9d; border: 1px solid rgba(224,71,76,.3); }
+  .alarm.warn { background: rgba(232,163,61,.13); color: #ffcc84; border-color: rgba(232,163,61,.3); }
+  .alarm.info { background: rgba(125,132,143,.12); color: var(--dim); border-color: var(--line); }
+
+  .ranges { display: flex; gap: 4px; }
+  .ranges button { border: 1px solid var(--line); background: transparent; color: var(--dim);
+                   border-radius: 6px; padding: 2px 8px; font-family: inherit; font-size: 11.5px; }
+  .ranges button.on { background: var(--card-2); color: var(--txt); border-color: #39414d; }
+
+  #link { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--dim); flex: none; }
+  #dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dim); flex: none; }
+  #dot.ok { background: var(--ok); } #dot.bad { background: var(--bad); }
+
+  /* ---- страница реле ---- */
+  h2.page { font-size: 17px; margin: 0 0 2px; font-weight: 650; }
+  .note { font-size: 11.5px; color: var(--dim); line-height: 1.45; }
+  .note.danger { color: #ffcc84; }
+  .grp { margin-bottom: 8px; }
+  .grp-h { display: flex; align-items: baseline; gap: 9px; margin: 0 0 5px; }
+  .grp-h .t { font-size: 13px; color: var(--dim); letter-spacing: .02em; }
+  .grp-h .warn { font-size: 10.5px; color: var(--warn); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    width: 150px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 9px; padding: 6px 8px;
+  }
+  .chip.on { border-color: rgba(62,196,109,.45); background: #16201a; }
+  .chip.danger { border-style: dashed; }
+  .chip-h { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .chip .nm { font-size: 12px; font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
+  .chip .led { width: 10px; height: 10px; border-radius: 3px; background: #2b313a; flex: none; }
+  .chip.on .led { background: var(--ok); box-shadow: 0 0 7px rgba(62,196,109,.55); }
+  .chip .a { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--dim-2);
+             display: flex; align-items: baseline; }
+  .chip .a.live { color: var(--run); }
+  .chip .a .u  { font-size: 11px; color: var(--dim-2); font-weight: 500; }
+  .chip .a .pk { font-size: 11px; color: var(--dim-2); font-weight: 500; margin-left: auto; }
+  .chip .src { font-size: 10px; color: var(--dim-2); }
+
+  /* ---- страница настроек ---- */
+  .set-grid { display: flex; gap: 9px; flex: 1; min-height: 0; }
+  .set-grid .card { flex: 1; }
+  .stp { display: flex; align-items: center; justify-content: space-between;
+         gap: 10px; padding: 9px 0; border-bottom: 1px solid #1e222a; }
+  .stp-l { font-size: 13px; color: var(--dim); }
+  .stp-r { display: flex; align-items: center; gap: 9px; }
+  .stp-v { font-size: 21px; font-weight: 650; font-variant-numeric: tabular-nums; min-width: 62px;
+           text-align: right; }
+  .stp-u { font-size: 11.5px; color: var(--dim-2); width: 22px; }
+  .stp-b { width: 40px; height: 36px; border: 1px solid #3a424e; background: var(--card-2);
+           color: var(--txt); border-radius: 8px; font-family: inherit; font-size: 19px; line-height: 1; }
+  .stp-b:active { background: #2b323d; }
+  .stp-b:disabled { opacity: .35; }
+  .stp-v { border-bottom: 1px dashed #3a424e; cursor: pointer; }
+  .stp-v:active { color: var(--run); }
+
+  /* экранная цифровая клавиатура */
+  #pad-wrap {
+    position: fixed; inset: 0; z-index: 20; display: none;
+    align-items: center; justify-content: center; background: rgba(6,8,11,.72);
+  }
+  #pad-wrap.show { display: flex; }
+  #pad {
+    background: var(--card); border: 1px solid #303845; border-radius: 14px;
+    padding: 16px; width: 340px; box-shadow: 0 18px 60px rgba(0,0,0,.6);
+  }
+  #pad .h { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; }
+  #pad .h .t { color: var(--txt); font-weight: 600; }
+  #pad .h .r { color: var(--dim-2); font-size: 11.5px; }
+  #pad .v {
+    margin: 10px 0 12px; padding: 9px 12px; background: #0e1116; border: 1px solid var(--line);
+    border-radius: 9px; font-size: 30px; font-weight: 650; text-align: right;
+    font-variant-numeric: tabular-nums; min-height: 52px;
+  }
+  #pad .v.bad { border-color: rgba(224,71,76,.6); color: #ff9a9d; }
+  #pad .g { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  #pad button {
+    height: 52px; border: 1px solid #333c49; background: var(--card-2); color: var(--txt);
+    border-radius: 9px; font-family: inherit; font-size: 19px; font-weight: 600;
+  }
+  #pad button:active { background: #2b323d; }
+  #pad button:disabled { opacity: .32; }
+  #pad button.act { font-size: 14px; }
+  #pad button.ok { background: rgba(62,196,109,.16); border-color: rgba(62,196,109,.5); color: var(--ok); }
+  #pad button.cancel { background: transparent; color: var(--dim); font-size: 14px; }
+
+  .kv { font-size: 12.5px; line-height: 1.85; color: var(--dim); margin-top: 8px; }
+  .kv b { color: var(--txt); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .kv .row { display: flex; justify-content: space-between; gap: 10px; }
+  .svc { display: flex; flex-direction: column; gap: 7px; margin-top: auto; padding-top: 10px; }
+  .svc .mbtn { width: 100%; }
+</style>
+</head>
+<body>
+
+<div id="track">
+
+  <!-- ============ 0. НАСОСНАЯ ============ -->
+  <section class="panel">
+    <div class="body">
+      <div class="col" id="col-tanks"></div>
+      <div class="col" id="col-pumps"></div>
+      <div class="col" id="col-side">
+        <button id="mode" class="man">
+          <span class="lbl">РЕЖИМ</span>
+          <span class="val" id="mode-val">—</span>
+          <span class="hint" id="mode-hint"></span>
+        </button>
+        <div class="card" style="flex:none"><div class="status" id="status"></div></div>
+        <div id="alarms"></div>
+        <div style="flex:1"></div>
+        <div id="link"><span id="dot"></span><span id="link-txt">подключение…</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 1. РЕЛЕ ============ -->
+  <section class="panel">
+    <div class="tab" data-go="0"><span class="vert">РЕЛЕ</span><span class="chev">‹</span></div>
+    <div class="body" style="flex-direction:column; gap:7px; overflow:hidden">
+      <div style="flex:none">
+        <h2 class="page">Реле и токи</h2>
+        <div class="note danger">
+          Клапаны и резерв без надобности не включать. Токи MAP — это питание блоков питания;
+          порядок каналов внутри группы пока предположительный.
+          <span id="map-u" style="color:var(--dim)"></span>
+        </div>
+      </div>
+      <div id="groups" style="flex:1; overflow:auto"></div>
+    </div>
+  </section>
+
+  <!-- ============ 2. НАСТРОЙКИ ============ -->
+  <section class="panel">
+    <div class="tab" data-go="1"><span class="vert">НАСТРОЙКИ</span><span class="chev">‹</span></div>
+    <div class="body" style="flex-direction:column; gap:9px">
+      <div style="flex:none; display:flex; align-items:flex-start; gap:14px">
+        <div style="flex:1">
+          <h2 class="page">Настройки</h2>
+          <div class="note">
+            Смотреть можно свободно, изменять — после ввода кода. Все изменения
+            записываются в журнал на контроллере. Уставка пока зашита в правилах
+            контроллера и здесь только показана.
+          </div>
+        </div>
+        <button class="mbtn" id="lockbtn">🔒 Разблокировать</button>
+      </div>
+      <div class="set-grid">
+
+        <div class="card">
+          <div class="card-h"><span>Контур уровня</span></div>
+          <div id="steppers"></div>
+          <div class="kv" id="sv-loop"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><span>Насос 1</span></div>
+          <div class="kv" id="sv-pump"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><span>Датчик, сеть, сервис</span></div>
+          <div class="kv" id="sv-misc"></div>
+          <div class="svc">
+            <button class="mbtn" id="btn-buzz">Проверить зуммер</button>
+            <button class="mbtn" id="btn-reload">Перезагрузить страницу</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- корешок «назад на главную» для последней страницы -->
+  <div class="tab" data-go="0"><span class="vert">НАСОСНАЯ</span><span class="chev">‹</span></div>
+</div>
+
+<div id="peek"></div>
+
+<div id="pad-wrap">
+  <div id="pad">
+    <div class="h"><span class="t" id="pad-t"></span><span class="r" id="pad-r"></span></div>
+    <div class="v" id="pad-v">0</div>
+    <div class="g">
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button data-k="bs" class="act">⌫</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="cl" class="act">C</button>
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="sg" class="act">±</button>
+      <button data-k=".">.</button><button data-k="0">0</button>
+      <button data-k="no" class="cancel">Отмена</button>
+      <button data-k="ok" class="ok act">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   КОНФИГУРАЦИЯ
+   ============================================================ */
+
+var TANKS = [
+  { key: 't1', title: 'Ёмкость 1',
+    level:  'pump_ctrl/controls/level_mm',
+    sensor: 'wb-mai2-mini_171/controls/input_1_current',
+    hyst:   'pump_ctrl/controls/hyst_mm',
+    setpoint: 70 },
+  { key: 't2', title: 'Ёмкость 2',
+    pending: 'датчик не подключён · свободен канал 2 на MAI2-mini 171' },
+  { key: 't3', title: 'Ёмкость 3',
+    pending: 'датчик не подключён · нужен ещё модуль аналоговых входов' }
+];
+
+var PUMPS = [
+  { key: 'p1', title: 'Насос 1',
+    dev: 'INNOVERT-ISD-mini-PLUS_101',
+    cmd: 'Команда управления', freq: 'Выходная частота', curr: 'Выходной ток',
+    hours: 'Счетчик часов эксплуатации', err: 'Текущий код ошибки' },
+  { key: 'p2', title: 'Насос 2', pending: 'частотник не подключён' }
+];
+
+/* Цепочка реле в порядке подключения. Именно в этом порядке заказчик
+   отсчитывает каналы: «до 103-K3 — питание макета, 103-K4 и далее 11
+   подряд — электроклапаны, остальное резерв». 15 + 11 + 4 = 30. */
+var RELAY_CHAIN = [
+  { dev: 'wb-mr6cv3_101', short: '101' },
+  { dev: 'wb-mr6cu_102',  short: '102' },
+  { dev: 'wb-mr6c_103',   short: '103' },
+  { dev: 'wb-mr6c_105',   short: '105' },
+  { dev: 'wb-mr6c_106',   short: '106' }
+];
+
+var CHANNELS = [];
+RELAY_CHAIN.forEach(function (m) {
+  ['K1', 'K2', 'K3', 'K4', 'K5', 'K6'].forEach(function (c) {
+    CHANNELS.push({ dev: m.dev, ch: c, src: m.short + ' · ' + c });
+  });
+});
+
+var MAP_DEV = 'wb-map12e_104';
+var MAP_CH = [];
+for (var mc = 1; mc <= 4; mc++) {
+  for (var ph = 1; ph <= 3; ph++) { MAP_CH.push({ c: mc, p: ph }); }
+}
+
+/* Токи MAP снимаются с реле питания блоков питания, а не с клапанов.
+   Реле питания — 15 каналов, но модули 101 и 102 дают ровно 12, столько же,
+   сколько у MAP токовых входов, поэтому измеряются они, а 103·K1…K3 — нет.
+   Порядок внутри группы всё ещё предположительный: подтвердить. */
+/* Клапаны подписаны по рукописному списку заказчика: одиннадцать штук на трёх
+   гидроузлах, по порядку от 103·K4. У Дубны и Углича по три — наполнение русла,
+   залив и слив шлюза; у Рыбинска пять, потому что шлюз там парный. */
+var VALVE_TRIO = ['Наполнение русла', 'Залив шлюза', 'Слив шлюза'];
+
+var GROUPS = [
+  { title: 'Питание макета', name: 'БП', from: 0, count: 15, danger: false, meter: true },
+  { title: 'Клапаны · Дубна', from: 15, count: 3, danger: true, meter: false,
+    names: VALVE_TRIO, warn: 'без надобности не включать' },
+  { title: 'Клапаны · Углич', from: 18, count: 3, danger: true, meter: false,
+    names: VALVE_TRIO, warn: 'без надобности не включать' },
+  { title: 'Клапаны · Рыбинск', from: 21, count: 5, danger: true, meter: false,
+    names: ['Наполнение русла', 'Залив шлюза 1', 'Залив шлюза 2',
+            'Слив шлюза 1', 'Слив шлюза 2'],
+    warn: 'без надобности не включать' },
+  { title: 'Резерв · запас на Рыбинск', name: 'Резерв', from: 26, count: 4,
+    danger: true, meter: false, warn: 'не подключено' }
+];
+
+
+var MODE_CTRL = 'pump_ctrl/controls/auto_mode';
+var AUTO_OFF_HOUR = 20;
+var SENSOR_SAT_MA = 17;
+
+var PAGES = ['НАСОСНАЯ', 'РЕЛЕ', 'НАСТРОЙКИ'];
+
+/* ============================================================
+   Навигация: горизонтальная лента с торчащим краем соседа
+   ============================================================ */
+
+var page = 0;
+var track = document.getElementById('track');
+
+function panelWidth() {
+  var strip = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--strip'));
+  return window.innerWidth - strip;
+}
+function goTo(i) {
+  var prev = page;
+  page = (i + PAGES.length) % PAGES.length;
+  track.style.transform = 'translateX(' + (-page * panelWidth()) + 'px)';
+  // уход со страницы настроек всегда снимает разблокировку
+  if (prev === 2 && page !== 2) { lockSettings(); padClose(); }
+  if (page === 2) { lastTouch = Date.now(); }
+  if (page === 0) { setTimeout(drawAll, 360); }
+}
+document.getElementById('peek').addEventListener('click', function () { goTo(page + 1); });
+[].forEach.call(document.querySelectorAll('.tab[data-go]'), function (t) {
+  t.addEventListener('click', function () { goTo(parseInt(t.dataset.go, 10)); });
+});
+
+// свайп по всей ленте
+var sx = 0, sy = 0, swiping = false;
+track.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; swiping = true; });
+track.addEventListener('pointerup', function (e) {
+  if (!swiping) { return; }
+  swiping = false;
+  var dx = e.clientX - sx, dy = e.clientY - sy;
+  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) { goTo(page + (dx < 0 ? 1 : -1)); }
+});
+window.addEventListener('resize', function () { goTo(page); drawAll(); });
+
+/* ============================================================
+   MQTT 3.1.1 поверх WebSocket, без библиотек
+   ============================================================ */
+
+var enc = new TextEncoder(), dec = new TextDecoder();
+var ws = null, connected = false, pinger = null, reconnectDelay = 1000;
+var pktId = 1, rxBuf = new Uint8Array(0);
+var handlers = [], filters = [], state = {};
+
+function remLen(n) {
+  var o = [];
+  do { var b = n % 128; n = Math.floor(n / 128); if (n > 0) { b |= 0x80; } o.push(b); } while (n > 0);
+  return o;
+}
+function mstr(s) {
+  var b = enc.encode(s), o = [b.length >> 8, b.length & 0xff];
+  for (var i = 0; i < b.length; i++) { o.push(b[i]); }
+  return o;
+}
+function pkt(t, body) { return new Uint8Array([t].concat(remLen(body.length)).concat(body)); }
+function send(u8) { try { ws.send(u8); return true; } catch (e) { return false; } }
+
+function publish(topic, payload) {
+  if (!connected) { return false; }
+  var body = mstr(topic), b = enc.encode(payload);
+  for (var i = 0; i < b.length; i++) { body.push(b[i]); }
+  return send(pkt(0x30, body));
+}
+/* Журнал действий: страница только публикует события, в файл их пишет
+   отдельный сервис на контроллере (hmi-audit.service). */
+var AUDIT_TOPIC = '/hmi/audit';
+function audit(o) {
+  o.t = Math.floor(Date.now() / 1000);
+  publish(AUDIT_TOPIC, JSON.stringify(o));
+}
+
+function sendSubscribe(f) {
+  var id = pktId++;
+  send(pkt(0x82, [id >> 8, id & 0xff].concat(mstr(f)).concat([0])));
+}
+function addSub(filter, cb) {
+  handlers.push({
+    re: new RegExp('^' + filter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                                .replace(/\\\+/g, '[^/]+').replace(/\\#/g, '.*') + '$'),
+    cb: cb
+  });
+  filters.push(filter);
+  if (connected) { sendSubscribe(filter); }
+}
+
+function feed(chunk) {
+  var m = new Uint8Array(rxBuf.length + chunk.length);
+  m.set(rxBuf); m.set(chunk, rxBuf.length); rxBuf = m;
+  for (;;) {
+    if (rxBuf.length < 2) { return; }
+    var len = 0, mult = 1, i = 1;
+    for (;;) {
+      if (i >= rxBuf.length) { return; }
+      var b = rxBuf[i]; len += (b & 0x7f) * mult; mult *= 128; i++;
+      if ((b & 0x80) === 0) { break; }
+    }
+    if (rxBuf.length < i + len) { return; }
+    var type = rxBuf[0] & 0xf0, body = rxBuf.subarray(i, i + len);
+    rxBuf = rxBuf.subarray(i + len);
+    if (type === 0x20) { onConnack(body); }
+    else if (type === 0x30) {
+      var tl = (body[0] << 8) | body[1];
+      var topic = dec.decode(body.subarray(2, 2 + tl));
+      state[topic] = dec.decode(body.subarray(2 + tl));
+      for (var k = 0; k < handlers.length; k++) {
+        if (handlers[k].re.test(topic)) { handlers[k].cb(topic, state[topic]); }
+      }
+    }
+  }
+}
+
+function onConnack(body) {
+  if (body[1] !== 0x00) { setLink('bad', 'брокер отказал: ' + body[1]); return; }
+  connected = true; reconnectDelay = 1000;
+  setLink('ok', 'связь есть');
+  for (var i = 0; i < filters.length; i++) { sendSubscribe(filters[i]); }
+  pinger = setInterval(function () { if (connected) { send(new Uint8Array([0xc0, 0x00])); } }, 30000);
+
+  loadHistory(); render();
+}
+
+function connect() {
+  var proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
+  ws = new WebSocket(proto + location.host + '/mqtt', 'mqtt');
+  ws.binaryType = 'arraybuffer';
+  ws.onopen = function () {
+    rxBuf = new Uint8Array(0);
+    send(pkt(0x10, mstr('MQTT').concat([4, 0x02, 0x00, 0x3c])
+                               .concat(mstr('hmi-' + Math.floor(Math.random() * 1e6)))));
+  };
+  ws.onmessage = function (ev) { feed(new Uint8Array(ev.data)); };
+  ws.onclose = function () {
+    connected = false; clearInterval(pinger);
+    setLink('bad', 'нет связи, переподключение…'); render();
+    setTimeout(connect, reconnectDelay);
+    reconnectDelay = Math.min(reconnectDelay * 2, 15000);
+  };
+  ws.onerror = function () { try { ws.close(); } catch (e) {} };
+}
+function setLink(c, t) {
+  document.getElementById('dot').className = c;
+  document.getElementById('link-txt').textContent = t;
+}
+
+/* ---------- история из wb-mqtt-db ---------- */
+
+var rpcSeq = 0, rpcClient = 'hmi' + Math.floor(Math.random() * 1e6), rpcWaiting = {};
+addSub('/rpc/v1/db_logger/history/get_values/' + rpcClient + '/reply', function (t, p) {
+  var m; try { m = JSON.parse(p); } catch (e) { return; }
+  var cb = rpcWaiting[m.id];
+  if (cb) { delete rpcWaiting[m.id]; cb(m.error ? null : m.result); }
+});
+function history(device, control, fromTs, cb) {
+  if (!connected) { cb(null); return; }
+  var id = 'h' + (++rpcSeq);
+  rpcWaiting[id] = cb;
+  publish('/rpc/v1/db_logger/history/get_values/' + rpcClient, JSON.stringify({
+    id: id, params: { channels: [[device, control]], timestamp: { gt: fromTs }, limit: 900, ver: 1 }
+  }));
+  setTimeout(function () { if (rpcWaiting[id]) { delete rpcWaiting[id]; cb(null); } }, 8000);
+}
+
+/* ============================================================
+   Разметка из конфигурации
+   ============================================================ */
+
+var RANGES = [{ t: '1 ч', s: 3600 }, { t: '6 ч', s: 21600 }, { t: '24 ч', s: 86400 }];
+var rangeSec = 3600, series = {};
+
+function el(h) { var d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstChild; }
+
+var tanksCol = document.getElementById('col-tanks');
+TANKS.forEach(function (tk, idx) {
+  tanksCol.appendChild(el(
+    '<div class="card tank' + (tk.pending ? ' pending' : '') + '">' +
+      '<div class="card-h"><span>' + tk.title + '</span>' +
+        (idx === 0 ? '<span class="ranges" id="ranges"></span>' : '<span></span>') + '</div>' +
+      (tk.pending ? '<div class="ph">' + tk.pending + '</div>'
+        : '<div class="tank-val"><span class="tank-num" id="num-' + tk.key + '">—</span>' +
+          '<span class="tank-unit">мм</span><span class="tank-sp" id="sp-' + tk.key + '"></span></div>' +
+          '<div class="chart-wrap"><canvas id="cv-' + tk.key + '"></canvas></div>') +
+    '</div>'));
+});
+
+var rangesBox = document.getElementById('ranges');
+RANGES.forEach(function (r) {
+  var b = document.createElement('button');
+  b.textContent = r.t;
+  if (r.s === rangeSec) { b.className = 'on'; }
+  b.onclick = function () {
+    rangeSec = r.s;
+    [].forEach.call(rangesBox.children, function (c) { c.className = ''; });
+    b.className = 'on'; loadHistory();
+  };
+  rangesBox.appendChild(b);
+});
+
+var pumpsCol = document.getElementById('col-pumps');
+PUMPS.forEach(function (p) {
+  pumpsCol.appendChild(el(
+    '<div class="card pump' + (p.pending ? ' pending' : '') + '">' +
+      '<div class="card-h"><span>' + p.title + '</span>' +
+        '<span class="state ' + (p.pending ? 'off' : '') + '" id="st-' + p.key + '">' +
+        (p.pending ? 'НЕТ' : '—') + '</span></div>' +
+      '<div class="pump-body"><div class="impeller">' +
+        '<svg width="92" height="92" viewBox="0 0 100 100">' +
+          '<circle cx="50" cy="50" r="44" fill="#12151a" stroke="#2b313a" stroke-width="2"/>' +
+          '<g class="rotor" id="rot-' + p.key + '">' +
+            '<path d="M50 50 L50 12 A38 38 0 0 1 79 31 Z" fill="#2f3945"/>' +
+            '<path d="M50 50 L79 31 A38 38 0 0 1 72 82 Z" fill="#242c36"/>' +
+            '<path d="M50 50 L72 82 A38 38 0 0 1 22 79 Z" fill="#2f3945"/>' +
+            '<path d="M50 50 L22 79 A38 38 0 0 1 22 22 Z" fill="#242c36"/>' +
+            '<path d="M50 50 L22 22 A38 38 0 0 1 50 12 Z" fill="#2f3945"/>' +
+          '</g><circle cx="50" cy="50" r="9" id="hub-' + p.key + '" fill="#4a5462"/>' +
+        '</svg></div>' +
+        (p.pending ? '<div class="ph" style="justify-content:flex-start">' + p.pending + '</div>'
+          : '<div class="pump-figs">' +
+              '<div class="fig-row"><span class="fig-v" id="f-' + p.key + '">—</span><span class="fig-u">Гц</span></div>' +
+              '<div class="fig-row"><span class="fig-v" id="a-' + p.key + '">—</span><span class="fig-u">А</span></div>' +
+            '</div>') +
+      '</div><div class="pump-meta" id="m-' + p.key + '"></div>' +
+      (p.pending ? '' :
+        '<div class="manual" id="man-' + p.key + '" style="display:none">' +
+          '<button class="mbtn" id="mb-' + p.key + '">ВКЛ</button>' +
+          '<span class="mleft" id="ml-' + p.key + '"></span>' +
+        '</div>') +
+    '</div>'));
+});
+
+// ---- страница реле: плашка на каждый канал ----
+var CHIPS = [];                       // {key, dev, ch, meter}
+var groupsBox = document.getElementById('groups');
+
+function chipKey(dev, ch) { return (dev + '-' + ch).replace(/\s/g, '_'); }
+
+function addChips(title, warn, items) {
+  var body = items.map(function (it) {
+    return '<div class="chip' + (it.danger ? ' danger' : '') + '" id="chip-' + it.key + '">' +
+             '<div class="chip-h"><span class="nm">' + it.name + '</span><span class="led"></span></div>' +
+             (it.meter
+               ? '<div class="a" id="a-' + it.key + '"><span id="av-' + it.key + '">—</span>' +
+                 '<span class="u"> А</span><span class="pk" id="ap-' + it.key + '"></span></div>'
+               : '<div class="a">·</div>') +
+             '<div class="src">' + it.src + (it.meter ? ' · ' + it.meter.label : '') + '</div>' +
+           '</div>';
+  }).join('');
+  groupsBox.appendChild(el(
+    '<div class="grp"><div class="grp-h"><span class="t">' + title + '</span>' +
+    (warn ? '<span class="warn">' + warn + '</span>' : '') + '</div>' +
+    '<div class="chips">' + body + '</div></div>'));
+}
+
+GROUPS.forEach(function (g) {
+  var items = [];
+  for (var i = 0; i < g.count; i++) {
+    var c = CHANNELS[g.from + i];
+    // токовых входов у MAP всего 12 — остальным каналам измерения нет
+    var meter = (g.meter && i < MAP_CH.length)
+      ? { ch: MAP_CH[i], label: 'Ch ' + MAP_CH[i].c + '·L' + MAP_CH[i].p + ' ?' } : null;
+    var it = { key: chipKey(c.dev, c.ch), dev: c.dev, ch: c.ch, src: c.src,
+               name: g.names ? g.names[i] : g.name + ' ' + (i + 1),
+               danger: g.danger, meter: meter };
+    items.push(it); CHIPS.push(it);
+  }
+  addChips(g.title, g.warn, items);
+});
+
+
+/* ---------- страница настроек ---------- */
+
+/* Код доступа лежит прямо здесь, в тексте страницы. Это защита от случайного
+   тыка, а не настоящая: кто угодно в сети всё равно может писать в MQTT
+   напрямую — брокер без авторизации. Менять код — эта строка. */
+var SETTINGS_PIN = '1234';
+var SETTINGS_IDLE_MS = 10 * 60 * 1000;   // бездействие на странице настроек
+
+var unlocked = false;
+var lastTouch = Date.now();
+
+function lockSettings() { unlocked = false; }
+
+document.getElementById('lockbtn').onclick = function () {
+  if (unlocked) { lockSettings(); renderSettings(); } else { padOpenPin(); }
+};
+
+// Редактируемые параметры. Границы — здесь, в UI: в самом wb-rules у hyst_mm
+// тип "value" без min/max, так что защита от «15 вместо 1.5» только тут.
+var SETTINGS = [
+  { key: 'hyst', label: 'Гистерезис', topic: 'pump_ctrl/controls/hyst_mm',
+    min: 0.2, max: 5, step: 0.1, dec: 2, unit: 'мм' },
+  { key: 'trim', label: 'Коррекция уровня', topic: 'pump_ctrl/controls/level_trim',
+    min: -5, max: 5, step: 0.1, dec: 1, unit: 'мм' }
+];
+
+var stepBox = document.getElementById('steppers');
+SETTINGS.forEach(function (s) {
+  stepBox.appendChild(el(
+    '<div class="stp"><div class="stp-l">' + s.label + '</div><div class="stp-r">' +
+      '<button class="stp-b" id="dn-' + s.key + '">−</button>' +
+      '<span class="stp-v" id="val-' + s.key + '">—</span>' +
+      '<span class="stp-u">' + s.unit + '</span>' +
+      '<button class="stp-b" id="up-' + s.key + '">+</button>' +
+    '</div></div>'));
+  document.getElementById('dn-' + s.key).onclick = function () { bump(s, -1); };
+  document.getElementById('up-' + s.key).onclick = function () { bump(s, 1); };
+  document.getElementById('val-' + s.key).onclick = function () {
+    if (unlocked) { padOpen(s); } else { padOpenPin(); }
+  };
+});
+
+/* --- экранная цифровая клавиатура --- */
+
+var padWrap = document.getElementById('pad-wrap');
+var padV = document.getElementById('pad-v');
+var padOk = document.querySelector('#pad button[data-k="ok"]');
+var padTarget = null, padBuf = '', padPin = false, padErr = false;
+
+function padOpen(s) {
+  if (!connected) { return; }
+  padPin = false; padErr = false; padTarget = s;
+  var cur = num(s.topic);
+  padBuf = (cur === null) ? '' : String(cur);
+  document.getElementById('pad-t').textContent = s.label;
+  document.getElementById('pad-r').textContent = 'от ' + s.min + ' до ' + s.max + ' ' + s.unit;
+  padDraw();
+  padWrap.classList.add('show');
+}
+
+function padOpenPin() {
+  padPin = true; padErr = false; padTarget = null; padBuf = '';
+  document.getElementById('pad-t').textContent = 'Код доступа';
+  document.getElementById('pad-r').textContent = 'для изменения настроек';
+  padDraw();
+  padWrap.classList.add('show');
+}
+
+function padClose() { padWrap.classList.remove('show'); padTarget = null; padPin = false; }
+
+function padDraw() {
+  if (padPin) {
+    padV.textContent = padErr ? 'неверный код' : (padBuf.replace(/./g, '•') || '—');
+    padV.className = 'v' + (padErr ? ' bad' : '');
+    padOk.disabled = padBuf.length === 0;
+    return;
+  }
+  padV.textContent = (padBuf === '' || padBuf === '-') ? (padBuf || '0') : padBuf;
+  var v = parseFloat(padBuf);
+  var bad = padBuf !== '' && (isNaN(v) || v < padTarget.min || v > padTarget.max);
+  padV.className = 'v' + (bad ? ' bad' : '');
+  padOk.disabled = bad || padBuf === '' || isNaN(v);
+}
+
+[].forEach.call(document.querySelectorAll('#pad button'), function (b) {
+  b.onclick = function () {
+    var k = b.getAttribute('data-k');
+    if (k === 'no') { padClose(); return; }
+
+    if (padPin) {
+      if (k === 'ok') {
+        var ok = (padBuf === SETTINGS_PIN);
+        audit({ ev: 'unlock', ok: ok });
+        if (ok) {
+          unlocked = true; lastTouch = Date.now();
+          padClose(); renderSettings();
+        } else {
+          padErr = true; padBuf = ''; padDraw();
+        }
+        return;
+      }
+      padErr = false;
+      if (k === 'bs') { padBuf = padBuf.slice(0, -1); }
+      else if (k === 'cl') { padBuf = ''; }
+      else if (k !== 'sg' && k !== '.' && padBuf.length < 12) { padBuf += k; }
+      padDraw();
+      return;
+    }
+
+    if (k === 'ok') {
+      var v = parseFloat(padBuf);
+      if (!isNaN(v) && v >= padTarget.min && v <= padTarget.max) {
+        audit({ ev: 'set', k: padTarget.label, from: num(padTarget.topic),
+                to: parseFloat(v.toFixed(padTarget.dec)), how: 'keypad' });
+        publish('/devices/' + padTarget.topic + '/on', v.toFixed(padTarget.dec));
+      }
+      padClose();
+      return;
+    }
+    if (k === 'bs') { padBuf = padBuf.slice(0, -1); }
+    else if (k === 'cl') { padBuf = ''; }
+    else if (k === 'sg') { padBuf = padBuf.charAt(0) === '-' ? padBuf.slice(1) : '-' + padBuf; }
+    else if (k === '.') { if (padBuf.indexOf('.') < 0) { padBuf = (padBuf || '0') + '.'; } }
+    else if (padBuf.replace('-', '').replace('.', '').length < 6) { padBuf += k; }
+    padDraw();
+  };
+});
+
+padWrap.onclick = function (e) { if (e.target === padWrap) { padClose(); } };
+
+function bump(s, dir) {
+  if (!connected || !unlocked) { return; }
+  var cur = num(s.topic);
+  if (cur === null) { return; }
+  var v = Math.min(s.max, Math.max(s.min, cur + dir * s.step));
+  audit({ ev: 'set', k: s.label, from: cur, to: parseFloat(v.toFixed(s.dec)), how: 'step' });
+  publish('/devices/' + s.topic + '/on', v.toFixed(s.dec));
+}
+
+function row(k, v) { return '<div class="row"><span>' + k + '</span><b>' + v + '</b></div>'; }
+
+
+document.getElementById('btn-reload').onclick = function () { location.reload(); };
+document.getElementById('btn-buzz').onclick = function () {
+  if (!connected) { return; }
+  publish('/devices/buzzer/controls/enabled/on', '1');
+  setTimeout(function () { publish('/devices/buzzer/controls/enabled/on', '0'); }, 1000);
+};
+
+function renderSettings() {
+  var btn = document.getElementById('lockbtn');
+  if (unlocked) {
+    var left = Math.max(0, SETTINGS_IDLE_MS - (Date.now() - lastTouch));
+    var secs = Math.floor(left / 1000);
+    btn.textContent = '🔓 Заблокировать · ' +
+      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2);
+    btn.className = 'mbtn stop';
+  } else {
+    btn.textContent = '🔒 Разблокировать';
+    btn.className = 'mbtn';
+  }
+
+  SETTINGS.forEach(function (s) {
+    var v = num(s.topic);
+    document.getElementById('val-' + s.key).textContent = v === null ? '—' : v.toFixed(s.dec);
+    var off = !connected || !unlocked || v === null;
+    document.getElementById('dn-' + s.key).disabled = off || v <= s.min + 1e-9;
+    document.getElementById('up-' + s.key).disabled = off || v >= s.max - 1e-9;
+  });
+
+  var tk = TANKS[0], hy = num(tk.hyst) || 0;
+  document.getElementById('sv-loop').innerHTML =
+    row('Уставка (в правилах)', tk.setpoint + ' мм') +
+    row('Включение ниже', (tk.setpoint - hy / 2).toFixed(2) + ' мм') +
+    row('Выключение выше', (tk.setpoint + hy / 2).toFixed(2) + ' мм') +
+    row('Уровень сейчас', fmt(num(tk.level)) + ' мм');
+
+  var p = PUMPS[0], d = p.dev + '/controls/';
+  var lo = num(d + 'Минимальная рабочая частота'), hi = num(d + 'Максимальная рабочая частота');
+  var errCode = num(d + p.err);
+  document.getElementById('sv-pump').innerHTML =
+    row('Задание', fmt(num(d + 'Заданная частота'), 1) + ' Гц') +
+    row('Диапазон', (lo === null ? '—' : (lo / 10).toFixed(1)) + '…' +
+                    (hi === null ? '—' : (hi / 10).toFixed(1)) + ' Гц') +
+    row('Выход', fmt(num(d + p.freq), 1) + ' Гц · ' + fmt(num(d + p.curr), 2) + ' А') +
+    row('Напряжение', fmt(num(d + 'Выходное напряжение'), 0) + ' В') +
+    row('Наработка', (num(d + p.hours) === null ? '—' : num(d + p.hours) + ' ч')) +
+    row('Код ошибки', errCode === null ? '—' : (errCode || 'нет'));
+
+  var now = new Date(), off = new Date(now);
+  off.setHours(AUTO_OFF_HOUR, 0, 0, 0);
+  if (off <= now) { off.setDate(off.getDate() + 1); }
+  var mins = Math.round((off - now) / 60000);
+  document.getElementById('sv-misc').innerHTML =
+    row('Ток датчика 1', fmt(num(tk.sensor), 3) + ' мА') +
+    row('Сырое значение', fmt(num('wb-mai2-mini_171/controls/input_1_value'), 0)) +
+    row('Сеть', fmt(num(MAP_DEV + '/controls/Urms L1'), 0) + ' В · ' +
+                fmt(num(MAP_DEV + '/controls/Frequency'), 2) + ' Гц') +
+    row('Автоотключение в', AUTO_OFF_HOUR + ':00, через ' +
+        Math.floor(mins / 60) + ' ч ' + (mins % 60) + ' м') +
+    row('Контроллер', location.host);
+}
+
+/* ---------- смена режима ---------- */
+
+var modeBtn = document.getElementById('mode');
+modeBtn.addEventListener('click', function () {
+  if (!connected) { return; }
+  var toAuto = !isAuto();
+  audit({ ev: 'mode', to: toAuto ? 'auto' : 'manual' });
+  publish('/devices/' + MODE_CTRL + '/on', toAuto ? '1' : '0');
+});
+
+/* ---------- ручной пуск насоса ----------
+   ВНИМАНИЕ: таймер на 15 минут живёт в браузере панели. Если страница
+   перезагрузится или панель потеряет связь во время работы — команду
+   останова подать будет некому. Дублирующая защита нужна в wb-rules. */
+
+var MANUAL_RUN_MS = 15 * 60 * 1000;
+var manualUntil = {};
+
+function pumpIsOn(p) {
+  var f = num(p.dev + '/controls/' + p.freq);
+  return (f !== null && f > 0.5) || val(p.dev + '/controls/' + p.cmd) === '2';
+}
+function manualCmd(p, v) { publish('/devices/' + p.dev + '/controls/' + p.cmd + '/on', v); }
+
+PUMPS.forEach(function (p) {
+  if (p.pending) { return; }
+  document.getElementById('mb-' + p.key).addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (!connected || isAuto()) { return; }
+    if (pumpIsOn(p)) {
+      audit({ ev: 'pump', p: p.title, to: 'stop' });
+      manualCmd(p, '1'); delete manualUntil[p.key];
+    } else {
+      audit({ ev: 'pump', p: p.title, to: 'start', limit_min: MANUAL_RUN_MS / 60000 });
+      manualCmd(p, '2'); manualUntil[p.key] = Date.now() + MANUAL_RUN_MS;
+    }
+    renderManual();
+  });
+});
+
+function renderManual() {
+  var auto = isAuto();
+  PUMPS.forEach(function (p) {
+    if (p.pending) { return; }
+    var box = document.getElementById('man-' + p.key);
+    box.style.display = auto ? 'none' : 'flex';
+    if (auto) { delete manualUntil[p.key]; return; }
+
+    var on = pumpIsOn(p);
+    var btn = document.getElementById('mb-' + p.key);
+    btn.textContent = on ? 'ВЫКЛ' : 'ВКЛ';
+    btn.className = 'mbtn' + (on ? ' stop' : '');
+
+    var until = manualUntil[p.key];
+    var left = until ? Math.max(0, until - Date.now()) : 0;
+    var secs = Math.floor(left / 1000);
+    document.getElementById('ml-' + p.key).textContent =
+      left ? 'стоп через ' + Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) : '';
+  });
+}
+
+document.addEventListener('pointerdown', function () { lastTouch = Date.now(); }, true);
+
+setInterval(function () {
+  PUMPS.forEach(function (p) {
+    if (p.pending) { return; }
+    var until = manualUntil[p.key];
+    if (until && Date.now() >= until) {
+      audit({ ev: 'pump', p: p.title, to: 'autostop' });
+      manualCmd(p, '1'); delete manualUntil[p.key];
+    }
+  });
+  renderManual();
+
+  // автовыход со страницы настроек по бездействию
+  if (page === 2) {
+    if (Date.now() - lastTouch > SETTINGS_IDLE_MS) { goTo(0); } else { renderSettings(); }
+  }
+}, 1000);
+
+/* ============================================================
+   Подписки
+   ============================================================ */
+
+function val(t) { return state['/devices/' + t]; }
+function num(t) { var v = parseFloat(val(t)); return isNaN(v) ? null : v; }
+function isAuto() { return val(MODE_CTRL) === '1'; }
+
+addSub('/devices/pump_ctrl/controls/+', function () { render(); });
+TANKS.forEach(function (tk) {
+  if (tk.sensor) { addSub('/devices/' + tk.sensor.split('/')[0] + '/controls/+', function () { render(); }); }
+});
+PUMPS.forEach(function (p) {
+  if (p.dev) { addSub('/devices/' + p.dev + '/controls/+', function () { render(); }); }
+});
+RELAY_CHAIN.forEach(function (m) {
+  addSub('/devices/' + m.dev + '/controls/+', function () { renderRelays(); });
+});
+addSub('/devices/' + MAP_DEV + '/controls/+', function () { renderRelays(); });
+
+TANKS.forEach(function (tk) {
+  if (tk.pending) { return; }
+  addSub('/devices/' + tk.level, function (t, p) {
+    var v = parseFloat(p); if (isNaN(v)) { return; }
+    var s = series[tk.key]; if (!s) { return; }
+    var now = Math.floor(Date.now() / 1000);
+    if (!s.length || now - s[s.length - 1].t >= 5) { s.push({ t: now, v: v }); drawAll(); }
+  });
+});
+
+function loadHistory() {
+  var from = Math.floor(Date.now() / 1000) - rangeSec;
+  TANKS.forEach(function (tk) {
+    if (tk.pending) { return; }
+    var pp = tk.level.split('/');              // device / "controls" / control
+    history(pp[0], pp[2], from, function (res) {
+      series[tk.key] = res ? res.values.map(function (r) { return { t: r.t, v: parseFloat(r.v) }; }) : [];
+      drawAll();
+    });
+  });
+}
+setInterval(loadHistory, 5 * 60 * 1000);
+
+/* ============================================================
+   Отрисовка
+   ============================================================ */
+
+function fmt(v, d) { return (v === null || v === undefined) ? '—' : v.toFixed(d === undefined ? 2 : d); }
+
+function render() {
+  var auto = isAuto();
+  modeBtn.className = auto ? 'auto' : 'man';
+  document.getElementById('mode-val').textContent = auto ? 'АВТО' : 'РУЧНОЙ';
+  document.getElementById('mode-hint').textContent = connected ? '' : 'нет связи';
+
+  TANKS.forEach(function (tk) {
+    if (tk.pending) { return; }
+    var lv = num(tk.level), hy = num(tk.hyst) || 0;
+    document.getElementById('num-' + tk.key).textContent = fmt(lv);
+    document.getElementById('sp-' + tk.key).innerHTML =
+      'уставка ' + tk.setpoint + ' мм<br>' +
+      (tk.setpoint - hy / 2).toFixed(2) + '…' + (tk.setpoint + hy / 2).toFixed(2);
+  });
+
+  PUMPS.forEach(function (p) {
+    if (p.pending) { return; }
+    var f = num(p.dev + '/controls/' + p.freq);
+    var a = num(p.dev + '/controls/' + p.curr);
+    var cmd = val(p.dev + '/controls/' + p.cmd);
+    var err = num(p.dev + '/controls/' + p.err);
+    var hrs = num(p.dev + '/controls/' + p.hours);
+    var running = f !== null && f > 0.5;
+    document.getElementById('f-' + p.key).textContent = fmt(f, 1);
+    document.getElementById('a-' + p.key).textContent = fmt(a, 2);
+    var st = document.getElementById('st-' + p.key);
+    if (err) { st.className = 'state bad'; st.textContent = 'АВАРИЯ ' + err; }
+    else if (running) { st.className = 'state run'; st.textContent = 'РАБОТАЕТ'; }
+    else if (cmd === '2') { st.className = 'state warn'; st.textContent = 'ПУСК ПОДАН'; }
+    else { st.className = 'state idle'; st.textContent = 'СТОП'; }
+    var rot = document.getElementById('rot-' + p.key);
+    if (running) {
+      rot.classList.add('spin');
+      rot.style.setProperty('--spin', Math.max(0.18, 17.5 / f).toFixed(2) + 's');
+    } else { rot.classList.remove('spin'); }
+    document.getElementById('hub-' + p.key).setAttribute('fill', running ? '#35b6ff' : '#4a5462');
+    document.getElementById('m-' + p.key).innerHTML =
+      'команда: ' + (cmd === '2' ? 'пуск' : cmd === '1' ? 'стоп' : '—') +
+      ' &nbsp;·&nbsp; наработка: ' + (hrs === null ? '—' : hrs + ' ч');
+  });
+
+  var now = new Date(), off = new Date(now);
+  off.setHours(AUTO_OFF_HOUR, 0, 0, 0);
+  if (off <= now) { off.setDate(off.getDate() + 1); }
+  var mins = Math.round((off - now) / 60000);
+  document.getElementById('status').innerHTML =
+    '<div class="row"><span>до автоотключения</span><b>' +
+    Math.floor(mins / 60) + ' ч ' + (mins % 60) + ' м</b></div>';
+
+  var al = [];
+  if (!connected) { al.push(['', 'Нет связи с контроллером']); }
+  if (connected && !auto) {
+    al.push(['info', 'Ручной режим: автоматика выключена, пуск только кнопкой. ' +
+                     'Насос сам остановится через 15 минут после пуска.']);
+  }
+  var mA = num(TANKS[0].sensor);
+  if (mA !== null && mA > SENSOR_SAT_MA) {
+    al.push(['warn', 'Датчик 1 в насыщении (' + mA.toFixed(1) + ' мА) — точность резко падает']);
+  }
+  PUMPS.forEach(function (p) {
+    if (p.pending) { return; }
+    var err = num(p.dev + '/controls/' + p.err);
+    var cmd = val(p.dev + '/controls/' + p.cmd);
+    var f = num(p.dev + '/controls/' + p.freq);
+    if (err) { al.push(['', p.title + ': ошибка частотника, код ' + err]); }
+    if (cmd === '2' && f !== null && f < 0.5) {
+      al.push(['warn', p.title + ': пуск подан, но частота 0 — насос не пошёл']);
+    }
+  });
+  document.getElementById('alarms').innerHTML = al.map(function (a) {
+    return '<div class="alarm ' + a[0] + '">' + a[1] + '</div>';
+  }).join('');
+
+  renderManual();
+  renderSettings();
+}
+
+function renderRelays() {
+  CHIPS.forEach(function (it) {
+    var on = val(it.dev + '/controls/' + it.ch) === '1';
+    var box = document.getElementById('chip-' + it.key);
+    box.className = 'chip' + (on ? ' on' : '') + (it.danger ? ' danger' : '');
+    if (it.meter) {
+      var base = MAP_DEV + '/controls/Ch ' + it.meter.ch.c;
+      var i = num(base + ' Irms L' + it.meter.ch.p);
+      var pk = num(base + ' Ipeak L' + it.meter.ch.p);
+      document.getElementById('av-' + it.key).textContent = (i === null ? '—' : i.toFixed(2));
+      document.getElementById('ap-' + it.key).textContent = 'пик ' + (pk === null ? '—' : pk.toFixed(1));
+      document.getElementById('a-' + it.key).className = 'a' + (i !== null && i > 0.02 ? ' live' : '');
+    }
+  });
+  var u = num(MAP_DEV + '/controls/Urms L1'), fr = num(MAP_DEV + '/controls/Frequency');
+  document.getElementById('map-u').textContent =
+    ' · сеть ' + (u === null ? '—' : u.toFixed(0)) + ' В, ' +
+    (fr === null ? '—' : fr.toFixed(2)) + ' Гц';
+}
+
+/* ---------- график (временный, будет переделан) ---------- */
+
+function drawAll() { TANKS.forEach(function (tk) { if (!tk.pending) { drawChart(tk); } }); }
+
+function drawChart(tk) {
+  var cv = document.getElementById('cv-' + tk.key);
+  if (!cv) { return; }
+  var w = cv.clientWidth, h = cv.clientHeight;
+  if (!w || !h) { return; }
+  var dpr = window.devicePixelRatio || 1;
+  cv.width = w * dpr; cv.height = h * dpr;
+  var c = cv.getContext('2d');
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
+
+  var data = series[tk.key] || [];
+  var padL = 38, padR = 6, padT = 6, padB = 16;
+  var iw = w - padL - padR, ih = h - padT - padB;
+  if (iw <= 10 || ih <= 10) { return; }
+
+  var hy = num(tk.hyst) || 0, lo = tk.setpoint - hy / 2, hi = tk.setpoint + hy / 2;
+  var vals = data.map(function (d) { return d.v; }).concat([lo, hi]);
+  var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+  var pad = Math.max(0.4, (mx - mn) * 0.18);
+  mn -= pad; mx += pad;
+
+  var tEnd = Math.floor(Date.now() / 1000), tStart = tEnd - rangeSec;
+  function X(t) { return padL + (t - tStart) / (tEnd - tStart) * iw; }
+  function Y(v) { return padT + (mx - v) / (mx - mn) * ih; }
+
+  c.strokeStyle = '#232830'; c.lineWidth = 1;
+  c.fillStyle = '#6b7280'; c.font = '10px system-ui'; c.textAlign = 'right';
+  for (var i = 0; i <= 3; i++) {
+    var v = mn + (mx - mn) * i / 3, y = Math.round(Y(v)) + 0.5;
+    c.beginPath(); c.moveTo(padL, y); c.lineTo(w - padR, y); c.stroke();
+    c.fillText(v.toFixed(1), padL - 5, y + 3.5);
+  }
+
+  c.fillStyle = 'rgba(62,196,109,.12)';
+  c.fillRect(padL, Y(hi), iw, Math.max(1, Y(lo) - Y(hi)));
+  c.strokeStyle = 'rgba(62,196,109,.45)'; c.setLineDash([4, 4]);
+  c.beginPath(); c.moveTo(padL, Y(tk.setpoint)); c.lineTo(w - padR, Y(tk.setpoint)); c.stroke();
+  c.setLineDash([]);
+
+  c.fillStyle = '#6b7280';
+  for (var k = 0; k <= 4; k++) {
+    var tt = tStart + (tEnd - tStart) * k / 4, d = new Date(tt * 1000);
+    c.textAlign = k === 0 ? 'left' : (k === 4 ? 'right' : 'center');
+    c.fillText(('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2), X(tt), h - 4);
+  }
+  c.textAlign = 'center';
+
+  if (data.length < 2) {
+    c.fillStyle = '#4b5560';
+    c.fillText('нет данных за период', padL + iw / 2, padT + ih / 2);
+    return;
+  }
+
+  c.beginPath();
+  data.forEach(function (d, i) { var x = X(d.t), y = Y(d.v); if (i) { c.lineTo(x, y); } else { c.moveTo(x, y); } });
+  c.strokeStyle = '#35b6ff'; c.lineWidth = 2; c.lineJoin = 'round'; c.stroke();
+
+  var last = data[data.length - 1];
+  c.beginPath(); c.arc(X(last.t), Y(last.v), 3.2, 0, 6.29);
+  c.fillStyle = '#35b6ff'; c.fill();
+}
+
+document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
+
+goTo(0);
+render(); renderRelays(); connect();
+setInterval(function () { render(); drawAll(); }, 10000);
+</script>
+</body>
+</html>
