@@ -33,10 +33,7 @@ for p in cfg['ports']:
         for ch in d['channels']:
             cid = ch.get('id')
             if cid == 'addr' or cid.endswith('_freq'):
-                continue        # техническое: адрес и частота ШИМ правятся в «Устройствах»
-            if '(свободен)' in ch['name']:
-                skipped_free += 1
-                continue
+                continue    # адрес и частота — только на странице «Устройства»
             cells.append({"id": f"{d['id']}/{cid}", "type": ch['type'], "extra": {}})
         if not cells:
             continue

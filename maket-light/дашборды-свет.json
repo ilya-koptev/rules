@@ -253,6 +253,11 @@
           "id": "ld58_12_221/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_12_221/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -262,6 +267,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_12_222/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_12_222/2",
           "type": "switch",
@@ -349,6 +359,11 @@
           "id": "ld58_12_223/7",
           "type": "switch",
           "extra": {}
+        },
+        {
+          "id": "ld58_12_223/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -387,6 +402,16 @@
           "id": "ld58_12_224/6",
           "type": "switch",
           "extra": {}
+        },
+        {
+          "id": "ld58_12_224/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_224/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -420,6 +445,21 @@
           "id": "ld58_14_208/5",
           "type": "switch",
           "extra": {}
+        },
+        {
+          "id": "ld58_14_208/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_14_208/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_14_208/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -451,6 +491,11 @@
         },
         {
           "id": "ld58_15_211/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/6",
           "type": "switch",
           "extra": {}
         },
@@ -511,6 +556,16 @@
           "id": "ld58_15_212/6",
           "type": "switch",
           "extra": {}
+        },
+        {
+          "id": "ld58_15_212/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_212/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -549,6 +604,16 @@
           "id": "ld58_17_155/6",
           "type": "switch",
           "extra": {}
+        },
+        {
+          "id": "ld58_17_155/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_155/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -574,6 +639,11 @@
           "extra": {}
         },
         {
+          "id": "ld58_17_156/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_17_156/5",
           "type": "switch",
           "extra": {}
@@ -592,6 +662,11 @@
           "id": "ld58_17_156/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_17_156/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -601,6 +676,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_18_150/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_18_150/2",
           "type": "switch",
@@ -683,6 +763,16 @@
           "id": "ld58_18_151/6",
           "type": "switch",
           "extra": {}
+        },
+        {
+          "id": "ld58_18_151/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_151/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -709,6 +799,16 @@
         },
         {
           "id": "ld58_18_152/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/6",
           "type": "switch",
           "extra": {}
         },
@@ -814,7 +914,17 @@
           "extra": {}
         },
         {
+          "id": "ld58_18_154/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_18_154/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/6",
           "type": "switch",
           "extra": {}
         },
@@ -846,6 +956,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_19_146/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_19_146/2",
           "type": "switch",
@@ -901,6 +1016,11 @@
       "cells": [
         {
           "id": "ld58_19_147/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/2",
           "type": "switch",
           "extra": {}
         },
@@ -1126,6 +1246,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_21_184/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_21_184/2",
           "type": "switch",
@@ -1614,6 +1739,16 @@
       "compact": false,
       "cells": [
         {
+          "id": "ld58_28_185/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_28_185/3",
           "type": "switch",
           "extra": {}
@@ -1661,6 +1796,21 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_28_186/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/3",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_28_186/4",
           "type": "switch",
@@ -1932,6 +2082,11 @@
       "compact": false,
       "cells": [
         {
+          "id": "ld58_30_187/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_30_187/2",
           "type": "switch",
           "extra": {}
@@ -2033,6 +2188,11 @@
       "compact": false,
       "cells": [
         {
+          "id": "ld58_30_189/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_30_189/2",
           "type": "switch",
           "extra": {}
@@ -2065,6 +2225,11 @@
         {
           "id": "ld58_30_189/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_189/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -2114,6 +2279,11 @@
           "id": "ld58_30_190/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_30_190/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -2123,6 +2293,16 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_30_191/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/2",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_30_191/3",
           "type": "switch",
@@ -2210,6 +2390,11 @@
           "id": "ld58_30_192/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_30_192/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -2226,6 +2411,11 @@
         },
         {
           "id": "ld58_31_120/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/3",
           "type": "switch",
           "extra": {}
         },
@@ -2311,6 +2501,11 @@
           "id": "ld58_32_199/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_32_199/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -2359,6 +2554,11 @@
           "id": "ld58_32_200/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_32_200/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -2390,6 +2590,11 @@
         },
         {
           "id": "ld58_32_201/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/6",
           "type": "switch",
           "extra": {}
         },
@@ -2460,6 +2665,11 @@
           "id": "ld58_32_202/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_32_202/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -2469,6 +2679,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_36_196/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_36_196/2",
           "type": "switch",
@@ -2609,6 +2824,16 @@
           "id": "ld58_36_198/6",
           "type": "switch",
           "extra": {}
+        },
+        {
+          "id": "ld58_36_198/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_198/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -2656,6 +2881,11 @@
         {
           "id": "ld58_37_140/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -2735,6 +2965,16 @@
           "extra": {}
         },
         {
+          "id": "ld58_37_142/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_142/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_37_142/7",
           "type": "switch",
           "extra": {}
@@ -2742,6 +2982,11 @@
         {
           "id": "ld58_37_142/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_142/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -2790,6 +3035,11 @@
         {
           "id": "ld58_37_143/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -2917,6 +3167,26 @@
       "compact": false,
       "cells": [
         {
+          "id": "ld58_38_195/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_38_195/5",
           "type": "switch",
           "extra": {}
@@ -2975,6 +3245,16 @@
           "extra": {}
         },
         {
+          "id": "ld58_39_158/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_39_158/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_39_158/7",
           "type": "switch",
           "extra": {}
@@ -2982,6 +3262,11 @@
         {
           "id": "ld58_39_158/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_39_158/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -2992,6 +3277,16 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_40_172/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/2",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_40_172/3",
           "type": "switch",
@@ -3079,6 +3374,11 @@
           "id": "ld58_41_121/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_41_121/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -3114,6 +3414,11 @@
           "extra": {}
         },
         {
+          "id": "ld58_42_203/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_42_203/7",
           "type": "switch",
           "extra": {}
@@ -3121,6 +3426,11 @@
         {
           "id": "ld58_42_203/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_42_203/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -3157,7 +3467,17 @@
           "extra": {}
         },
         {
+          "id": "ld58_44_138/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_44_138/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_138/8",
           "type": "switch",
           "extra": {}
         }
@@ -3191,6 +3511,11 @@
         },
         {
           "id": "ld58_44_139/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/6",
           "type": "switch",
           "extra": {}
         },
@@ -3314,6 +3639,11 @@
           "id": "ld58_45_174/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_45_174/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -3349,6 +3679,11 @@
           "extra": {}
         },
         {
+          "id": "ld58_46_175/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_46_175/7",
           "type": "switch",
           "extra": {}
@@ -3356,6 +3691,11 @@
         {
           "id": "ld58_46_175/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_175/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -3392,6 +3732,11 @@
           "extra": {}
         },
         {
+          "id": "ld58_46_176/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_46_176/7",
           "type": "switch",
           "extra": {}
@@ -3399,6 +3744,11 @@
         {
           "id": "ld58_46_176/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_176/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -3411,6 +3761,11 @@
       "cells": [
         {
           "id": "ld58_47_131/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/2",
           "type": "switch",
           "extra": {}
         },
@@ -3532,6 +3887,11 @@
         },
         {
           "id": "ld58_47_133/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/5",
           "type": "switch",
           "extra": {}
         },
@@ -3665,6 +4025,11 @@
           "id": "ld58_48_128/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_48_128/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -3712,6 +4077,11 @@
         {
           "id": "ld58_48_129/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/8",
+          "type": "switch",
           "extra": {}
         }
       ]
@@ -3761,6 +4131,11 @@
           "id": "ld58_48_130/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_48_130/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -3787,6 +4162,16 @@
         },
         {
           "id": "ld58_49_122/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/6",
           "type": "switch",
           "extra": {}
         },
@@ -3819,6 +4204,11 @@
       "compact": false,
       "cells": [
         {
+          "id": "ld58_49_123/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_49_123/2",
           "type": "switch",
           "extra": {}
@@ -3830,6 +4220,11 @@
         },
         {
           "id": "ld58_49_123/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/5",
           "type": "switch",
           "extra": {}
         },
@@ -4011,6 +4406,11 @@
           "id": "ld58_49_126/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_49_126/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -4032,6 +4432,21 @@
         },
         {
           "id": "ld58_50_171/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/6",
           "type": "switch",
           "extra": {}
         },
@@ -4058,6 +4473,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_51_194/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_51_194/2",
           "type": "switch",
@@ -4339,6 +4759,11 @@
       "compact": false,
       "cells": [
         {
+          "id": "ld58_54_163/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_54_163/2",
           "type": "switch",
           "extra": {}
@@ -4430,6 +4855,11 @@
           "id": "ld58_54_164/7_pwm",
           "type": "range",
           "extra": {}
+        },
+        {
+          "id": "ld58_54_164/8",
+          "type": "switch",
+          "extra": {}
         }
       ]
     },
@@ -4439,6 +4869,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_54_165/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_54_165/2",
           "type": "switch",
@@ -4492,6 +4927,11 @@
       "description": "",
       "compact": false,
       "cells": [
+        {
+          "id": "ld58_54_166/1",
+          "type": "switch",
+          "extra": {}
+        },
         {
           "id": "ld58_54_166/2",
           "type": "switch",
@@ -4566,6 +5006,16 @@
           "extra": {}
         },
         {
+          "id": "ld58_55_159/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_55_159/7",
           "type": "switch",
           "extra": {}
@@ -4609,6 +5059,21 @@
           "extra": {}
         },
         {
+          "id": "ld58_55_160/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_160/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_160/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_55_160/7",
           "type": "switch",
           "extra": {}
@@ -4637,12 +5102,22 @@
           "extra": {}
         },
         {
+          "id": "ld58_56_161/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
           "id": "ld58_56_161/3",
           "type": "switch",
           "extra": {}
         },
         {
           "id": "ld58_56_161/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_161/5",
           "type": "switch",
           "extra": {}
         },
@@ -4712,6 +5187,11 @@
         {
           "id": "ld58_56_162/7_pwm",
           "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/8",
+          "type": "switch",
           "extra": {}
         }
       ]
