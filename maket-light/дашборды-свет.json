@@ -5505,12 +5505,52 @@
     },
     {
       "id": "w_light_groups_poll",
-      "name": "Опрос шлюзов",
+      "name": "Опрос",
       "description": "",
       "compact": false,
       "cells": [
         {
-          "id": "svet/poll",
+          "id": "svet/poll_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_ear",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_kalyazin",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_uglich",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_myshkin",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_kashin",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_kimry",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_dubna",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/poll_borok",
           "type": "switch",
           "extra": {}
         },

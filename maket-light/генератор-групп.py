@@ -42,6 +42,12 @@ for p in cfg['ports']:
                 continue                        # портовые краны — только вручную
             rows.append([d['id'], cid, CITY_SLUG[city], KIND.get(naz, 'O')])
 
+GW = collections.defaultdict(list)          # слаг города -> адреса шлюзов
+for p in cfg['ports']:
+    city = p['devices'][0]['name'].split(' · ')[0].split()[0]
+    GW[CITY_SLUG[city]].append(p['address'])
+EAR_GW = '192.168.69.35'                     # шлюз «Уха», в таблице макета его нет
+
 cnt = collections.Counter(r[3] for r in rows)
 print('каналов в группах:', len(rows), '| фонарей:', cnt['L'], '| машинок:', cnt['M'],
       '| кранов исключено:', len(KRANY))
@@ -55,7 +61,14 @@ for c in CITY_ORDER:
 cells += [('all', 'Весь макет — всё'), ('lamps', 'Весь макет — фонари'),
           ('cars', 'Весь макет — машинки')]
 
-js = u'''// Группы света макета: включить/выключить разом.
+gw_all = [a for v in GW.values() for a in v] + [EAR_GW]
+gw_map = {'poll_all': gw_all, 'poll_ear': [EAR_GW]}
+poll_cells = [('poll_all', 'Все шлюзы'), ('poll_ear', 'Ухо')]
+for c in CITY_ORDER:
+    gw_map['poll_' + CITY_SLUG[c]] = GW[CITY_SLUG[c]]
+    poll_cells.append(('poll_' + CITY_SLUG[c], c))
+
+js = r'''// Группы света макета: включить/выключить разом.
 // Сгенерировано gen_groups.py по таблице адресации — руками не править.
 //
 // Канал: [устройство, номер, город, вид]; вид L — фонарь, M — машинка, O — прочее.
@@ -106,10 +119,15 @@ for (var i = 0; i < CELLS.length; i++) {
 }
 controls['status'] = { type: 'text', value: '', title: 'Состояние',
                        order: CELLS.length + 1, readonly: true };
-controls['poll'] = { type: 'switch', value: false, title: 'Опрос шлюзов',
-                     order: 0, readonly: false };
+var GW = __GW__;                 // область -> адреса шлюзов
+var POLL = __POLL__;             // [id контрола, подпись]
+
+for (var q = 0; q < POLL.length; q++) {
+  controls[POLL[q][0]] = { type: 'switch', value: false, title: POLL[q][1],
+                           order: 100 + q, readonly: false };
+}
 controls['pollStatus'] = { type: 'text', value: '', title: 'Опрос',
-                           order: 0.5, readonly: true };
+                           order: 99, readonly: true };
 
 defineVirtualDevice('svet', { title: 'Свет макета', cells: controls });
 
@@ -132,58 +150,75 @@ function makeRule(id) {
 
 for (var j = 0; j < CELLS.length; j++) makeRule(CELLS[j][0]);
 
-// --- опрос макета ---
-// Выключенный опрос освобождает ВСЕ шлюзы Ebyte (макет и «Ухо»): по ним можно
-// работать напрямую, мимо контроллера. Порты из конфига не исчезают, у них лишь
-// снимается enabled. Пока опрос выключен, «Ухо» тоже недоступно.
+// --- опрос шлюзов ---
+// Выключенный шлюз освобождает шину: по ней можно работать напрямую, мимо
+// контроллера. Порты из конфига не исчезают, у них лишь снимается enabled.
+// Переключение перезапускает wb-mqtt-serial — пауза в опросе ВСЕГО, поэтому
+// пока «Ухо» едет, переключать нельзя: оно потеряет тики и встанет.
 var pollSyncing = false;
 
-defineRule('svet_poll', {
-  whenChanged: 'svet/poll',
-  then: function (newValue) {
-    if (pollSyncing) return;
-    // Переключение перезапускает wb-mqtt-serial, а это пауза в опросе ВСЕГО,
-    // включая «Ухо». Пока Ухо едет — не трогаем, иначе оно потеряет тики и встанет.
-    var ear = dev['ear'] && dev['ear']['status'];
-    if (ear && ear !== 'idle' && ear !== 'parked' && ear.indexOf('ERROR') !== 0) {
-      pollSyncing = true;
-      dev['svet']['poll'] = !newValue;          // возвращаем переключатель назад
-      pollSyncing = false;
-      dev['svet']['pollStatus'] = 'Ухо в движении (' + ear + ') — переключить нельзя';
-      return;
-    }
-    dev['svet']['pollStatus'] = newValue ? 'включаю опрос…' : 'выключаю опрос…';
-    runShellCommand('/usr/local/bin/svet-poll ' + (newValue ? 'on' : 'off'), {
-      captureOutput: true,
-      exitCallback: function (code, out) {
-        dev['svet']['pollStatus'] = code === 0
-          ? (newValue ? 'опрос идёт' : 'выключен — шлюзы свободны, Ухо недоступно')
-          : 'ошибка: ' + out;
-      }
-    });
-  }
-});
+function earBusy() {
+  var st = dev['ear'] && dev['ear']['status'];
+  return st && st !== 'idle' && st !== 'parked' && st.indexOf('ERROR') !== 0 ? st : '';
+}
 
-// при старте правила показываем, как есть на самом деле
-runShellCommand('/usr/local/bin/svet-poll state', {
-  captureOutput: true,
-  exitCallback: function (code, out) {
-    var st = (out || '').replace(/\s+$/, '');
-    var on = st.indexOf('on') === 0;
-    pollSyncing = true;
-    dev['svet']['poll'] = on;
-    pollSyncing = false;
-    if (st.indexOf('mixed') === 0) {
-      var m = st.split(' ');
-      dev['svet']['pollStatus'] = 'частично: опрашивается ' + m[1] + ' шлюз(ов) из ' + m[2];
-    } else {
-      dev['svet']['pollStatus'] = on
-        ? 'опрос идёт'
-        : 'выключен — шлюзы свободны, Ухо недоступно';
+function syncPoll() {
+  runShellCommand('/usr/local/bin/svet-poll list', {
+    captureOutput: true,
+    exitCallback: function (code, out) {
+      if (code !== 0) { dev['svet']['pollStatus'] = 'ошибка: ' + out; return; }
+      var state = {}, on = 0, total = 0;
+      var lines = (out || '').split(/\r?\n/);
+      for (var i = 0; i < lines.length; i++) {
+        var t = lines[i].split(' ');
+        if (t.length < 2) continue;
+        state[t[0]] = t[1].charAt(0) === '1';
+        total++; if (state[t[0]]) on++;
+      }
+      pollSyncing = true;
+      for (var k = 0; k < POLL.length; k++) {
+        var id = POLL[k][0], list = GW[id], all = list.length > 0;
+        for (var j = 0; j < list.length; j++) if (!state[list[j]]) { all = false; break; }
+        dev['svet'][id] = all;
+      }
+      pollSyncing = false;
+      dev['svet']['pollStatus'] = on === 0 ? 'выключен весь — шлюзы свободны'
+        : (on === total ? 'опрашиваются все ' + total
+                        : 'опрашивается ' + on + ' из ' + total);
     }
-  }
-});
-'''.replace('__CH__', json.dumps(rows, ensure_ascii=False, separators=(',', ':')))     .replace('__CELLS__', json.dumps(cells, ensure_ascii=False))
+  });
+}
+
+function makePollRule(id) {
+  defineRule('svet_poll_' + id, {
+    whenChanged: 'svet/' + id,
+    then: function (newValue) {
+      if (pollSyncing) return;
+      var busyEar = earBusy();
+      if (busyEar) {
+        pollSyncing = true; dev['svet'][id] = !newValue; pollSyncing = false;
+        dev['svet']['pollStatus'] = 'Ухо в движении (' + busyEar + ') — переключить нельзя';
+        return;
+      }
+      dev['svet']['pollStatus'] = (newValue ? 'включаю: ' : 'выключаю: ') + POLL_TITLE[id];
+      runShellCommand('/usr/local/bin/svet-poll set ' + (newValue ? 'on' : 'off') +
+                      ' ' + GW[id].join(','), {
+        captureOutput: true,
+        exitCallback: function (code, out) {
+          if (code !== 0) dev['svet']['pollStatus'] = 'ошибка: ' + out;
+          syncPoll();
+        }
+      });
+    }
+  });
+}
+
+var POLL_TITLE = {};
+for (var t = 0; t < POLL.length; t++) POLL_TITLE[POLL[t][0]] = POLL[t][1];
+for (var t2 = 0; t2 < POLL.length; t2++) makePollRule(POLL[t2][0]);
+
+syncPoll();     // при старте показываем, как есть на самом деле
+'''.replace('__CH__', json.dumps(rows, ensure_ascii=False, separators=(',', ':')))     .replace('__CELLS__', json.dumps(cells, ensure_ascii=False))     .replace('__GW__', json.dumps(gw_map, ensure_ascii=False))     .replace('__POLL__', json.dumps(poll_cells, ensure_ascii=False))
 
 io.open('svet-gruppy.js', 'w', encoding='utf-8', newline='\n').write(js)
 print('правило:', len(js), 'символов')
@@ -194,9 +229,12 @@ dash['widgets'] = [w for w in dash['widgets'] if not w['id'].startswith('w_light
 dash['dashboards'] = [d for d in dash['dashboards'] if d['id'] != 'dash_light_groups']
 
 widgets = [{
-    "id": "w_light_groups_poll", "name": "Опрос шлюзов", "description": "", "compact": False,
-    "cells": [{"id": "svet/poll", "type": "switch", "extra": {}},
-              {"id": "svet/pollStatus", "type": "text", "extra": {}}],
+    "id": "w_light_groups_poll", "name": "Опрос", "description": "", "compact": False,
+    "cells": ([{"id": "svet/poll_all", "type": "switch", "extra": {}},
+               {"id": "svet/poll_ear", "type": "switch", "extra": {}}] +
+              [{"id": 'svet/poll_' + CITY_SLUG[c], "type": "switch", "extra": {}}
+               for c in CITY_ORDER] +
+              [{"id": "svet/pollStatus", "type": "text", "extra": {}}]),
 }, {
     "id": "w_light_groups_all", "name": "Весь макет", "description": "", "compact": False,
     "cells": [{"id": "svet/all", "type": "switch", "extra": {}},

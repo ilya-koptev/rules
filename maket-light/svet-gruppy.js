@@ -49,10 +49,15 @@ for (var i = 0; i < CELLS.length; i++) {
 }
 controls['status'] = { type: 'text', value: '', title: 'Состояние',
                        order: CELLS.length + 1, readonly: true };
-controls['poll'] = { type: 'switch', value: false, title: 'Опрос шлюзов',
-                     order: 0, readonly: false };
+var GW = {"poll_all": ["192.168.69.11", "192.168.69.12", "192.168.69.14", "192.168.69.15", "192.168.69.32", "192.168.69.36", "192.168.69.38", "192.168.69.42", "192.168.69.51", "192.168.69.52", "192.168.69.53", "192.168.69.17", "192.168.69.18", "192.168.69.19", "192.168.69.37", "192.168.69.44", "192.168.69.21", "192.168.69.23", "192.168.69.27", "192.168.69.28", "192.168.69.29", "192.168.69.30", "192.168.69.22", "192.168.69.24", "192.168.69.25", "192.168.69.39", "192.168.69.54", "192.168.69.55", "192.168.69.56", "192.168.69.31", "192.168.69.41", "192.168.69.47", "192.168.69.48", "192.168.69.49", "192.168.69.40", "192.168.69.45", "192.168.69.46", "192.168.69.50", "192.168.69.35"], "poll_ear": ["192.168.69.35"], "poll_kalyazin": ["192.168.69.31", "192.168.69.41", "192.168.69.47", "192.168.69.48", "192.168.69.49"], "poll_uglich": ["192.168.69.17", "192.168.69.18", "192.168.69.19", "192.168.69.37", "192.168.69.44"], "poll_myshkin": ["192.168.69.22", "192.168.69.24", "192.168.69.25", "192.168.69.39", "192.168.69.54", "192.168.69.55", "192.168.69.56"], "poll_kashin": ["192.168.69.40", "192.168.69.45", "192.168.69.46", "192.168.69.50"], "poll_kimry": ["192.168.69.21", "192.168.69.23", "192.168.69.27", "192.168.69.28", "192.168.69.29", "192.168.69.30"], "poll_dubna": ["192.168.69.14", "192.168.69.15", "192.168.69.32", "192.168.69.36", "192.168.69.38", "192.168.69.42", "192.168.69.51", "192.168.69.52", "192.168.69.53"], "poll_borok": ["192.168.69.11", "192.168.69.12"]};                 // область -> адреса шлюзов
+var POLL = [["poll_all", "Все шлюзы"], ["poll_ear", "Ухо"], ["poll_kalyazin", "Калязин"], ["poll_uglich", "Углич"], ["poll_myshkin", "Мышкин"], ["poll_kashin", "Кашин"], ["poll_kimry", "Кимры"], ["poll_dubna", "Дубна"], ["poll_borok", "Борок"]];             // [id контрола, подпись]
+
+for (var q = 0; q < POLL.length; q++) {
+  controls[POLL[q][0]] = { type: 'switch', value: false, title: POLL[q][1],
+                           order: 100 + q, readonly: false };
+}
 controls['pollStatus'] = { type: 'text', value: '', title: 'Опрос',
-                           order: 0.5, readonly: true };
+                           order: 99, readonly: true };
 
 defineVirtualDevice('svet', { title: 'Свет макета', cells: controls });
 
@@ -75,54 +80,71 @@ function makeRule(id) {
 
 for (var j = 0; j < CELLS.length; j++) makeRule(CELLS[j][0]);
 
-// --- опрос макета ---
-// Выключенный опрос освобождает ВСЕ шлюзы Ebyte (макет и «Ухо»): по ним можно
-// работать напрямую, мимо контроллера. Порты из конфига не исчезают, у них лишь
-// снимается enabled. Пока опрос выключен, «Ухо» тоже недоступно.
+// --- опрос шлюзов ---
+// Выключенный шлюз освобождает шину: по ней можно работать напрямую, мимо
+// контроллера. Порты из конфига не исчезают, у них лишь снимается enabled.
+// Переключение перезапускает wb-mqtt-serial — пауза в опросе ВСЕГО, поэтому
+// пока «Ухо» едет, переключать нельзя: оно потеряет тики и встанет.
 var pollSyncing = false;
 
-defineRule('svet_poll', {
-  whenChanged: 'svet/poll',
-  then: function (newValue) {
-    if (pollSyncing) return;
-    // Переключение перезапускает wb-mqtt-serial, а это пауза в опросе ВСЕГО,
-    // включая «Ухо». Пока Ухо едет — не трогаем, иначе оно потеряет тики и встанет.
-    var ear = dev['ear'] && dev['ear']['status'];
-    if (ear && ear !== 'idle' && ear !== 'parked' && ear.indexOf('ERROR') !== 0) {
-      pollSyncing = true;
-      dev['svet']['poll'] = !newValue;          // возвращаем переключатель назад
-      pollSyncing = false;
-      dev['svet']['pollStatus'] = 'Ухо в движении (' + ear + ') — переключить нельзя';
-      return;
-    }
-    dev['svet']['pollStatus'] = newValue ? 'включаю опрос…' : 'выключаю опрос…';
-    runShellCommand('/usr/local/bin/svet-poll ' + (newValue ? 'on' : 'off'), {
-      captureOutput: true,
-      exitCallback: function (code, out) {
-        dev['svet']['pollStatus'] = code === 0
-          ? (newValue ? 'опрос идёт' : 'выключен — шлюзы свободны, Ухо недоступно')
-          : 'ошибка: ' + out;
-      }
-    });
-  }
-});
+function earBusy() {
+  var st = dev['ear'] && dev['ear']['status'];
+  return st && st !== 'idle' && st !== 'parked' && st.indexOf('ERROR') !== 0 ? st : '';
+}
 
-// при старте правила показываем, как есть на самом деле
-runShellCommand('/usr/local/bin/svet-poll state', {
-  captureOutput: true,
-  exitCallback: function (code, out) {
-    var st = (out || '').replace(/\s+$/, '');
-    var on = st.indexOf('on') === 0;
-    pollSyncing = true;
-    dev['svet']['poll'] = on;
-    pollSyncing = false;
-    if (st.indexOf('mixed') === 0) {
-      var m = st.split(' ');
-      dev['svet']['pollStatus'] = 'частично: опрашивается ' + m[1] + ' шлюз(ов) из ' + m[2];
-    } else {
-      dev['svet']['pollStatus'] = on
-        ? 'опрос идёт'
-        : 'выключен — шлюзы свободны, Ухо недоступно';
+function syncPoll() {
+  runShellCommand('/usr/local/bin/svet-poll list', {
+    captureOutput: true,
+    exitCallback: function (code, out) {
+      if (code !== 0) { dev['svet']['pollStatus'] = 'ошибка: ' + out; return; }
+      var state = {}, on = 0, total = 0;
+      var lines = (out || '').split(/\r?\n/);
+      for (var i = 0; i < lines.length; i++) {
+        var t = lines[i].split(' ');
+        if (t.length < 2) continue;
+        state[t[0]] = t[1].charAt(0) === '1';
+        total++; if (state[t[0]]) on++;
+      }
+      pollSyncing = true;
+      for (var k = 0; k < POLL.length; k++) {
+        var id = POLL[k][0], list = GW[id], all = list.length > 0;
+        for (var j = 0; j < list.length; j++) if (!state[list[j]]) { all = false; break; }
+        dev['svet'][id] = all;
+      }
+      pollSyncing = false;
+      dev['svet']['pollStatus'] = on === 0 ? 'выключен весь — шлюзы свободны'
+        : (on === total ? 'опрашиваются все ' + total
+                        : 'опрашивается ' + on + ' из ' + total);
     }
-  }
-});
+  });
+}
+
+function makePollRule(id) {
+  defineRule('svet_poll_' + id, {
+    whenChanged: 'svet/' + id,
+    then: function (newValue) {
+      if (pollSyncing) return;
+      var busyEar = earBusy();
+      if (busyEar) {
+        pollSyncing = true; dev['svet'][id] = !newValue; pollSyncing = false;
+        dev['svet']['pollStatus'] = 'Ухо в движении (' + busyEar + ') — переключить нельзя';
+        return;
+      }
+      dev['svet']['pollStatus'] = (newValue ? 'включаю: ' : 'выключаю: ') + POLL_TITLE[id];
+      runShellCommand('/usr/local/bin/svet-poll set ' + (newValue ? 'on' : 'off') +
+                      ' ' + GW[id].join(','), {
+        captureOutput: true,
+        exitCallback: function (code, out) {
+          if (code !== 0) dev['svet']['pollStatus'] = 'ошибка: ' + out;
+          syncPoll();
+        }
+      });
+    }
+  });
+}
+
+var POLL_TITLE = {};
+for (var t = 0; t < POLL.length; t++) POLL_TITLE[POLL[t][0]] = POLL[t][1];
+for (var t2 = 0; t2 < POLL.length; t2++) makePollRule(POLL[t2][0]);
+
+syncPoll();     // при старте показываем, как есть на самом деле

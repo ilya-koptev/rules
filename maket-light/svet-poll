@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Опрос шлюзов Ebyte вкл/выкл: флаг enabled у всех портов Modbus-over-TCP на 8886.
+"""Опрос шлюзов Ebyte: снимает и возвращает флаг enabled у портов Modbus-over-TCP:8886.
 
-Это и 38 шлюзов макета, и шлюз «Уха» (.35): выключенный опрос освобождает шину,
-по ней можно работать напрямую, мимо контроллера. Пока опрос выключен, «Ухо»
-тоже недоступно — им нельзя управлять.
+Под управлением все 39 шлюзов — 38 макетных и шлюз «Уха» (.35). Выключенный шлюз
+освобождает шину: по ней можно работать напрямую, мимо контроллера. Состав конфига
+не меняется, порты остаются на месте. Последовательные порты (/dev/tty*) и прочие
+TCP-порты не трогаются никогда.
 
-Состав конфига не меняется, порты остаются на месте. Последовательные порты
-(/dev/tty*) и прочие TCP-порты не трогаются.
-
-    svet-poll on | off | state
+    svet-poll list                      кто есть кто: строка «<адрес> <0|1>»
+    svet-poll set on|off [адреса]       адреса через запятую; без списка — все
+    svet-poll on | off | state          то же самое сразу для всех шлюзов
 """
 import json, os, subprocess, sys
 
@@ -20,29 +20,39 @@ def gateway(port):
     return port.get('port_type') == 'tcp' and int(port.get('port') or 0) == 8886
 
 
-cmd = (sys.argv[1] if len(sys.argv) > 1 else 'state').lower()
 cfg = json.load(open(CONF, encoding='utf-8'))
 ports = [p for p in cfg.get('ports', []) if gateway(p)]
 
-if cmd == 'state':
-    on = sum(1 for p in ports if p.get('enabled'))
-    if not ports or not on:
-        print('off')
-    elif on == len(ports):
-        print('on')
-    else:
-        print('mixed %d %d' % (on, len(ports)))   # часть шлюзов опрашивается
+args = sys.argv[1:] or ['state']
+cmd = args[0].lower()
+
+if cmd == 'list':
+    for p in ports:
+        print(p['address'], 1 if p.get('enabled') else 0)
     sys.exit(0)
 
-if cmd not in ('on', 'off'):
-    sys.exit('нужно on, off или state')
+if cmd == 'state':
+    on = sum(1 for p in ports if p.get('enabled'))
+    print('off' if not ports or not on
+          else ('on' if on == len(ports) else 'mixed %d %d' % (on, len(ports))))
+    sys.exit(0)
 
-if not ports:
-    sys.exit('шлюзов в конфиге нет')
+if cmd == 'set':
+    if len(args) < 2:
+        sys.exit('нужно: set on|off [адреса через запятую]')
+    want = args[1].lower() == 'on'
+    picked = [a for a in (args[2].split(',') if len(args) > 2 else []) if a]
+elif cmd in ('on', 'off'):
+    want, picked = (cmd == 'on'), []
+else:
+    sys.exit('нужно list, set, state, on или off')
 
-want = (cmd == 'on')
+target = [p for p in ports if not picked or p['address'] in picked]
+if not target:
+    sys.exit('таких шлюзов в конфиге нет')
+
 changed = 0
-for p in ports:
+for p in target:
     if p.get('enabled') != want:
         p['enabled'] = want
         changed += 1
@@ -55,5 +65,5 @@ if changed:
     os.replace(tmp, CONF)
     subprocess.run(['systemctl', 'restart', 'wb-mqtt-serial'])
 
-print('шлюзов: %d, изменено: %d, опрос %s'
-      % (len(ports), changed, 'включён' if want else 'выключен'))
+print('шлюзов затронуто: %d, изменено: %d, опрос %s'
+      % (len(target), changed, 'включён' if want else 'выключен'))
