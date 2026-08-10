@@ -21,10 +21,10 @@
 
 ```bash
 # положить файл на контроллер
-scp pump-level/pump_level.js root@<HOST>:/etc/wb-rules/
+scp pump-level/water_level.js root@<HOST>:/etc/wb-rules/
 
 # либо через wb-cli (имя правила — без .js)
-ssh root@<HOST> 'wb-cli --json rules save pump_level "$(cat /etc/wb-rules/pump_level.js)"'
+ssh root@<HOST> 'wb-cli --json rules save water_level "$(cat /etc/wb-rules/water_level.js)"'
 
 # проверить, что поднялось без ошибок (они молчаливые!)
 ssh root@<HOST> journalctl -u wb-rules --since '30s ago' --no-pager
