@@ -147,6 +147,22 @@
         "w_light_12_223",
         "w_light_12_224"
       ]
+    },
+    {
+      "id": "dash_light_groups",
+      "name": "Группы",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_groups_all",
+        "w_light_groups_kalyazin",
+        "w_light_groups_uglich",
+        "w_light_groups_myshkin",
+        "w_light_groups_kashin",
+        "w_light_groups_kimry",
+        "w_light_groups_dubna",
+        "w_light_groups_borok"
+      ]
     }
   ],
   "widgets": [
@@ -5482,6 +5498,195 @@
         {
           "id": "ld58_56_162/8_pwm",
           "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_all",
+      "name": "Весь макет",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/cars",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/status",
+          "type": "text",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_kalyazin",
+      "name": "Калязин",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/kalyazin_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/kalyazin_lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/kalyazin_cars",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_uglich",
+      "name": "Углич",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/uglich_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/uglich_lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/uglich_cars",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_myshkin",
+      "name": "Мышкин",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/myshkin_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/myshkin_lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/myshkin_cars",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_kashin",
+      "name": "Кашин",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/kashin_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/kashin_lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/kashin_cars",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_kimry",
+      "name": "Кимры",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/kimry_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/kimry_lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/kimry_cars",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_dubna",
+      "name": "Дубна",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/dubna_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/dubna_lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/dubna_cars",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_groups_borok",
+      "name": "Борок",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "svet/borok_all",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/borok_lamps",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "svet/borok_cars",
+          "type": "switch",
           "extra": {}
         }
       ]
