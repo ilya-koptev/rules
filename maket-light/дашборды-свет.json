@@ -1,0 +1,4720 @@
+{
+  "dashboards": [
+    {
+      "id": "dash_light_kalyazin",
+      "name": "Калязин",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_41_121",
+        "w_light_49_122",
+        "w_light_49_123",
+        "w_light_49_124",
+        "w_light_49_125",
+        "w_light_49_126",
+        "w_light_48_127",
+        "w_light_48_128",
+        "w_light_48_129",
+        "w_light_48_130",
+        "w_light_47_131",
+        "w_light_47_132",
+        "w_light_47_133",
+        "w_light_31_120"
+      ]
+    },
+    {
+      "id": "dash_light_uglich",
+      "name": "Углич",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_37_140",
+        "w_light_37_141",
+        "w_light_37_142",
+        "w_light_37_143",
+        "w_light_37_144",
+        "w_light_37_145",
+        "w_light_19_146",
+        "w_light_19_147",
+        "w_light_19_148",
+        "w_light_19_149",
+        "w_light_18_150",
+        "w_light_18_151",
+        "w_light_18_152",
+        "w_light_18_153",
+        "w_light_18_154",
+        "w_light_17_155",
+        "w_light_17_156",
+        "w_light_44_138",
+        "w_light_44_139"
+      ]
+    },
+    {
+      "id": "dash_light_myshkin",
+      "name": "Мышкин",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_24_170",
+        "w_light_22_167",
+        "w_light_22_168",
+        "w_light_22_169",
+        "w_light_54_163",
+        "w_light_54_164",
+        "w_light_54_165",
+        "w_light_54_166",
+        "w_light_55_159",
+        "w_light_55_160",
+        "w_light_56_161",
+        "w_light_56_162",
+        "w_light_39_158",
+        "w_light_25_157"
+      ]
+    },
+    {
+      "id": "dash_light_kashin",
+      "name": "Кашин",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_50_171",
+        "w_light_40_172",
+        "w_light_45_173",
+        "w_light_45_174",
+        "w_light_46_175",
+        "w_light_46_176"
+      ]
+    },
+    {
+      "id": "dash_light_kimry",
+      "name": "Кимры",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_27_181",
+        "w_light_27_182",
+        "w_light_29_177",
+        "w_light_29_178",
+        "w_light_29_179",
+        "w_light_29_180",
+        "w_light_21_183",
+        "w_light_21_184",
+        "w_light_23_193",
+        "w_light_30_187",
+        "w_light_30_188",
+        "w_light_30_189",
+        "w_light_30_190",
+        "w_light_30_191",
+        "w_light_30_192",
+        "w_light_28_185",
+        "w_light_28_186"
+      ]
+    },
+    {
+      "id": "dash_light_dubna",
+      "name": "Дубна",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_51_194",
+        "w_light_38_195",
+        "w_light_52_204",
+        "w_light_14_208",
+        "w_light_53_205",
+        "w_light_53_206",
+        "w_light_53_207",
+        "w_light_32_199",
+        "w_light_32_200",
+        "w_light_32_201",
+        "w_light_32_202",
+        "w_light_36_196",
+        "w_light_36_197",
+        "w_light_36_198",
+        "w_light_42_203",
+        "w_light_15_211",
+        "w_light_15_212"
+      ]
+    },
+    {
+      "id": "dash_light_borok",
+      "name": "Борок",
+      "isSvg": false,
+      "options": {},
+      "widgets": [
+        "w_light_11_220",
+        "w_light_12_221",
+        "w_light_12_222",
+        "w_light_12_223",
+        "w_light_12_224"
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "id": "w_light_11_220",
+      "name": "Борок 1 · LD 220",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_11_220/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_11_220/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_12_221",
+      "name": "Борок 2 · LD 221",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_12_221/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_221/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_221/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_221/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_221/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_221/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_221/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_221/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_12_222",
+      "name": "Борок 2 · LD 222",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_12_222/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_222/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_12_223",
+      "name": "Борок 2 · LD 223",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_12_223/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_223/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_223/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_223/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_223/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_223/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_223/7",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_12_224",
+      "name": "Борок 2 · LD 224",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_12_224/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_224/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_224/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_224/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_224/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_12_224/6",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_14_208",
+      "name": "Дубна 5 · LD 208",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_14_208/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_14_208/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_14_208/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_14_208/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_14_208/5",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_15_211",
+      "name": "Дубна 10 · LD 211",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_15_211/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_211/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_15_212",
+      "name": "Дубна 10 · LD 212",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_15_212/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_212/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_212/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_212/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_212/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_15_212/6",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_17_155",
+      "name": "Углич 4 · LD 155",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_17_155/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_155/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_155/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_155/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_155/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_155/6",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_17_156",
+      "name": "Углич 4 · LD 156",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_17_156/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_156/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_156/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_156/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_156/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_156/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_17_156/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_18_150",
+      "name": "Углич 3 · LD 150",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_18_150/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_150/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_18_151",
+      "name": "Углич 3 · LD 151",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_18_151/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_151/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_151/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_151/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_151/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_151/6",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_18_152",
+      "name": "Углич 3 · LD 152",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_18_152/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_152/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_18_153",
+      "name": "Углич 3 · LD 153",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_18_153/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_153/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_18_154",
+      "name": "Углич 3 · LD 154",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_18_154/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_18_154/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_19_146",
+      "name": "Углич 2 · LD 146",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_19_146/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_146/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_19_147",
+      "name": "Углич 2 · LD 147",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_19_147/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_147/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_19_148",
+      "name": "Углич 2 · LD 148",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_19_148/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_148/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_19_149",
+      "name": "Углич 2 · LD 149",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_19_149/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_19_149/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_21_183",
+      "name": "Кимры 3 · LD 183",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_21_183/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_183/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_21_184",
+      "name": "Кимры 3 · LD 184",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_21_184/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_21_184/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_22_167",
+      "name": "Мышкин 2 · LD 167",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_22_167/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_167/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_167/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_167/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_167/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_167/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_167/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_167/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_22_168",
+      "name": "Мышкин 2 · LD 168",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_22_168/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_168/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_22_169",
+      "name": "Мышкин 2 · LD 169",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_22_169/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_22_169/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_23_193",
+      "name": "Кимры 4 · LD 193",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_23_193/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_23_193/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_24_170",
+      "name": "Мышкин 1 · LD 170",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_24_170/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_24_170/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_25_157",
+      "name": "Мышкин 8 · LD 157",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_25_157/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_25_157/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_27_181",
+      "name": "Кимры 1 · LD 181",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_27_181/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_181/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_27_182",
+      "name": "Кимры 1 · LD 182",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_27_182/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_27_182/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_28_185",
+      "name": "Кимры 6 · LD 185",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_28_185/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_185/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_28_186",
+      "name": "Кимры 6 · LD 186",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_28_186/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_28_186/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_29_177",
+      "name": "Кимры 2 · LD 177",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_29_177/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_177/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_29_178",
+      "name": "Кимры 2 · LD 178",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_29_178/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_178/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_29_179",
+      "name": "Кимры 2 · LD 179",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_29_179/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_179/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_29_180",
+      "name": "Кимры 2 · LD 180",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_29_180/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_29_180/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_30_187",
+      "name": "Кимры 5 · LD 187",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_30_187/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_187/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_30_188",
+      "name": "Кимры 5 · LD 188",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_30_188/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_188/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_188/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_188/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_188/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_188/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_188/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_188/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_30_189",
+      "name": "Кимры 5 · LD 189",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_30_189/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_189/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_189/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_189/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_189/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_189/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_189/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_30_190",
+      "name": "Кимры 5 · LD 190",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_30_190/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_190/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_190/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_190/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_190/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_190/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_190/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_190/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_30_191",
+      "name": "Кимры 5 · LD 191",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_30_191/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_191/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_30_192",
+      "name": "Кимры 5 · LD 192",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_30_192/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_192/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_192/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_192/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_192/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_192/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_192/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_30_192/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_31_120",
+      "name": "Калязин 5 · LD 120",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_31_120/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_31_120/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_32_199",
+      "name": "Дубна 7 · LD 199",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_32_199/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_199/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_199/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_199/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_199/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_199/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_199/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_199/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_32_200",
+      "name": "Дубна 7 · LD 200",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_32_200/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_200/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_200/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_200/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_200/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_200/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_200/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_200/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_32_201",
+      "name": "Дубна 7 · LD 201",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_32_201/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_201/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_32_202",
+      "name": "Дубна 7 · LD 202",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_32_202/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_202/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_202/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_202/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_202/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_202/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_202/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_32_202/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_36_196",
+      "name": "Дубна 8 · LD 196",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_36_196/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_196/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_36_197",
+      "name": "Дубна 8 · LD 197",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_36_197/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_197/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_36_198",
+      "name": "Дубна 8 · LD 198",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_36_198/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_198/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_198/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_198/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_198/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_36_198/6",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_37_140",
+      "name": "Углич 1 · LD 140",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_37_140/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_140/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_37_141",
+      "name": "Углич 1 · LD 141",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_37_141/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_141/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_141/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_141/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_141/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_141/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_141/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_141/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_37_142",
+      "name": "Углич 1 · LD 142",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_37_142/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_142/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_142/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_142/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_142/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_142/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_37_143",
+      "name": "Углич 1 · LD 143",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_37_143/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_143/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_37_144",
+      "name": "Углич 1 · LD 144",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_37_144/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_144/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_37_145",
+      "name": "Углич 1 · LD 145",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_37_145/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_37_145/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_38_195",
+      "name": "Дубна 2 · LD 195",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_38_195/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_38_195/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_39_158",
+      "name": "Мышкин 6 · LD 158",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_39_158/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_39_158/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_39_158/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_39_158/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_39_158/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_39_158/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_40_172",
+      "name": "Кашин 2 · LD 172",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_40_172/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_40_172/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_41_121",
+      "name": "Калязин 1 · LD 121",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_41_121/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_41_121/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_41_121/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_41_121/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_41_121/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_41_121/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_41_121/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_41_121/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_42_203",
+      "name": "Дубна 9 · LD 203",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_42_203/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_42_203/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_42_203/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_42_203/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_42_203/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_42_203/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_42_203/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_44_138",
+      "name": "Углич 5 · LD 138",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_44_138/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_138/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_138/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_138/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_138/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_138/7",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_44_139",
+      "name": "Углич 5 · LD 139",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_44_139/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_44_139/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_45_173",
+      "name": "Кашин 4 · LD 173",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_45_173/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_173/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_45_174",
+      "name": "Кашин 4 · LD 174",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_45_174/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_174/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_174/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_174/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_174/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_174/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_174/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_45_174/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_46_175",
+      "name": "Кашин 5 · LD 175",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_46_175/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_175/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_175/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_175/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_175/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_175/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_175/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_46_176",
+      "name": "Кашин 5 · LD 176",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_46_176/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_176/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_176/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_176/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_176/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_176/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_46_176/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_47_131",
+      "name": "Калязин 4 · LD 131",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_47_131/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_131/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_47_132",
+      "name": "Калязин 4 · LD 132",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_47_132/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_132/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_47_133",
+      "name": "Калязин 4 · LD 133",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_47_133/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_47_133/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_48_127",
+      "name": "Калязин 3 · LD 127",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_48_127/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_127/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_48_128",
+      "name": "Калязин 3 · LD 128",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_48_128/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_128/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_128/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_128/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_128/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_128/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_128/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_128/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_48_129",
+      "name": "Калязин 3 · LD 129",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_48_129/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_129/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_48_130",
+      "name": "Калязин 3 · LD 130",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_48_130/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_130/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_130/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_130/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_130/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_130/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_130/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_48_130/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_49_122",
+      "name": "Калязин 2 · LD 122",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_49_122/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_122/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_49_123",
+      "name": "Калязин 2 · LD 123",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_49_123/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_123/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_49_124",
+      "name": "Калязин 2 · LD 124",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_49_124/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_124/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_124/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_124/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_124/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_124/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_124/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_124/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_49_125",
+      "name": "Калязин 2 · LD 125",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_49_125/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_125/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_49_126",
+      "name": "Калязин 2 · LD 126",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_49_126/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_126/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_126/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_126/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_126/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_126/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_126/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_49_126/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_50_171",
+      "name": "Кашин 1 · LD 171",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_50_171/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_50_171/8",
+          "type": "switch",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_51_194",
+      "name": "Дубна 1 · LD 194",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_51_194/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_51_194/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_52_204",
+      "name": "Дубна 3 · LD 204",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_52_204/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_52_204/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_53_205",
+      "name": "Дубна 6 · LD 205",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_53_205/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_205/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_53_206",
+      "name": "Дубна 6 · LD 206",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_53_206/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_206/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_53_207",
+      "name": "Дубна 6 · LD 207",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_53_207/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_53_207/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_54_163",
+      "name": "Мышкин 3 · LD 163",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_54_163/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_163/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_54_164",
+      "name": "Мышкин 3 · LD 164",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_54_164/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_164/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_164/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_164/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_164/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_164/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_164/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_164/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_54_165",
+      "name": "Мышкин 3 · LD 165",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_54_165/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_165/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_54_166",
+      "name": "Мышкин 3 · LD 166",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_54_166/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_54_166/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_55_159",
+      "name": "Мышкин 4 · LD 159",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_55_159/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/7_pwm",
+          "type": "range",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_159/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_55_160",
+      "name": "Мышкин 4 · LD 160",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_55_160/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_160/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_160/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_160/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_160/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_55_160/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_56_161",
+      "name": "Мышкин 5 · LD 161",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_56_161/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_161/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_161/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_161/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_161/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_161/8",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_161/8_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    },
+    {
+      "id": "w_light_56_162",
+      "name": "Мышкин 5 · LD 162",
+      "description": "",
+      "compact": false,
+      "cells": [
+        {
+          "id": "ld58_56_162/1",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/2",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/3",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/4",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/5",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/6",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/7",
+          "type": "switch",
+          "extra": {}
+        },
+        {
+          "id": "ld58_56_162/7_pwm",
+          "type": "range",
+          "extra": {}
+        }
+      ]
+    }
+  ]
+}
