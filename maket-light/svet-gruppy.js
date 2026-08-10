@@ -85,7 +85,26 @@ for (var j = 0; j < CELLS.length; j++) makeRule(CELLS[j][0]);
 // контроллера. Порты из конфига не исчезают, у них лишь снимается enabled.
 // Переключение перезапускает wb-mqtt-serial — пауза в опросе ВСЕГО, поэтому
 // пока «Ухо» едет, переключать нельзя: оно потеряет тики и встанет.
-var pollSyncing = false;
+// Свои же записи в переключатели не должны запускать правило заново, иначе одно
+// нажатие расплодится в десяток перезапусков драйвера. Помечаем ожидаемое значение
+// и только тогда, когда запись реально меняет контрол — то есть когда правило
+// действительно сработает.
+var expected = {};
+
+function quietSet(id, value) {
+  if (dev['svet'][id] !== value) {
+    expected[id] = value;
+    dev['svet'][id] = value;
+  }
+}
+
+function selfWrite(id, value) {
+  if (expected.hasOwnProperty(id) && expected[id] === value) {
+    delete expected[id];
+    return true;
+  }
+  return false;
+}
 
 function earBusy() {
   var st = dev['ear'] && dev['ear']['status'];
@@ -105,13 +124,11 @@ function syncPoll() {
         state[t[0]] = t[1].charAt(0) === '1';
         total++; if (state[t[0]]) on++;
       }
-      pollSyncing = true;
       for (var k = 0; k < POLL.length; k++) {
         var id = POLL[k][0], list = GW[id], all = list.length > 0;
         for (var j = 0; j < list.length; j++) if (!state[list[j]]) { all = false; break; }
-        dev['svet'][id] = all;
+        quietSet(id, all);
       }
-      pollSyncing = false;
       dev['svet']['pollStatus'] = on === 0 ? 'выключен весь — шлюзы свободны'
         : (on === total ? 'опрашиваются все ' + total
                         : 'опрашивается ' + on + ' из ' + total);
@@ -123,14 +140,22 @@ function makePollRule(id) {
   defineRule('svet_poll_' + id, {
     whenChanged: 'svet/' + id,
     then: function (newValue) {
-      if (pollSyncing) return;
+      if (selfWrite(id, newValue)) return;
       var busyEar = earBusy();
       if (busyEar) {
-        pollSyncing = true; dev['svet'][id] = !newValue; pollSyncing = false;
+        quietSet(id, !newValue);
         dev['svet']['pollStatus'] = 'Ухо в движении (' + busyEar + ') — переключить нельзя';
         return;
       }
-      dev['svet']['pollStatus'] = (newValue ? 'включаю: ' : 'выключаю: ') + POLL_TITLE[id];
+      // сразу показываем намерение: перезапуск драйвера занимает секунд десять,
+      // и всё это время переключатели иначе висели бы в прежнем положении
+      if (id === 'poll_all') {
+        for (var z = 0; z < POLL.length; z++) quietSet(POLL[z][0], newValue);
+      } else if (!newValue) {
+        quietSet('poll_all', false);
+      }
+      dev['svet']['pollStatus'] = (newValue ? 'включаю: ' : 'выключаю: ') + POLL_TITLE[id] +
+                                  ' — драйвер перезапускается, секунд десять';
       runShellCommand('/usr/local/bin/svet-poll set ' + (newValue ? 'on' : 'off') +
                       ' ' + GW[id].join(','), {
         captureOutput: true,
