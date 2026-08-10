@@ -63,7 +63,7 @@ cells += [('all', 'Весь макет — всё'), ('lamps', 'Весь мак�
 
 gw_all = [a for v in GW.values() for a in v] + [EAR_GW]
 gw_map = {'poll_all': gw_all, 'poll_ear': [EAR_GW]}
-poll_cells = [('poll_all', 'Все шлюзы'), ('poll_ear', 'Ухо')]
+poll_cells = [('poll_all', 'Все Ebyte'), ('poll_ear', 'Ухо')]
 for c in CITY_ORDER:
     gw_map['poll_' + CITY_SLUG[c]] = GW[CITY_SLUG[c]]
     poll_cells.append(('poll_' + CITY_SLUG[c], c))
