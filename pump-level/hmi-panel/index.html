@@ -86,7 +86,10 @@
   .tank-unit { font-size: 14px; color: var(--dim); }
   .tank-sp { margin-left: auto; font-size: 11.5px; color: var(--dim); text-align: right; line-height: 1.4; }
   .chart-wrap { position: relative; flex: 1; min-height: 0; }
-  canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* Правило только для графика уровня: он лежит в .chart-wrap с position:relative.
+     Без такого ограничения оно ловит любой canvas на странице и растягивает его
+     на весь экран — на этом и споткнулись спарклайны токов. */
+  .chart-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .ph { flex: 1; display: flex; align-items: center; justify-content: center;
         font-size: 13px; color: var(--dim-2); text-align: center; }
 
@@ -154,6 +157,28 @@
   h2.page { font-size: 17px; margin: 0 0 2px; font-weight: 650; }
   .note { font-size: 11.5px; color: var(--dim); line-height: 1.45; }
   .note.danger { color: #ffcc84; }
+  /* ---- групповая плашка модуля: ток, пик, график и свои каналы ---- */
+  .mods { display: flex; gap: 10px; margin-bottom: 12px; min-width: 0; }
+  /* min-width:0 обязателен: у canvas собственная ширина 300 px, и без этого
+     флекс-элемент не даёт себя сжать — карточки распирают страницу наружу. */
+  .mod { flex: 1 1 0; min-width: 0; background: var(--card); border: 1px solid var(--line);
+         border-radius: 12px; padding: 10px 12px; }
+  .mod-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .mod-h .t { font-size: 13px; font-weight: 600; }
+  .mod-h .cnt { font-size: 11px; color: var(--dim-2); }
+  .mod-h .cnt.part { color: var(--warn); }
+  .mod-body { display: flex; align-items: center; gap: 10px; margin: 6px 0 2px; }
+  .mod-i { flex: none; }
+  .mod-i .now { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums;
+                line-height: 1; color: var(--dim-2); }
+  .mod-i .now.live { color: var(--run); }
+  .mod-i .now .u { font-size: 12px; font-weight: 500; color: var(--dim-2); margin-left: 3px; }
+  .mod-i .pk { font-size: 11px; color: var(--dim-2); margin-top: 3px; }
+  .mod-chart { flex: 1 1 0; min-width: 0; height: 46px; }
+  .mod-chart canvas { width: 100%; height: 100%; display: block; }
+  .mod .chips { margin-top: 6px; }
+  .mod .chip { width: auto; flex: 1; min-width: 84px; padding: 5px 7px; }
+
   .grp { margin-bottom: 8px; }
   .grp-h { display: flex; align-items: baseline; gap: 9px; margin: 0 0 5px; }
   .grp-h .t { font-size: 13px; color: var(--dim); letter-spacing: .02em; }
@@ -387,11 +412,15 @@ var MAP_DEV = 'wb-map12e_104';
    Проверено 11.08.2026 под нагрузкой — гасили блоки по одному и смотрели, какой
    вход просел; суммы просадок совпали с полными токами, значит учтено всё.
    Восемь остальных входов MAP ни к чему не подключены. */
-var MODULE_CURRENTS = [
-  { ctl: 'Ch 2 Irms L1', title: '101' },
-  { ctl: 'Ch 2 Irms L2', title: '102' },
-  { ctl: 'Ch 2 Irms L3', title: '103' },
-  { ctl: 'Ch 4 Irms L1', title: 'насос' }
+var MODULES = [
+  { key: 'm101', title: 'Модуль 101', from: 0,  count: 6,
+    irms: 'Ch 2 Irms L1', ipeak: 'Ch 2 Ipeak L1' },
+  { key: 'm102', title: 'Модуль 102', from: 6,  count: 6,
+    irms: 'Ch 2 Irms L2', ipeak: 'Ch 2 Ipeak L2' },
+  { key: 'm103', title: 'Модуль 103', from: 12, count: 3,
+    irms: 'Ch 2 Irms L3', ipeak: 'Ch 2 Ipeak L3' },
+  { key: 'mpump', title: 'Насос', from: -1, count: 0,
+    irms: 'Ch 4 Irms L1', ipeak: 'Ch 4 Ipeak L1' }
 ];
 
 var MAP_CH = [];
@@ -409,7 +438,6 @@ for (var mc = 1; mc <= 4; mc++) {
 var VALVE_TRIO = ['Наполнение русла', 'Залив шлюза', 'Слив шлюза'];
 
 var GROUPS = [
-  { title: 'Питание макета', name: 'БП', from: 0, count: 15, danger: false, meter: false },
   { title: 'Клапаны · Дубна', from: 15, count: 3, danger: true, meter: false,
     names: VALVE_TRIO, warn: 'без надобности не включать' },
   { title: 'Клапаны · Углич', from: 18, count: 3, danger: true, meter: false,
@@ -450,6 +478,7 @@ function goTo(i) {
   if (prev === 2 && page !== 2) { lockSettings(); padClose(); }
   if (page === 2) { lastTouch = Date.now(); }
   if (page === 0) { setTimeout(drawAll, 360); }
+  if (page === 1) { setTimeout(drawCurrents, 360); }
 }
 document.getElementById('peek').addEventListener('click', function () { goTo(page + 1); });
 [].forEach.call(document.querySelectorAll('.tab[data-go]'), function (t) {
@@ -683,6 +712,38 @@ function addChips(title, warn, items) {
     (warn ? '<span class="warn">' + warn + '</span>' : '') + '</div>' +
     '<div class="chips">' + body + '</div></div>'));
 }
+
+/* Модули питания: у каждого свой ток с MAP, свой пик, свой график и свои каналы.
+   Отдельной линии тока не существует — трансформатор охватывает пучок модуля. */
+var modsBox = el('<div class="mods"></div>');
+groupsBox.appendChild(modsBox);
+
+MODULES.forEach(function (m) {
+  var chips = '';
+  for (var i = 0; i < m.count; i++) {
+    var c = CHANNELS[m.from + i];
+    var it = { key: chipKey(c.dev, c.ch), dev: c.dev, ch: c.ch, src: c.src,
+               name: 'БП ' + (m.from + i + 1), danger: false, meter: null };
+    CHIPS.push(it);
+    chips += '<div class="chip" id="chip-' + it.key + '">' +
+               '<div class="chip-h"><span class="nm">' + it.name + '</span>' +
+               '<span class="led"></span></div>' +
+               '<div class="src">' + it.src + '</div></div>';
+  }
+  modsBox.appendChild(el(
+    '<div class="mod">' +
+      '<div class="mod-h"><span class="t">' + m.title + '</span>' +
+        '<span class="cnt" id="cnt-' + m.key + '">' + (m.count ? '' : '&nbsp;') + '</span></div>' +
+      '<div class="mod-body">' +
+        '<div class="mod-i">' +
+          '<div class="now" id="i-' + m.key + '">—<span class="u">А</span></div>' +
+          '<div class="pk" id="p-' + m.key + '">пик —</div>' +
+        '</div>' +
+        '<div class="mod-chart"><canvas id="cvi-' + m.key + '"></canvas></div>' +
+      '</div>' +
+      (chips ? '<div class="chips">' + chips + '</div>' : '') +
+    '</div>'));
+});
 
 GROUPS.forEach(function (g) {
   var items = [];
@@ -1030,6 +1091,14 @@ function loadHistory() {
       });
     }
   });
+
+  // Токи модулей — для графиков на странице реле
+  MODULES.forEach(function (m) {
+    history(MAP_DEV, m.irms, from, function (res) {
+      series[m.key] = res ? res.values.map(function (r) { return { t: r.t, v: parseFloat(r.v) }; }) : [];
+      drawCurrents();
+    });
+  });
 }
 setInterval(loadHistory, 5 * 60 * 1000);
 
@@ -1121,32 +1190,86 @@ function renderRelays() {
     var on = val(it.dev + '/controls/' + it.ch) === '1';
     var box = document.getElementById('chip-' + it.key);
     box.className = 'chip' + (on ? ' on' : '') + (it.danger ? ' danger' : '');
-    if (it.meter) {
-      var base = MAP_DEV + '/controls/Ch ' + it.meter.ch.c;
-      var i = num(base + ' Irms L' + it.meter.ch.p);
-      var pk = num(base + ' Ipeak L' + it.meter.ch.p);
-      document.getElementById('av-' + it.key).textContent = (i === null ? '—' : i.toFixed(2));
-      document.getElementById('ap-' + it.key).textContent = 'пик ' + (pk === null ? '—' : pk.toFixed(1));
-      document.getElementById('a-' + it.key).className = 'a' + (i !== null && i > 0.02 ? ' live' : '');
+  });
+
+  MODULES.forEach(function (m) {
+    var i = num(MAP_DEV + '/controls/' + m.irms);
+    var pk = num(MAP_DEV + '/controls/' + m.ipeak);
+    var el1 = document.getElementById('i-' + m.key);
+    el1.innerHTML = (i === null ? '—' : i.toFixed(2)) + '<span class="u">А</span>';
+    el1.className = 'now' + (i !== null && i > 0.02 ? ' live' : '');
+    document.getElementById('p-' + m.key).textContent =
+      'пик ' + (pk === null ? '—' : pk.toFixed(1)) + ' А';
+
+    if (m.count) {
+      var on = 0;
+      for (var k = 0; k < m.count; k++) {
+        var c = CHANNELS[m.from + k];
+        if (val(c.dev + '/controls/' + c.ch) === '1') { on++; }
+      }
+      var cnt = document.getElementById('cnt-' + m.key);
+      cnt.textContent = on + ' из ' + m.count;
+      cnt.className = 'cnt' + (on === m.count ? '' : ' part');
     }
   });
-  var u = num(MAP_DEV + '/controls/Urms L1'), fr = num(MAP_DEV + '/controls/Frequency');
-  var txt = ' · сеть ' + (u === null ? '—' : u.toFixed(0)) + ' В, ' +
-            (fr === null ? '—' : fr.toFixed(2)) + ' Гц';
 
-  // Токи — по модулям целиком: трансформатор охватывает пучок модуля, а не
-  // отдельную линию (проверено 11.08.2026 гашением блоков по одному).
-  var parts = [];
-  MODULE_CURRENTS.forEach(function (m) {
-    var v = num(MAP_DEV + '/controls/' + m.ctl);
-    parts.push(m.title + ' ' + (v === null ? '—' : v.toFixed(2)) + ' А');
-  });
-  document.getElementById('map-u').textContent = txt + ' · ' + parts.join(' · ');
+  var u = num(MAP_DEV + '/controls/Urms L1'), fr = num(MAP_DEV + '/controls/Frequency');
+  document.getElementById('map-u').textContent =
+    ' · сеть ' + (u === null ? '—' : u.toFixed(0)) + ' В, ' +
+    (fr === null ? '—' : fr.toFixed(2)) + ' Гц';
 }
 
 /* ---------- график (временный, будет переделан) ---------- */
 
 function drawAll() { TANKS.forEach(function (tk) { if (!tk.pending) { drawChart(tk); } }); }
+
+/* Спарклайн тока модуля: без осей и подписей — важно не значение, а форма.
+   Ноль всегда внизу, иначе шум у нуля выглядит как работа. */
+function drawCurrents() { MODULES.forEach(drawCurrent); }
+
+function drawCurrent(m) {
+  var cv = document.getElementById('cvi-' + m.key);
+  if (!cv) { return; }
+  var w = cv.clientWidth, h = cv.clientHeight;
+  if (!w || !h) { return; }
+  var dpr = window.devicePixelRatio || 1;
+  cv.width = w * dpr; cv.height = h * dpr;
+  var c = cv.getContext('2d');
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
+
+  var data = series[m.key] || [];
+  if (data.length < 2) {
+    c.fillStyle = '#3a424c'; c.font = '10px system-ui'; c.textAlign = 'center';
+    c.fillText('нет истории', w / 2, h / 2 + 3);
+    return;
+  }
+
+  var mx = 0;
+  data.forEach(function (d) { if (d.v > mx) { mx = d.v; } });
+  if (mx < 0.2) { mx = 0.2; }
+  mx *= 1.15;
+
+  var tEnd = Math.floor(Date.now() / 1000), tStart = tEnd - rangeSec;
+  function X(t) { return (t - tStart) / (tEnd - tStart) * w; }
+  function Y(v) { return h - 1 - (v / mx) * (h - 3); }
+
+  c.beginPath();
+  c.moveTo(X(data[0].t), h);
+  data.forEach(function (d) { c.lineTo(X(d.t), Y(d.v)); });
+  c.lineTo(X(data[data.length - 1].t), h);
+  c.closePath();
+  c.fillStyle = 'rgba(53,182,255,.14)'; c.fill();
+
+  c.beginPath();
+  data.forEach(function (d, i) {
+    var x = X(d.t), y = Y(d.v);
+    if (i) { c.lineTo(x, y); } else { c.moveTo(x, y); }
+  });
+  c.strokeStyle = '#35b6ff'; c.lineWidth = 1.5; c.lineJoin = 'round'; c.stroke();
+
+  c.fillStyle = '#4b5560'; c.font = '9px system-ui'; c.textAlign = 'right';
+  c.fillText(mx.toFixed(1) + ' А', w - 1, 9);
+}
 
 function drawChart(tk) {
   var cv = document.getElementById('cv-' + tk.key);
@@ -1247,7 +1370,7 @@ document.addEventListener('touchmove', function (e) { e.preventDefault(); }, { p
 
 goTo(0);
 render(); renderRelays(); connect();
-setInterval(function () { render(); drawAll(); }, 10000);
+setInterval(function () { render(); drawAll(); drawCurrents(); }, 10000);
 </script>
 </body>
 </html>
