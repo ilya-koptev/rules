@@ -56,11 +56,11 @@ WIDGETS = [
 
     {"id": "wPowerCtrl", "name": "Управление питанием", "description": "", "compact": False,
      "cells": cells([
-         ("power_ctrl/all_on",  "Включить все БП"),
-         ("power_ctrl/all_off", "Выключить все БП"),
-         ("power_ctrl/status",  "Состояние"),
-         ("power_ctrl/running", "Идёт включение"),
-         ("power_ctrl/step_ms", "Пауза между блоками, мс"),
+         ("power_ctrl/all_power", "Все блоки питания"),
+         ("power_ctrl/on_count",  "Включено блоков"),
+         ("power_ctrl/status",    "Состояние"),
+         ("power_ctrl/running",   "Идёт переключение"),
+         ("power_ctrl/step_ms",   "Пауза между блоками, мс"),
      ])},
 
     # Питание разложено по модулям реле — так плашки совпадают с железом в щите,

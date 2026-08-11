@@ -7,13 +7,15 @@
 // по одному реле с паузой.
 //
 // Виртуальное устройство power_ctrl:
-//   «Включить все БП» — кнопка, запускает последовательность
+//   «Все блоки питания» — переключатель: включил — поднимаются с начала списка,
+//                         выключил — гаснут с конца
+//   «Включено блоков»   — сколько реле реально замкнуто, N из 15
+//   «Состояние»         — ход выполнения, на каком блоке сейчас
+//   «Идёт переключение» — признак, чтобы не запускать вторую последовательность
 //   «Пауза между блоками» — мс, по умолчанию 500
-//   «Состояние» — текст, видно ход выполнения
-//   «Идёт включение» — признак, чтобы не запускать вторую последовательность
 //
-// Уже включённые блоки пропускаются, поэтому повторное нажатие безопасно
-// и работает как «дозакрыть то, что осталось».
+// Блоки, уже стоящие в нужном положении, пропускаются без паузы — поэтому
+// повторное нажатие безопасно и работает как «дозакрыть то, что осталось».
 
 var RELAYS = [
   { dev: "wb-mr6cv3_101", ctl: "K1", name: "БП 1"  },
@@ -40,24 +42,24 @@ var STEP_MS_MAX = 5000;
 defineVirtualDevice("power_ctrl", {
   title: { en: "Power Supplies", ru: "Блоки питания" },
   cells: {
-    all_on: {
-      type: "pushbutton", value: false, order: 1,
-      title: { en: "Switch All On", ru: "Включить все БП" }
+    all_power: {
+      type: "switch", value: false, order: 1,
+      title: { en: "All Power Supplies", ru: "Все блоки питания" }
     },
-    all_off: {
-      type: "pushbutton", value: false, order: 2,
-      title: { en: "Switch All Off", ru: "Выключить все БП" }
+    on_count: {
+      type: "text", value: "", readonly: true, order: 2,
+      title: { en: "Switched On", ru: "Включено блоков" }
     },
     status: {
-      type: "text", value: "готово", readonly: true, order: 2,
+      type: "text", value: "готово", readonly: true, order: 3,
       title: { en: "Status", ru: "Состояние" }
     },
     running: {
-      type: "switch", value: false, readonly: true, order: 3,
-      title: { en: "In Progress", ru: "Идёт включение" }
+      type: "switch", value: false, readonly: true, order: 4,
+      title: { en: "In Progress", ru: "Идёт переключение" }
     },
     step_ms: {
-      type: "value", value: STEP_MS_DEFAULT, units: "ms", readonly: false, order: 4,
+      type: "value", value: STEP_MS_DEFAULT, units: "ms", readonly: false, order: 5,
       title: { en: "Delay Between Units", ru: "Пауза между блоками" }
     }
   }
@@ -67,6 +69,29 @@ var seqIndex = 0;
 var seqSwitched = 0;
 var seqTimer = null;
 var seqOn = true;          // что делаем: включаем или выключаем
+var syncing = false;       // правим переключатель сами — не принимать это за команду
+
+function countOn() {
+  var n = 0;
+  for (var i = 0; i < RELAYS.length; i++) {
+    if (dev[RELAYS[i].dev][RELAYS[i].ctl]) { n++; }
+  }
+  return n;
+}
+
+function refreshCount() {
+  var n = countOn();
+  dev["power_ctrl"]["on_count"] = n + " из " + RELAYS.length;
+
+  // Переключатель подтягиваем к факту только в крайних положениях: «все» и
+  // «ни одного». В промежуточном состоянии он остаётся там, куда его поставили,
+  // а правду показывает счётчик.
+  var want = (n === RELAYS.length) ? true : (n === 0 ? false : null);
+  if (want !== null && !!dev["power_ctrl"]["all_power"] !== want) {
+    syncing = true;
+    dev["power_ctrl"]["all_power"] = want;
+  }
+}
 
 function stepMs() {
   var v = dev["power_ctrl"]["step_ms"];
@@ -121,12 +146,28 @@ function startAll(on) {
   step();
 }
 
-defineRule("power_all_on", {
-  whenChanged: "power_ctrl/all_on",
-  then: function () { startAll(true); }
+// Переключатель — это команда, а не отражение состояния: реле могут стоять
+// вразнобой, и одна кнопка честно показать это не может. Поэтому рядом счётчик
+// «включено N из 15» — он и есть настоящее состояние.
+defineRule("power_all_switch", {
+  whenChanged: "power_ctrl/all_power",
+  then: function (newValue) {
+    if (syncing) { syncing = false; return; }
+    startAll(!!newValue);
+  }
 });
 
-defineRule("power_all_off", {
-  whenChanged: "power_ctrl/all_off",
-  then: function () { startAll(false); }
+// Счётчик пересчитывается при любом изменении любого реле питания — хоть с
+// дашборда, хоть с пульта, хоть этой же последовательностью.
+var WATCH = [];
+for (var wi = 0; wi < RELAYS.length; wi++) {
+  WATCH.push(RELAYS[wi].dev + "/" + RELAYS[wi].ctl);
+}
+
+defineRule("power_count", {
+  whenChanged: WATCH,
+  then: function () { refreshCount(); }
 });
+
+// первичный пересчёт после старта правил, когда состояния реле уже пришли
+setTimeout(refreshCount, 2000);
