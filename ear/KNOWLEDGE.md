@@ -36,7 +36,7 @@
 | .101 | **Пусковой** | wirenboard-AJRUPXPG | — | `water_level.js` — насос, частотник, датчик уровня |
 | .102 | **Углич** | wirenboard-AGOELVA4 | — | пока только базовые правила |
 | .103 | **Шлюз Дубна** | wirenboard-AOZHRS2R | — | `gate_control.js` — шлюз |
-| .104 | **Тверской** | wirenboard-AJUF3LS5 | WB 7.3.4 | Tailscale-мост (точка входа), KNX, служебное |
+| .104 | **Тверской** | wirenboard-AJUF3LS5 | WB 7.3.4 | KNX, служебное |
 | .105 | **Boats** | wirenboard-AKEYTVSO | — | `ship-bus-switch.js`, `ship-diag.js` — корабли |
 | .106 | **Свет** | wirenboard-AIMOZTVW | WB 8.5.2 | **`ear.js` — «Ухо» (этот проект)**, KNX и др. |
 
