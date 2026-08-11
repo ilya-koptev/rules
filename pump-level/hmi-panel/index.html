@@ -346,7 +346,10 @@ var TANKS = [
     level:  'pump_ctrl/controls/level_mm',
     sensor: 'wb-mai2-mini_171/controls/input_1_current',
     hyst:   'pump_ctrl/controls/hyst_mm',
-    setpoint: 70 },
+    setpoint: 70,
+    // Второй ряд на графике: выходная частота насоса. Нужен, чтобы по картинке
+    // было видно, когда насос работал, а не гадать по форме уровня.
+    freq:   'INNOVERT-ISD-mini-PLUS_101/controls/Выходная частота' },
   { key: 't2', title: 'Ёмкость 2',
     pending: 'датчик не подключён · свободен канал 2 на MAI2-mini 171' },
   { key: 't3', title: 'Ёмкость 3',
@@ -1009,6 +1012,13 @@ function loadHistory() {
       series[tk.key] = res ? res.values.map(function (r) { return { t: r.t, v: parseFloat(r.v) }; }) : [];
       drawAll();
     });
+    if (tk.freq) {
+      var fp = tk.freq.split('/');
+      history(fp[0], fp[2], from, function (res) {
+        series[tk.key + '_f'] = res ? res.values.map(function (r) { return { t: r.t, v: parseFloat(r.v) }; }) : [];
+        drawAll();
+      });
+    }
   });
 }
 setInterval(loadHistory, 5 * 60 * 1000);
@@ -1166,6 +1176,38 @@ function drawChart(tk) {
     c.fillText(('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2), X(tt), h - 4);
   }
   c.textAlign = 'center';
+
+  /* Второй ряд — выходная частота насоса, своей шкалой в нижней части поля.
+     Смысл не в точном значении, а в том, чтобы было видно, когда насос крутился:
+     уровень и без того медленно ползёт, и по нему одному работу не прочитать. */
+  var fdata = series[tk.key + '_f'] || [];
+  if (fdata.length > 1) {
+    var fmax = 0;
+    fdata.forEach(function (d) { if (d.v > fmax) { fmax = d.v; } });
+    if (fmax < 5) { fmax = 5; }              // иначе шум около нуля растянется на всю высоту
+    // Ноль поднят на 2 px над кромкой: иначе «насос стоял» рисуется прямо по
+    // краю поля и сливается с рамкой — не отличить от «данных нет».
+    var fBase = padT + ih - 2, fH = ih * 0.45;
+    var FY = function (v) { return fBase - (v / fmax) * fH; };
+
+    c.beginPath();
+    c.moveTo(X(fdata[0].t), fBase);
+    fdata.forEach(function (d) { c.lineTo(X(d.t), FY(d.v)); });
+    c.lineTo(X(fdata[fdata.length - 1].t), fBase);
+    c.closePath();
+    c.fillStyle = 'rgba(232,163,61,.16)'; c.fill();
+
+    c.beginPath();
+    fdata.forEach(function (d, i) {
+      var x = X(d.t), y = FY(d.v);
+      if (i) { c.lineTo(x, y); } else { c.moveTo(x, y); }
+    });
+    c.strokeStyle = '#e8a33d'; c.lineWidth = 1.5; c.lineJoin = 'round'; c.stroke();
+
+    c.fillStyle = '#e8a33d'; c.font = '10px system-ui'; c.textAlign = 'right';
+    c.fillText(fmax.toFixed(0) + ' Гц', w - padR, Math.max(padT + 9, fBase - fH - 3));
+    c.textAlign = 'center';
+  }
 
   if (data.length < 2) {
     c.fillStyle = '#4b5560';

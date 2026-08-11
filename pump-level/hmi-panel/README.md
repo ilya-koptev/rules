@@ -51,8 +51,12 @@ scp pump-level/hmi-panel/index.html root@192.168.69.101:/var/www/kiosk/index.htm
    location /kiosk/ {
        alias /mnt/data/www/kiosk/;
        index index.html;
+       add_header Cache-Control "no-store, must-revalidate" always;
+       etag off;
    }
    ```
+
+   Запрет кеша здесь не украшение, а лечение конкретной болезни — см. ниже.
 
    `default.wb.d/*.conf` — это штатное место для своей конфигурации, так написано
    в шапке самого `sites-available/default`.
@@ -82,8 +86,27 @@ scp -o ProxyJump=root@100.98.33.26 pump-level/hmi-panel/index.html \
 
 **Страница не перечитается сама.** Она загружается один раз и живёт в браузере
 панели неделями. После замены файла надо перезапустить Fully — см. ниже
-«Управление панелью». Обновление вкладки внутри Fully по опыту не помогает:
-адрес тот же, и браузер отдаёт своё.
+«Управление панелью».
+
+**Грабля, на которую мы потратили час 11.08.2026: кеш WebView.** Перезапуск
+приложения может вообще не пойти в сеть — Fully поднимает страницу из своего
+кеша, и в логе nginx нового запроса просто нет. Со стороны это выглядит как
+«правки не появляются», хотя файл на контроллере новый и код в нём правильный.
+Проверять надо не файл, а лог: `grep "GET /kiosk/" /var/log/nginx/access.log`.
+Ответ `304` или отсутствие записи — страница взята из кеша.
+
+Лечится двумя действиями, оба уже сделаны:
+
+- в правиле nginx выставлен `Cache-Control: no-store` и выключен `etag`;
+- один раз почищен кеш на панели (запрет действует только на новые загрузки,
+  уже сохранённую копию он не выкидывает):
+
+  ```bash
+  A="python3 /mnt/data/adbmini.py 192.168.69.227"
+  $A "am force-stop de.ozerov.fully"
+  $A "su 0 toybox find /data/data/de.ozerov.fully/cache -type f -delete"
+  $A "am start -n de.ozerov.fully/.FullyActivity"
+  ```
 
 ---
 
