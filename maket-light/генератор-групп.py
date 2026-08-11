@@ -42,11 +42,11 @@ for p in cfg['ports']:
                 continue                        # портовые краны — только вручную
             rows.append([d['id'], cid, CITY_SLUG[city], KIND.get(naz, 'O')])
 
-GW = collections.defaultdict(list)          # слаг города -> адреса шлюзов
+GW = collections.defaultdict(list)          # слаг города -> адреса Ebyte
 for p in cfg['ports']:
     city = p['devices'][0]['name'].split(' · ')[0].split()[0]
     GW[CITY_SLUG[city]].append(p['address'])
-EAR_GW = '192.168.69.35'                     # шлюз «Уха», в таблице макета его нет
+EAR_GW = '192.168.69.35'                     # Ebyte «Уха», в таблице макета его нет
 
 cnt = collections.Counter(r[3] for r in rows)
 print('каналов в группах:', len(rows), '| фонарей:', cnt['L'], '| машинок:', cnt['M'],
@@ -119,7 +119,7 @@ for (var i = 0; i < CELLS.length; i++) {
 }
 controls['status'] = { type: 'text', value: '', title: 'Состояние',
                        order: CELLS.length + 1, readonly: true };
-var GW = __GW__;                 // область -> адреса шлюзов
+var GW = __GW__;                 // область -> адреса Ebyte
 var POLL = __POLL__;             // [id контрола, подпись]
 
 for (var q = 0; q < POLL.length; q++) {
@@ -150,8 +150,8 @@ function makeRule(id) {
 
 for (var j = 0; j < CELLS.length; j++) makeRule(CELLS[j][0]);
 
-// --- опрос шлюзов ---
-// Выключенный шлюз освобождает шину: по ней можно работать напрямую, мимо
+// --- опрос Ebyte ---
+// Выключенный Ebyte освобождает шину: по ней можно работать напрямую, мимо
 // контроллера. Порты из конфига не исчезают, у них лишь снимается enabled.
 // Переключение перезапускает wb-mqtt-serial — пауза в опросе ВСЕГО, поэтому
 // пока «Ухо» едет, переключать нельзя: оно потеряет тики и встанет.
@@ -199,7 +199,7 @@ function syncPoll() {
         for (var j = 0; j < list.length; j++) if (!state[list[j]]) { all = false; break; }
         quietSet(id, all);
       }
-      dev['svet']['pollStatus'] = on === 0 ? 'выключен весь — шлюзы свободны'
+      dev['svet']['pollStatus'] = on === 0 ? 'выключен весь — Ebyte свободны'
         : (on === total ? 'опрашиваются все ' + total
                         : 'опрашивается ' + on + ' из ' + total);
     }

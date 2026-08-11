@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Опрос шлюзов Ebyte: снимает и возвращает флаг enabled у портов Modbus-over-TCP:8886.
+"""Опрос Ebyte: снимает и возвращает флаг enabled у портов Modbus-over-TCP:8886.
 
-Под управлением все 39 шлюзов — 38 макетных и шлюз «Уха» (.35). Выключенный шлюз
+Под управлением все 39 Ebyte — 38 макетных и Ebyte «Уха» (.35). Выключенный Ebyte
 освобождает шину: по ней можно работать напрямую, мимо контроллера. Состав конфига
 не меняется, порты остаются на месте. Последовательные порты (/dev/tty*) и прочие
 TCP-порты не трогаются никогда.
 
     svet-poll list                      кто есть кто: строка «<адрес> <0|1>»
     svet-poll set on|off [адреса]       адреса через запятую; без списка — все
-    svet-poll on | off | state          то же самое сразу для всех шлюзов
+    svet-poll on | off | state          то же самое сразу для всех Ebyte
 """
 import json, os, subprocess, sys
 
@@ -49,7 +49,7 @@ else:
 
 target = [p for p in ports if not picked or p['address'] in picked]
 if not target:
-    sys.exit('таких шлюзов в конфиге нет')
+    sys.exit('таких Ebyte в конфиге нет')
 
 changed = 0
 for p in target:
@@ -65,5 +65,5 @@ if changed:
     os.replace(tmp, CONF)
     subprocess.run(['systemctl', 'restart', 'wb-mqtt-serial'])
 
-print('шлюзов затронуто: %d, изменено: %d, опрос %s'
+print('Ebyte затронуто: %d, изменено: %d, опрос %s'
       % (len(target), changed, 'включён' if want else 'выключен'))
