@@ -199,7 +199,8 @@ function syncPoll() {
         for (var j = 0; j < list.length; j++) if (!state[list[j]]) { all = false; break; }
         quietSet(id, all);
       }
-      dev['svet']['pollStatus'] = on === 0 ? 'выключен весь — Ebyte свободны'
+      dev['svet']['pollStatus'] = on === 0
+        ? 'выключено всё — Ebyte свободны; плашки без названий — это нормально'
         : (on === total ? 'опрашиваются все ' + total
                         : 'опрашивается ' + on + ' из ' + total);
     }
