@@ -16,6 +16,11 @@
 //
 // Блоки, уже стоящие в нужном положении, пропускаются без паузы — поэтому
 // повторное нажатие безопасно и работает как «дозакрыть то, что осталось».
+//
+// Кроме паузы между блоками есть выдержка ПОСЛЕ ВЫКЛЮЧЕНИЯ: включать блок
+// снова можно не раньше чем через MIN_OFF_MS. Горячий повторный пуск тяжелее
+// холодного — входные ёмкости ещё заряжены. Последовательность в таком случае
+// честно ждёт остаток, показывая это в «Состоянии».
 
 var RELAYS = [
   { dev: "wb-mr6cv3_101", ctl: "K1", name: "БП 1"  },
@@ -38,6 +43,23 @@ var RELAYS = [
 var STEP_MS_DEFAULT = 500;
 var STEP_MS_MIN = 100;
 var STEP_MS_MAX = 5000;
+
+// Импульсному блоку тяжелее включаться «горячим»: входные ёмкости ещё не
+// разрядились, и бросок при повторной подаче больше обычного. Поэтому между
+// выключением блока и его следующим включением выдерживается пауза.
+var MIN_OFF_MS = 30000;
+
+var offAt = {};                                  // ключ реле -> когда выключили
+function keyOf(r) { return r.dev + "/" + r.ctl; }
+function now() { return new Date().getTime(); }
+
+// сколько ещё ждать, прежде чем этот блок можно включать
+function coolLeft(r) {
+  var t = offAt[keyOf(r)];
+  if (!t) { return 0; }
+  var left = MIN_OFF_MS - (now() - t);
+  return left > 0 ? left : 0;
+}
 
 defineVirtualDevice("power_ctrl", {
   title: { en: "Power Supplies", ru: "Блоки питания" },
@@ -79,17 +101,48 @@ function countOn() {
   return n;
 }
 
+var lastState = {};
+
+// Следим за реле независимо от того, кто их щёлкнул: последовательность, дашборд
+// или чужая рука. Момент выключения запоминаем — от него считается пауза.
+// Включение раньше паузы перехватить нечем (команда уже дошла до реле), поэтому
+// такое только отмечаем в состоянии и в журнале.
+function watchRelays() {
+  for (var i = 0; i < RELAYS.length; i++) {
+    var r = RELAYS[i], k = keyOf(r), v = !!dev[r.dev][r.ctl], prev = lastState[k];
+    if (prev !== undefined && prev !== v) {
+      if (!v) {
+        offAt[k] = now();
+      } else {
+        var left = coolLeft(r);
+        if (left > 0 && !dev["power_ctrl"]["running"]) {
+          dev["power_ctrl"]["status"] = r.name + " включили раньше паузы (оставалось " +
+                                        Math.ceil(left / 1000) + " с)";
+          log("power_seq: " + r.name + " включили горячим, оставалось " +
+              Math.ceil(left / 1000) + " с паузы");
+        }
+      }
+    }
+    lastState[k] = v;
+  }
+}
+
 function refreshCount() {
+  watchRelays();
   var n = countOn();
   dev["power_ctrl"]["on_count"] = n + " из " + RELAYS.length;
 
-  // Переключатель подтягиваем к факту только в крайних положениях: «все» и
-  // «ни одного». В промежуточном состоянии он остаётся там, куда его поставили,
-  // а правду показывает счётчик.
-  var want = (n === RELAYS.length) ? true : (n === 0 ? false : null);
-  if (want !== null && !!dev["power_ctrl"]["all_power"] !== want) {
-    syncing = true;
-    dev["power_ctrl"]["all_power"] = want;
+  // Переключатель поднят, только когда включены ВСЕ. Стоит одному блоку выпасть —
+  // он опускается, и его повторное включение снова запускает последовательность,
+  // дозакрывая недостающее. Иначе рычаг «уже включён» и команду не отдать:
+  // whenChanged на неизменившееся значение не срабатывает.
+  // Сколько блоков включено на самом деле, показывает счётчик рядом.
+  if (!dev["power_ctrl"]["running"]) {
+    var want = (n === RELAYS.length);
+    if (!!dev["power_ctrl"]["all_power"] !== want) {
+      syncing = true;
+      dev["power_ctrl"]["all_power"] = want;
+    }
   }
 }
 
@@ -125,7 +178,20 @@ function step() {
     return;
   }
 
+  // включать «горячим» нельзя — если блок выключили только что, ждём остаток паузы
+  if (seqOn) {
+    var left = coolLeft(r);
+    if (left > 0) {
+      seqIndex--;                                 // этот же блок и попробуем снова
+      dev["power_ctrl"]["status"] = "жду остывания " + r.name + ": " +
+                                    Math.ceil(left / 1000) + " с";
+      seqTimer = setTimeout(step, left > 1000 ? 1000 : left + 50);
+      return;
+    }
+  }
+
   dev[r.dev][r.ctl] = seqOn;
+  if (!seqOn) { offAt[keyOf(r)] = now(); }
   seqSwitched++;
   dev["power_ctrl"]["status"] = (seqOn ? "включаю " : "выключаю ") + r.name +
                                 " (" + seqIndex + " из " + RELAYS.length + ")";
