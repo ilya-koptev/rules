@@ -316,6 +316,7 @@ js = r'''// Группы света макета: включить/выключ�
 var CH = __CH__;
 
 var CELLS = __CELLS__;
+var CITIES = __CITIES__;   // слаги городов, для переклички переключателей
 
 var CHUNK = 40;          // каналов за один заход, чтобы не подвесить движок правил
 var STEP_MS = 50;
@@ -369,6 +370,47 @@ controls['pollStatus'] = { type: 'text', value: '', title: 'Опрос',
 
 defineVirtualDevice('svet', { title: 'Свет макета', cells: controls });
 
+
+// Нажали общий переключатель — подчинённые должны встать так же, иначе панель
+// врёт: свет горит, а «Углич — всё» показывает выключено. Выключение любого
+// подчинённого гасит и общий: «всё» перестало быть правдой.
+var ВИДЫ = ['all', 'lamps', 'cars'];
+
+function перекличка(id, value) {
+  var parts = id.split('_');
+  var kind = parts[parts.length - 1];
+  var city = parts.length > 1 ? parts.slice(0, -1).join('_') : '';
+  var i, j;
+  if (!city) {                                   // общий переключатель
+    for (i = 0; i < CITIES.length; i++) {
+      if (kind === 'all') {
+        for (j = 0; j < ВИДЫ.length; j++) quietSet(CITIES[i] + '_' + ВИДЫ[j], value);
+      } else {
+        quietSet(CITIES[i] + '_' + kind, value);
+      }
+    }
+    if (kind === 'all') {
+      quietSet('lamps', value);
+      quietSet('cars', value);
+    } else if (!value) {
+      quietSet('all', false);
+      for (i = 0; i < CITIES.length; i++) quietSet(CITIES[i] + '_all', false);
+    }
+  } else {                                       // переключатель города
+    if (kind === 'all') {
+      quietSet(city + '_lamps', value);
+      quietSet(city + '_cars', value);
+    }
+    if (!value) {                                // часть погасили — «всё» уже не всё
+      quietSet('all', false);
+      if (kind !== 'all') {
+        quietSet(kind, false);
+        quietSet(city + '_all', false);
+      }
+    }
+  }
+}
+
 function makeRule(id) {
   var parts = id.split('_');
   var kind = parts[parts.length - 1];
@@ -377,10 +419,12 @@ function makeRule(id) {
   defineRule('svet_group_' + id, {
     whenChanged: 'svet/' + id,
     then: function (newValue) {
+      if (selfWrite(id, newValue)) return;   // это перекличка, а не нажатие
       if (busy) {
         dev['svet']['status'] = 'занято, дождись окончания';
         return;
       }
+      перекличка(id, newValue);
       apply(members(scope, k), newValue);
     }
   });
@@ -482,7 +526,7 @@ for (var t = 0; t < POLL.length; t++) POLL_TITLE[POLL[t][0]] = POLL[t][1];
 for (var t2 = 0; t2 < POLL.length; t2++) makePollRule(POLL[t2][0]);
 
 syncPoll();     // при старте показываем, как есть на самом деле
-'''.replace('__CH__', json.dumps(группы_каналов, ensure_ascii=False, separators=(',', ':')))     .replace('__CELLS__', json.dumps(cells, ensure_ascii=False))     .replace('__GW__', json.dumps(gw_map, ensure_ascii=False))     .replace('__POLL__', json.dumps(poll_cells, ensure_ascii=False))
+'''.replace('__CH__', json.dumps(группы_каналов, ensure_ascii=False, separators=(',', ':')))     .replace('__CELLS__', json.dumps(cells, ensure_ascii=False))     .replace('__CITIES__', json.dumps([CITY_SLUG[c] for c in CITY_ORDER], ensure_ascii=False))     .replace('__GW__', json.dumps(gw_map, ensure_ascii=False))     .replace('__POLL__', json.dumps(poll_cells, ensure_ascii=False))
 
 
 
