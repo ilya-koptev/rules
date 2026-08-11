@@ -164,14 +164,17 @@ adb -s 192.168.69.227:5555 shell am start -n de.ozerov.fully/.FullyActivity
 ADB на сокете, умеет ровно одно: выполнить shell-команду и вернуть вывод.
 
 ```bash
-scp pump-level/hmi-panel/adbmini.py root@192.168.69.101:/tmp/
-ssh root@192.168.69.101 'python3 /tmp/adbmini.py 192.168.69.227 "am force-stop de.ozerov.fully"'
+scp pump-level/hmi-panel/adbmini.py root@192.168.69.101:/mnt/data/
+ssh root@192.168.69.101 'python3 /mnt/data/adbmini.py 192.168.69.227 "am force-stop de.ozerov.fully"'
 ```
+
+Кладём на `/mnt/data`, а не в `/tmp`: `/tmp` очищается при перезагрузке, и после
+первого же ребута утилиты не окажется ровно тогда, когда она нужна.
 
 Полезные команды через него:
 
 ```bash
-A="python3 /tmp/adbmini.py 192.168.69.227"
+A="python3 /mnt/data/adbmini.py 192.168.69.227"
 
 # перезапустить пульт после замены страницы
 $A "am force-stop de.ozerov.fully"; sleep 2
