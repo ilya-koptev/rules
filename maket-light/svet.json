@@ -16453,6 +16453,11 @@
      "extra": {}
     },
     {
+     "id": "svet/sound",
+     "type": "switch",
+     "extra": {}
+    },
+    {
      "id": "svet/status",
      "type": "text",
      "extra": {}
@@ -16479,6 +16484,11 @@
      "id": "svet/kalyazin_cars",
      "type": "switch",
      "extra": {}
+    },
+    {
+     "id": "svet/kalyazin_sound",
+     "type": "switch",
+     "extra": {}
     }
    ]
   },
@@ -16500,6 +16510,11 @@
     },
     {
      "id": "svet/uglich_cars",
+     "type": "switch",
+     "extra": {}
+    },
+    {
+     "id": "svet/uglich_sound",
      "type": "switch",
      "extra": {}
     }
@@ -16525,6 +16540,11 @@
      "id": "svet/myshkin_cars",
      "type": "switch",
      "extra": {}
+    },
+    {
+     "id": "svet/myshkin_sound",
+     "type": "switch",
+     "extra": {}
     }
    ]
   },
@@ -16546,6 +16566,11 @@
     },
     {
      "id": "svet/kashin_cars",
+     "type": "switch",
+     "extra": {}
+    },
+    {
+     "id": "svet/kashin_sound",
      "type": "switch",
      "extra": {}
     }
@@ -16571,6 +16596,11 @@
      "id": "svet/kimry_cars",
      "type": "switch",
      "extra": {}
+    },
+    {
+     "id": "svet/kimry_sound",
+     "type": "switch",
+     "extra": {}
     }
    ]
   },
@@ -16594,6 +16624,11 @@
      "id": "svet/dubna_cars",
      "type": "switch",
      "extra": {}
+    },
+    {
+     "id": "svet/dubna_sound",
+     "type": "switch",
+     "extra": {}
     }
    ]
   },
@@ -16615,6 +16650,11 @@
     },
     {
      "id": "svet/borok_cars",
+     "type": "switch",
+     "extra": {}
+    },
+    {
+     "id": "svet/borok_sound",
      "type": "switch",
      "extra": {}
     }

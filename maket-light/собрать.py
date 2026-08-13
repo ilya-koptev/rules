@@ -256,7 +256,7 @@ for city in sorted(by_city, key=lambda c: CITY_ORDER.get(c, 99)):
 
 # назначение канала → вид: L фонарь, M машинка, O прочее (дом, светофор, плеер),
 # свободные каналы в группы не входят вовсе
-KIND = {'Фонарь': 'L', 'Машинка': 'M'}
+KIND = {'Фонарь': 'L', 'Машинка': 'M', 'Плеер': 'P'}
 
 # портовые краны: 40 Гц и скважность ≤30 %, включать их пачкой пока нельзя —
 # в группы не входят вовсе, только вручную
@@ -295,9 +295,9 @@ cells = []
 for c in CITY_ORDER:
     s = CITY_SLUG[c]
     cells += [(s + '_all', c + ' — всё'), (s + '_lamps', c + ' — фонари'),
-              (s + '_cars', c + ' — машинки')]
+              (s + '_cars', c + ' — машинки'), (s + '_sound', c + ' — звуки')]
 cells += [('all', 'Весь макет — всё'), ('lamps', 'Весь макет — фонари'),
-          ('cars', 'Весь макет — машинки')]
+          ('cars', 'Весь макет — машинки'), ('sound', 'Весь макет — звуки')]
 
 gw_all = [a for v in GW.values() for a in v] + [EAR_GW]
 gw_map = {'poll_all': gw_all, 'poll_ear': [EAR_GW]}
@@ -321,6 +321,13 @@ var CITIES = __CITIES__;   // слаги городов, для переклич
 var CHUNK = 40;          // каналов за один заход, чтобы не подвесить движок правил
 var STEP_MS = 50;
 var queue = [], busy = false, applied = 0, total = 0;
+
+function буква(вид) {
+  if (вид === 'lamps') return 'L';
+  if (вид === 'cars') return 'M';
+  if (вид === 'sound') return 'P';
+  return '';                       // 'all' — любой вид
+}
 
 function members(scope, kind) {
   var out = [];
@@ -374,7 +381,7 @@ defineVirtualDevice('svet', { title: 'Свет макета', cells: controls })
 // Нажали общий переключатель — подчинённые должны встать так же, иначе панель
 // врёт: свет горит, а «Углич — всё» показывает выключено. Выключение любого
 // подчинённого гасит и общий: «всё» перестало быть правдой.
-var ВИДЫ = ['all', 'lamps', 'cars'];
+var ВИДЫ = ['all', 'lamps', 'cars', 'sound'];
 
 function перекличка(id, value) {
   var parts = id.split('_');
@@ -392,6 +399,7 @@ function перекличка(id, value) {
     if (kind === 'all') {
       quietSet('lamps', value);
       quietSet('cars', value);
+      quietSet('sound', value);
     } else if (!value) {
       quietSet('all', false);
       for (i = 0; i < CITIES.length; i++) quietSet(CITIES[i] + '_all', false);
@@ -400,6 +408,7 @@ function перекличка(id, value) {
     if (kind === 'all') {
       quietSet(city + '_lamps', value);
       quietSet(city + '_cars', value);
+      quietSet(city + '_sound', value);
     }
     if (!value) {                                // часть погасили — «всё» уже не всё
       quietSet('all', false);
@@ -415,7 +424,7 @@ function makeRule(id) {
   var parts = id.split('_');
   var kind = parts[parts.length - 1];
   var scope = parts.length > 1 ? parts.slice(0, -1).join('_') : '';
-  var k = kind === 'lamps' ? 'L' : (kind === 'cars' ? 'M' : '');
+  var k = буква(kind);
   defineRule('svet_group_' + id, {
     whenChanged: 'svet/' + id,
     then: function (newValue) {
@@ -454,7 +463,7 @@ function сверить() {
       var ч = id.split('_');
       var вид = ч[ч.length - 1];
       var область = ч.length > 1 ? ч.slice(0, -1).join('_') : '';
-      var k = вид === 'lamps' ? 'L' : (вид === 'cars' ? 'M' : '');
+      var k = буква(вид);
       quietSet(id, всеВключены(members(область, k)));
     }
   } catch (e) {
@@ -599,6 +608,7 @@ widgets = [{
     "cells": [{"id": "svet/all", "type": "switch", "extra": {}},
               {"id": "svet/lamps", "type": "switch", "extra": {}},
               {"id": "svet/cars", "type": "switch", "extra": {}},
+              {"id": "svet/sound", "type": "switch", "extra": {}},
               {"id": "svet/status", "type": "text", "extra": {}}],
 }]
 for c in CITY_ORDER:
@@ -607,7 +617,8 @@ for c in CITY_ORDER:
         "id": "w_light_groups_" + s_, "name": c, "description": "", "compact": False,
         "cells": [{"id": "svet/" + s_ + "_all", "type": "switch", "extra": {}},
                   {"id": "svet/" + s_ + "_lamps", "type": "switch", "extra": {}},
-                  {"id": "svet/" + s_ + "_cars", "type": "switch", "extra": {}}],
+                  {"id": "svet/" + s_ + "_cars", "type": "switch", "extra": {}},
+                  {"id": "svet/" + s_ + "_sound", "type": "switch", "extra": {}}],
     })
 
 dash['widgets'] += widgets
