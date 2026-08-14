@@ -591,7 +591,7 @@ function onConnack(body) {
 
 function connect() {
   var proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
-  ws = new WebSocket(proto + location.host + '/mqtt', 'mqtt');
+  ws = new WebSocket(proto + location.host + '/kiosk-mqtt', 'mqtt');
   ws.binaryType = 'arraybuffer';
   ws.onopen = function () {
     rxBuf = new Uint8Array(0);
