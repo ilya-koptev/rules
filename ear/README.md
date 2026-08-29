@@ -24,3 +24,18 @@ scp ear.js root@<контроллер>:/etc/wb-rules/
 | `sync` | switch | согласованное ведение осей |
 | `homed` | switch | референс установлен |
 | `status` | text | idle/homing/moving/parked/ERROR |
+
+### Примеры
+
+```bash
+# смотреть всё состояние
+mosquitto_sub -h <контроллер> -t '/devices/ear/controls/+' -v
+
+# навести на азимут 120°, элевацию 60°
+mosquitto_pub -h <контроллер> -t /devices/ear/controls/azimuth/on   -m 120
+mosquitto_pub -h <контроллер> -t /devices/ear/controls/elevation/on -m 60
+
+# хоминг и аварийный стоп
+mosquitto_pub -h <контроллер> -t /devices/ear/controls/home/on -m 1
+mosquitto_pub -h <контроллер> -t /devices/ear/controls/stop/on -m 1
+```

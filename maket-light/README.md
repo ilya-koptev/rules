@@ -29,6 +29,23 @@ Slave-id модуля = его адрес на шине. Регистр адре
 
 Команда — тот же топик с суффиксом `/on`.
 
+### Примеры
+
+`<шлюз>` — последний октет адреса шлюза, `<slave>` — адрес модуля на шине.
+
+```bash
+# смотреть все каналы модуля
+mosquitto_sub -h <контроллер> -t '/devices/ld58_<шлюз>_<slave>/controls/+' -v
+
+# включить канал 3
+mosquitto_pub -h <контроллер> -t /devices/ld58_<шлюз>_<slave>/controls/3/on -m 1
+
+# канал 7: яркость 50 %, частота 400 Гц
+mosquitto_pub -h <контроллер> -t /devices/ld58_<шлюз>_<slave>/controls/7/on     -m 1
+mosquitto_pub -h <контроллер> -t /devices/ld58_<шлюз>_<slave>/controls/7_pwm/on  -m 50
+mosquitto_pub -h <контроллер> -t /devices/ld58_<шлюз>_<slave>/controls/7_freq/on -m 400
+```
+
 ## Инструменты
 
 | Файл | Что | Куда |
