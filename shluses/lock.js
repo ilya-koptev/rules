@@ -71,7 +71,7 @@ var HI_DIR_LEVEL  = "wb-mao4_190/Channel 2 Dimming Level";  // уровень в
 var HI_LIM_OPEN   = "wb-mao4_190/Input 1";                  // концевик «открыто»
 var HI_LIM_CLOSE  = "wb-mao4_190/Input 2";                  // концевик «закрыто»
 var HI_PULSES     = "wb-mcm8_212/Input 2 counter";          // датчик оборотов
-var HI_CURRENT    = "wb-mai6_16/IN 1 Voltage";              // ток мотора
+var HI_CURRENT    = "wb-mai6_16/IN 1 P Voltage";              // ток мотора
 
 // --- Нижние ворота (к нижнему бьефу) ---
 var LO_MOTOR      = "wb-mao4_172/Channel 1 Switch";
@@ -81,10 +81,10 @@ var LO_DIR_LEVEL  = "wb-mao4_172/Channel 2 Dimming Level";
 var LO_LIM_OPEN   = "wb-mao4_172/Input 1";
 var LO_LIM_CLOSE  = "wb-mao4_172/Input 2";
 var LO_PULSES     = "wb-mcm8_212/Input 3 counter";
-var LO_CURRENT    = "wb-mai6_16/IN 2 Voltage";
+var LO_CURRENT    = "wb-mai6_16/IN 2 P Voltage";
 
 // --- Камера ---
-var LEVEL_SENSOR_MA = "wb-mai6_16/IN 3 Current";            // ток датчика уровня, мА
+var LEVEL_SENSOR_MA = "wb-mai6_16/IN 3 P Current";            // ток датчика уровня, мА
 
 var HW = {
   hi_gate: { title: "Верхние ворота", motor: HI_MOTOR, speed: HI_SPEED, dir: HI_DIR, dirLevel: HI_DIR_LEVEL,
