@@ -100,6 +100,8 @@ var VALVE_FILL  = "wb-mrm2-mini_0/K1";         // налив (из верхне�
 var VALVE_DRAIN = "wb-mrm2-mini_0/K2";         // слив (в нижний бьеф)
 
 var TICK_MS = 500;                             // шаг проверок автоматики
+var INTERLOCK_SETTLE_MS = 300;                 // пауза сторожа «обе не открыты», см. makeGate
+var SENSOR_BROKEN_MA = 3.5;                    // ниже — обрыв петли датчика уровня (норма 4–20 мА)
 
 
 // -----------------------------------------------------------------------------
@@ -293,12 +295,23 @@ function makeGate(id, hw, otherId) {
   // Мотор едет «открывать», а другие ворота ушли с концевика «закрыто» —
   // разворачиваем на закрытие. Проверяем на каждое из трёх событий:
   // кто-то может включить мотор раньше, чем выставит направление.
+  // Проверяем не сразу, а через INTERLOCK_SETTLE_MS после последнего события:
+  // «мотор» и «направление» пишутся почти одновременно, а подтверждения от
+  // модуля приходят в произвольном порядке. Без паузы сторож на мгновение
+  // видит мотор включённым при старом направлении и срабатывает зря
+  // (поймано при первом запуске 10.10). Пауза короткая — ворота за неё
+  // не успевают сдвинуться заметно.
+  var interlockTimer = null;
   defineRule(id + "_interlock", {
     whenChanged: [motor, dir, otherClosed],
     then: function () {
-      if (dev[motor] && dev[dir] === openingDir() && !dev[otherClosed]) {
-        closeNow("ход на открытие при незакрытых воротах «" + HW[otherId].title + "»");
-      }
+      if (interlockTimer) { clearTimeout(interlockTimer); }
+      interlockTimer = setTimeout(function () {
+        interlockTimer = null;
+        if (dev[motor] && dev[dir] === openingDir() && !dev[otherClosed]) {
+          closeNow("ход на открытие при незакрытых воротах «" + HW[otherId].title + "»");
+        }
+      }, INTERLOCK_SETTLE_MS);
     }
   });
 
@@ -381,6 +394,12 @@ var plateauSince = 0;         // с какого момента скорость
 function updateLevel() {
   var ma = num(LEVEL_SENSOR_MA);
   if (ma === null) { dev["shluses_ctl/chamber"] = "нет датчика"; return null; }
+  // 0 мА — это не «пустая камера», а оборванная петля или не подключённый датчик.
+  if (ma < SENSOR_BROKEN_MA) {
+    dev["shluses_ctl/chamber"] = "обрыв датчика (" + ma + " мА)";
+    levelHistory = []; plateauSince = 0;
+    return null;
+  }
   var c = "shluses_ctl";
   var mm = (ma - par(c, "sensor_zero_ma")) * par(c, "sensor_mm_per_ma") + par(c, "sensor_axis_mm");
   var t = now();
