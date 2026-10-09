@@ -11,24 +11,24 @@ def w(wid, name, cells):
     return {"id": wid, "name": name, "description": "", "compact": False,
             "cells": [{"id": a, "name": b} for a, b in cells]}
 def gate(g, title):
-    return w("shl_" + g, title, [(g+"/state","Состояние"),(g+"/position","Пройдено хода, %"),(g+"/current","Ток мотора"),
-        (g+"/error","Ошибка"),(g+"/open","Открыть (ручной)"),(g+"/close","Закрыть (ручной)"),(g+"/stop","Стоп")])
+    return w("shl_" + g, title, [(g+"/state","Состояние"),(g+"/position","Ход, %"),(g+"/current","Ток"),
+        (g+"/error","Ошибка"),(g+"/open","Открыть"),(g+"/close","Закрыть"),(g+"/stop","Стоп")])
 def gate_par(g, title):
-    return w("shl_" + g + "_par", title, [(g+"/full_travel","Импульсов на полный ход"),(g+"/fast_speed","Скорость основная, %"),
-        (g+"/slow_speed","Скорость у концевика, %"),(g+"/slow_from","Замедляться с, % хода"),(g+"/overrun_pct","Перебег, % хода"),
-        (g+"/no_pulse_s","Нет импульсов дольше, с"),(g+"/max_current","Порог тока"),(g+"/invert","Направление наоборот")])
+    return w("shl_" + g + "_par", title, [(g+"/full_travel","Импульсов на ход"),(g+"/fast_speed","Скорость, %"),
+        (g+"/slow_speed","Медленно, %"),(g+"/slow_from","Замедлять с, %"),(g+"/overrun_pct","Перебег, %"),
+        (g+"/no_pulse_s","Без импульсов, с"),(g+"/max_current","Порог тока"),(g+"/invert","Наоборот")])
 W = [
-  w("shl_main", "Шлюз", [(ID+"/status","Статус"),(ID+"/open_upstream","Открыть верхний бьеф"),(ID+"/open_downstream","Открыть нижний бьеф"),
-     (C+"/manual","Ручной режим"),(C+"/step","Шаг автоматики"),(C+"/error","Ошибка"),(C+"/reset_error","Сбросить ошибку")]),
-  w("shl_chamber", "Камера", [(C+"/level_mm","Уровень от пола, мм"),(C+"/level_rate","Скорость уровня, мм/с"),(C+"/chamber","Камера"),
-     (C+"/valve_fill","Клапан налива (ручной)"),(C+"/valve_drain","Клапан слива (ручной)")]),
+  w("shl_main", "Шлюз", [(ID+"/status","Статус"),(ID+"/open_upstream","Верхний бьеф"),(ID+"/open_downstream","Нижний бьеф"),
+     (C+"/manual","Ручной режим"),(C+"/step","Шаг"),(C+"/error","Ошибка"),(C+"/reset_error","Сброс ошибки")]),
+  w("shl_chamber", "Камера", [(C+"/level_mm","Уровень, мм"),(C+"/level_rate","Скорость, мм/с"),(C+"/chamber","Камера"),
+     (C+"/valve_fill","Налив"),(C+"/valve_drain","Слив")]),
   gate("hi_gate", "Верхние ворота"), gate("lo_gate", "Нижние ворота"),
   w("shl_chamber_par", "Камера — уровни", [(C+"/empty_mm","Пустая, мм"),(C+"/full_mm","Полная, мм"),(C+"/tolerance_mm","Допуск, ±мм"),
-     (C+"/plateau_rate","Полка: скорость ниже, мм/с"),(C+"/plateau_s","Полка: держится, с"),(C+"/valve_grace_s","Не судить о полке первые, с")]),
-  w("shl_sensor_par", "Датчик уровня — калибровка", [(C+"/sensor_zero_ma","Ток на воздухе, мА"),(C+"/sensor_mm_per_ma","мм на 1 мА"),
-     (C+"/sensor_axis_mm","Ось мембраны над полом, мм")]),
-  w("shl_common_par", "Общее", [(C+"/travel_timeout_s","Общий таймаут хода, с"),(C+"/battery_shutdown","Выключать от батареи"),
-     (C+"/battery_shutdown_s","…через, с")]),
+     (C+"/plateau_rate","Полка, мм/с"),(C+"/plateau_s","Полка, с"),(C+"/valve_grace_s","Полку ждать, с")]),
+  w("shl_sensor_par", "Датчик уровня — калибровка", [(C+"/sensor_zero_ma","Ноль, мА"),(C+"/sensor_mm_per_ma","мм на мА"),
+     (C+"/sensor_axis_mm","Ось мембраны, мм")]),
+  w("shl_common_par", "Общее", [(C+"/travel_timeout_s","Таймаут хода, с"),(C+"/battery_shutdown","Выкл. от батареи"),
+     (C+"/battery_shutdown_s","Выкл. через, с")]),
   gate_par("hi_gate", "Верхние ворота — параметры"), gate_par("lo_gate", "Нижние ворота — параметры"),
 ]
 ids = {x["id"] for x in W}
