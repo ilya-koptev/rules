@@ -10,11 +10,11 @@
 
 ## Установка
 
-В начале `lock.js` задать имя устройства `LOCK_ID` и, если провода другие,
+В начале `shluses.js` задать имя устройства `SHLUSES_ID` и, если провода другие,
 константы входов/выходов (`HI_*`, `LO_*`, `LEVEL_SENSOR_MA`, клапаны).
 
 ```bash
-scp lock.js root@<контроллер>:/etc/wb-rules/
+scp shluses.js root@<контроллер>:/etc/wb-rules/
 ssh root@<контроллер> journalctl -u wb-rules --since '30s ago' --no-pager
 ```
 
@@ -24,7 +24,7 @@ ssh root@<контроллер> journalctl -u wb-rules --since '30s ago' --no-pa
 
 ## MQTT API — для внешней системы
 
-Устройство `<LOCK_ID>`.
+Устройство `<SHLUSES_ID>`.
 
 | Контрол | Тип | Назначение |
 |---|---|---|
@@ -39,15 +39,15 @@ ssh root@<контроллер> journalctl -u wb-rules --since '30s ago' --no-pa
 ### Примеры
 
 ```bash
-mosquitto_sub -h <контроллер> -t '/devices/<LOCK_ID>/controls/status' -v
+mosquitto_sub -h <контроллер> -t '/devices/<SHLUSES_ID>/controls/status' -v
 
-mosquitto_pub -h <контроллер> -t /devices/<LOCK_ID>/controls/open_upstream/on   -m 1
-mosquitto_pub -h <контроллер> -t /devices/<LOCK_ID>/controls/open_downstream/on -m 1
+mosquitto_pub -h <контроллер> -t /devices/<SHLUSES_ID>/controls/open_upstream/on   -m 1
+mosquitto_pub -h <контроллер> -t /devices/<SHLUSES_ID>/controls/open_downstream/on -m 1
 ```
 
 ## MQTT API — наладка
 
-### `lock_ctl` — шлюз
+### `shluses_ctl` — шлюз
 
 | Контрол | Тип | Назначение |
 |---|---|---|
@@ -85,7 +85,7 @@ mosquitto_pub -h <контроллер> -t /devices/<LOCK_ID>/controls/open_down
 
 ```bash
 # ручной режим, открыть верхние ворота
-mosquitto_pub -h <контроллер> -t /devices/lock_ctl/controls/manual/on -m 1
+mosquitto_pub -h <контроллер> -t /devices/shluses_ctl/controls/manual/on -m 1
 mosquitto_pub -h <контроллер> -t /devices/hi_gate/controls/open/on   -m 1
 
 # порог тока нижних ворот

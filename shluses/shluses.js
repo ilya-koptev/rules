@@ -57,8 +57,8 @@
 //  Подключение. Меняется, только если перекинули провода или модули.
 // -----------------------------------------------------------------------------
 
-// Имя устройства для внешней системы: /devices/<LOCK_ID>/controls/...
-var LOCK_ID = "lock";
+// Имя устройства для внешней системы: /devices/<SHLUSES_ID>/controls/...
+var SHLUSES_ID = "shluses";
 
 // Каждый вход и выход — отдельной строкой: перекинули провод — правится
 // одна строка здесь, код ниже не трогается.
@@ -130,7 +130,7 @@ function setValves(fill, drain) {
 // forceDefault: true — для того, что вычисляется (не должно «вспоминаться»
 // после перезагрузки). Без него — параметры: их значения сохраняются.
 
-defineVirtualDevice("lock_ctl", {
+defineVirtualDevice("shluses_ctl", {
   title: "Шлюз — управление",
   cells: {
     manual:      { title: "Ручной режим", type: "switch", value: false, order: 1 },
@@ -166,8 +166,8 @@ defineVirtualDevice("lock_ctl", {
 });
 
 // Ошибка уровня шлюза (камера, команды). У ворот — свои ошибки.
-function lockFail(reason) {
-  dev["lock_ctl/error"] = reason;
+function shlusesFail(reason) {
+  dev["shluses_ctl/error"] = reason;
   setValves(false, false);
   log.error("шлюз: {}", reason);
 }
@@ -328,8 +328,8 @@ function makeGate(id, hw, otherId) {
       return;
     }
     if (done >= p("slow_from") / 100 && dev[speed] > p("slow_speed")) { dev[speed] = p("slow_speed"); }
-    if (t - startedAt > par("lock_ctl", "travel_timeout_s") * 1000) {
-      fail("ход дольше " + par("lock_ctl", "travel_timeout_s") + " с");
+    if (t - startedAt > par("shluses_ctl", "travel_timeout_s") * 1000) {
+      fail("ход дольше " + par("shluses_ctl", "travel_timeout_s") + " с");
     }
   }
 
@@ -337,13 +337,13 @@ function makeGate(id, hw, otherId) {
   defineRule(id + "_btn_open", {
     whenChanged: id + "/open",
     then: function () {
-      if (!dev["lock_ctl/manual"]) { return; }
+      if (!dev["shluses_ctl/manual"]) { return; }
       var r = move(false); if (r) { log.warning("{}", r); }
     }
   });
   defineRule(id + "_btn_close", {
     whenChanged: id + "/close",
-    then: function () { if (dev["lock_ctl/manual"]) { move(true); } }
+    then: function () { if (dev["shluses_ctl/manual"]) { move(true); } }
   });
   defineRule(id + "_btn_stop", { whenChanged: id + "/stop", then: function () { stop(); } });
 
@@ -380,8 +380,8 @@ var plateauSince = 0;         // с какого момента скорость
 
 function updateLevel() {
   var ma = num(LEVEL_SENSOR_MA);
-  if (ma === null) { dev["lock_ctl/chamber"] = "нет датчика"; return null; }
-  var c = "lock_ctl";
+  if (ma === null) { dev["shluses_ctl/chamber"] = "нет датчика"; return null; }
+  var c = "shluses_ctl";
   var mm = (ma - par(c, "sensor_zero_ma")) * par(c, "sensor_mm_per_ma") + par(c, "sensor_axis_mm");
   var t = now();
   levelHistory.push([t, mm]);
@@ -399,14 +399,14 @@ function updateLevel() {
 }
 
 function chamberZone(mm) {
-  var c = "lock_ctl", tol = par(c, "tolerance_mm");
+  var c = "shluses_ctl", tol = par(c, "tolerance_mm");
   if (mm >= par(c, "full_mm") - tol) { return "полная"; }
   if (mm <= par(c, "empty_mm") + tol) { return "пустая"; }
   return "между";
 }
 
 function onPlateau() {
-  return plateauSince && now() - plateauSince >= par("lock_ctl", "plateau_s") * 1000;
+  return plateauSince && now() - plateauSince >= par("shluses_ctl", "plateau_s") * 1000;
 }
 
 
@@ -428,12 +428,12 @@ var stepAt = 0;               // когда начался шаг
 
 function setStep(s) {
   step = s; stepAt = now();
-  dev["lock_ctl/step"] = target ? (target + ": " + s) : "";
+  dev["shluses_ctl/step"] = target ? (target + ": " + s) : "";
 }
 
 function startCycle(t) {
-  if (dev["lock_ctl/manual"]) { log.warning("шлюз: команда «{}» в ручном режиме не принимается", t); return; }
-  if (dev["lock_ctl/error"] || gateError()) { log.warning("шлюз: команда «{}» отклонена — ошибка не сброшена", t); return; }
+  if (dev["shluses_ctl/manual"]) { log.warning("шлюз: команда «{}» в ручном режиме не принимается", t); return; }
+  if (dev["shluses_ctl/error"] || gateError()) { log.warning("шлюз: команда «{}» отклонена — ошибка не сброшена", t); return; }
   // Бьеф уже открыт как надо — ничего не двигаем.
   var g = t === "upstream" ? hi : lo, o = t === "upstream" ? lo : hi;
   if (!target && g.isOpened() && o.isClosed()) { return; }
@@ -446,7 +446,7 @@ function abortCycle() { target = ""; setStep(""); }
 
 function cycleTick() {
   if (!target) { return; }
-  if (dev["lock_ctl/manual"] || dev["lock_ctl/error"] || gateError()) { setValves(false, false); abortCycle(); return; }
+  if (dev["shluses_ctl/manual"] || dev["shluses_ctl/error"] || gateError()) { setValves(false, false); abortCycle(); return; }
 
   var up = target === "upstream";
   var gate = up ? hi : lo;          // ворота, которые надо открыть
@@ -463,15 +463,15 @@ function cycleTick() {
 
   if (step === "level") {
     var mm = updateLevel();
-    if (mm === null) { lockFail("нет данных с датчика уровня"); return; }
-    if (now() - stepAt < par("lock_ctl", "valve_grace_s") * 1000) { return; }
+    if (mm === null) { shlusesFail("нет данных с датчика уровня"); return; }
+    if (now() - stepAt < par("shluses_ctl", "valve_grace_s") * 1000) { return; }
     if (!onPlateau()) { return; }                        // уровень ещё меняется — идёт
     var zone = chamberZone(mm);
     if ((up && zone === "полная") || (!up && zone === "пустая")) {
       setValves(false, false);
       setStep("open");
     } else {
-      lockFail("уровень встал на " + Math.round(mm) + " мм, а нужна " + (up ? "полная" : "пустая") + " камера");
+      shlusesFail("уровень встал на " + Math.round(mm) + " мм, а нужна " + (up ? "полная" : "пустая") + " камера");
     }
     return;
   }
@@ -480,7 +480,7 @@ function cycleTick() {
     if (gate.isOpened()) { setStep("done"); return; }
     if (gate.state() !== "opening") {
       var r = gate.move(false);
-      if (r) { lockFail(r); }
+      if (r) { shlusesFail(r); }
     }
     return;
   }
@@ -492,7 +492,7 @@ function cycleTick() {
 //  Внешнее устройство: две команды и статус
 // -----------------------------------------------------------------------------
 
-defineVirtualDevice(LOCK_ID, {
+defineVirtualDevice(SHLUSES_ID, {
   title: "Шлюз",
   cells: {
     open_upstream:   { title: "Открыть верхний бьеф", type: "pushbutton", order: 1 },
@@ -502,11 +502,11 @@ defineVirtualDevice(LOCK_ID, {
   }
 });
 
-defineRule("lock_cmd_upstream",   { whenChanged: LOCK_ID + "/open_upstream",   then: function () { startCycle("upstream"); } });
-defineRule("lock_cmd_downstream", { whenChanged: LOCK_ID + "/open_downstream", then: function () { startCycle("downstream"); } });
+defineRule("shluses_cmd_upstream",   { whenChanged: SHLUSES_ID + "/open_upstream",   then: function () { startCycle("upstream"); } });
+defineRule("shluses_cmd_downstream", { whenChanged: SHLUSES_ID + "/open_downstream", then: function () { startCycle("downstream"); } });
 
 function externalStatus() {
-  if (dev["lock_ctl/error"] || gateError()) { return "error"; }
+  if (dev["shluses_ctl/error"] || gateError()) { return "error"; }
   var running = target && step !== "done";
   if (!running && hi.isOpened() && lo.isClosed()) { return "upstream_open"; }
   if (!running && lo.isOpened() && hi.isClosed()) { return "downstream_open"; }
@@ -518,28 +518,28 @@ function externalStatus() {
 //  Ручной режим и сброс ошибки
 // -----------------------------------------------------------------------------
 
-defineRule("lock_manual_switch", {
-  whenChanged: "lock_ctl/manual",
+defineRule("shluses_manual_switch", {
+  whenChanged: "shluses_ctl/manual",
   then: function (manual) {
     // В ручной — бросаем цикл. Из ручного в авто — ничего не двигаем.
     if (manual) { abortCycle(); setValves(false, false); }
   }
 });
 
-defineRule("lock_manual_valves", {
-  whenChanged: ["lock_ctl/valve_fill", "lock_ctl/valve_drain"],
+defineRule("shluses_manual_valves", {
+  whenChanged: ["shluses_ctl/valve_fill", "shluses_ctl/valve_drain"],
   then: function () {
     // В ручном уровень не проверяем — клапаны как есть.
-    if (!dev["lock_ctl/manual"]) { dev["lock_ctl/valve_fill"] = false; dev["lock_ctl/valve_drain"] = false; return; }
-    setValves(dev["lock_ctl/valve_fill"], dev["lock_ctl/valve_drain"]);
+    if (!dev["shluses_ctl/manual"]) { dev["shluses_ctl/valve_fill"] = false; dev["shluses_ctl/valve_drain"] = false; return; }
+    setValves(dev["shluses_ctl/valve_fill"], dev["shluses_ctl/valve_drain"]);
   }
 });
 
-defineRule("lock_reset_error", {
-  whenChanged: "lock_ctl/reset_error",
+defineRule("shluses_reset_error", {
+  whenChanged: "shluses_ctl/reset_error",
   then: function () {
     // Сброс НЕ двигает ворота.
-    dev["lock_ctl/error"] = "";
+    dev["shluses_ctl/error"] = "";
     hi.resetError(); lo.resetError();
     abortCycle();
   }
@@ -556,22 +556,22 @@ function onFailure(reason) {
   closeAll(reason);
 }
 
-defineRule("lock_network_lost", {
+defineRule("shluses_network_lost", {
   whenChanged: "network/Ethernet IP Connection Enabled",
   then: function (up) { if (up === false) { onFailure("пропал Ethernet"); } }
 });
 
 var shutdownTimer = null;
-defineRule("lock_on_battery", {
+defineRule("shluses_on_battery", {
   whenChanged: "power_status/working on battery",
   then: function (onBattery) {
     if (onBattery) {
       onFailure("работа от батареи");
       // Выключение контроллера — только если включено на дашборде: пока не
       // проверено, что контроллер сам включится, когда вернётся питание.
-      if (dev["lock_ctl/battery_shutdown"] && !shutdownTimer) {
+      if (dev["shluses_ctl/battery_shutdown"] && !shutdownTimer) {
         shutdownTimer = setTimeout(function () { runShellCommand("poweroff"); },
-          par("lock_ctl", "battery_shutdown_s") * 1000);
+          par("shluses_ctl", "battery_shutdown_s") * 1000);
       }
     } else if (shutdownTimer) {
       clearTimeout(shutdownTimer); shutdownTimer = null;     // питание вернулось
@@ -597,5 +597,5 @@ setInterval(function () {
   if (step !== "level") { updateLevel(); }   // на шаге level уровень считает cycleTick
   cycleTick();
   var s = externalStatus();
-  if (dev[LOCK_ID + "/status"] !== s) { dev[LOCK_ID + "/status"] = s; }
+  if (dev[SHLUSES_ID + "/status"] !== s) { dev[SHLUSES_ID + "/status"] = s; }
 }, TICK_MS);
