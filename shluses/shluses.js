@@ -84,6 +84,7 @@ defineVirtualDevice(API, {
     close_gates:     { title: "Закрыть ворота", type: "pushbutton", order: 12 },
     stop:            { title: "Стоп", type: "pushbutton", order: 13 },
     reset:           { title: "Сбросить ошибку", type: "pushbutton", order: 14 },
+    init:            { title: "Инициализация", type: "pushbutton", order: 15 },
     upper_gate:      { title: "Верхние ворота", type: "text", value: "unknown", readonly: true, forceDefault: true, order: 20 },
     lower_gate:      { title: "Нижние ворота", type: "text", value: "unknown", readonly: true, forceDefault: true, order: 21 },
     level_mm:        { title: "Уровень в камере", type: "value", units: "mm", value: 0, readonly: true, forceDefault: true, order: 22 },
@@ -402,6 +403,18 @@ defineRule("shluz_cmd_reset", {
 
 // Налив и слив — только при закрытых обоих воротах.
 function bothClosed() { return gate.upper.state === "closed" && gate.lower.state === "closed"; }
+
+// Инициализация: забыть положение ворот, сбросить ошибки, закрыть обе до концевика.
+defineRule("shluz_cmd_init", {
+  whenChanged: API + "/init",
+  then: function () {
+    stopAll("");
+    dev[API + "/error"] = "";
+    setState("upper", "unknown");
+    setState("lower", "unknown");
+    cycle = { kind: "init", phase: "close", phaseAt: now() };
+  }
+});
 
 // Клапаны вручную — с теми же запретами, что у автоматики.
 defineRule("shluz_btn_fill", {
