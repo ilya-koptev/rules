@@ -1,41 +1,62 @@
 #!/usr/bin/env python3
-# Панели веб-интерфейса для правила shluses.js: «Шлюз» (работа) и «Шлюз — настройки» (параметры).
-# Запуск на контроллере: python3 add-dashboards.py <SHLUSES_ID>
-import json, sys, shutil, time
-ID = sys.argv[1]                       # имя внешнего устройства шлюза
+# Панели веб-интерфейса для shluses.js:
+#   «Шлюз»          — для пользователя: кнопки и состояние;
+#   «Шлюз — наладка» — ручное управление воротами и клапанами, параметры.
+# Запуск на контроллере: python3 add-dashboards.py
+# Бэкап конфига — в /root/. Чужие панели не трогает, повторный запуск заменяет свои.
+import json, shutil, time
+
 P = "/mnt/data/etc/wb-webui.conf"
 shutil.copy2(P, "/root/wb-webui.conf.bak-" + time.strftime("%Y%m%d-%H%M%S"))
 c = json.load(open(P))
-C = "shluses_ctl"
+A, S = "shluz", "shluz_service"
+
+
 def w(wid, name, cells):
     return {"id": wid, "name": name, "description": "", "compact": False,
             "cells": [{"id": a, "name": b} for a, b in cells]}
-def gate(g, title):
-    return w("shl_" + g, title, [(g+"/state","Состояние"),(g+"/position","Ход, %"),(g+"/current","Ток"),
-        (g+"/error","Ошибка"),(g+"/open","Открыть"),(g+"/close","Закрыть"),(g+"/stop","Стоп")])
-def gate_par(g, title):
-    return w("shl_" + g + "_par", title, [(g+"/full_travel","Импульсов на ход"),(g+"/fast_speed","Скорость, %"),
-        (g+"/slow_speed","Медленно, %"),(g+"/slow_from","Замедлять с, %"),(g+"/overrun_pct","Перебег, %"),
-        (g+"/no_pulse_s","Без импульсов, с"),(g+"/max_current","Порог тока"),(g+"/invert","Наоборот")])
+
+
 W = [
-  w("shl_main", "Шлюз", [(ID+"/status","Статус"),(ID+"/open_upstream","Верхний бьеф"),(ID+"/open_downstream","Нижний бьеф"),
-     (C+"/manual","Ручной режим"),(C+"/step","Шаг"),(C+"/error","Ошибка"),(C+"/reset_error","Сброс ошибки")]),
-  w("shl_chamber", "Камера", [(C+"/level_mm","Уровень, мм"),(C+"/level_rate","Скорость, мм/с"),(C+"/chamber","Камера"),
-     (C+"/valve_fill","Налив"),(C+"/valve_drain","Слив")]),
-  gate("hi_gate", "Верхние ворота"), gate("lo_gate", "Нижние ворота"),
-  w("shl_chamber_par", "Камера — уровни", [(C+"/empty_mm","Пустая, мм"),(C+"/full_mm","Полная, мм"),(C+"/tolerance_mm","Допуск, ±мм"),
-     (C+"/plateau_rate","Полка, мм/с"),(C+"/plateau_s","Полка, с"),(C+"/valve_grace_s","Полку ждать, с")]),
-  w("shl_sensor_par", "Датчик уровня — калибровка", [(C+"/sensor_zero_ma","Ноль, мА"),(C+"/sensor_mm_per_ma","мм на мА"),
-     (C+"/sensor_axis_mm","Ось мембраны, мм")]),
-  w("shl_common_par", "Общее", [(C+"/travel_timeout_s","Таймаут хода, с"),(C+"/battery_shutdown","Выкл. от батареи"),
-     (C+"/battery_shutdown_s","Выкл. через, с")]),
-  gate_par("hi_gate", "Верхние ворота — параметры"), gate_par("lo_gate", "Нижние ворота — параметры"),
+    w("shl_main", "Шлюз", [
+        (A + "/status", "Состояние"), (A + "/step", "Что делает"), (A + "/error", "Ошибка"),
+        (A + "/open_upstream", "Открыть верхний бьеф"), (A + "/open_downstream", "Открыть нижний бьеф"),
+        (A + "/close_gates", "Закрыть ворота"), (A + "/stop", "Стоп"), (A + "/reset", "Сбросить ошибку")]),
+    w("shl_view", "Ворота и камера", [
+        (A + "/upper_gate", "Верхние ворота"), (A + "/lower_gate", "Нижние ворота"),
+        (A + "/level_mm", "Уровень, мм"), (A + "/chamber", "Камера")]),
+    w("shl_manual", "Ручное управление", [
+        (S + "/upper_open", "Верхние: открыть"), (S + "/upper_close", "Верхние: закрыть"),
+        (S + "/lower_open", "Нижние: открыть"), (S + "/lower_close", "Нижние: закрыть"),
+        (A + "/stop", "Стоп"),
+        (S + "/fill", "Налив"), (S + "/drain", "Слив"), (S + "/valves_off", "Клапаны закрыть"),
+        (S + "/valve_fill", "Налив открыт"), (S + "/valve_drain", "Слив открыт"),
+        (S + "/last_block", "Последний запрет")]),
+    w("shl_meas", "Измерения", [
+        (S + "/upper_current", "Ток верхних"), (S + "/lower_current", "Ток нижних"),
+        (S + "/level_ma", "Датчик уровня, мА"), (A + "/level_mm", "Уровень, мм")]),
+    w("shl_par_gates", "Ворота — параметры", [
+        (S + "/upper_timeout_s", "Верхние: таймаут, с"), (S + "/lower_timeout_s", "Нижние: таймаут, с"),
+        (S + "/max_current", "Порог тока (0 — нет)"), (S + "/init_on_start", "Закрывать после старта")]),
+    w("shl_par_chamber", "Камера — параметры", [
+        (S + "/use_level", "По датчику уровня"), (S + "/empty_mm", "Пустая, мм"), (S + "/full_mm", "Полная, мм"),
+        (S + "/tolerance_mm", "Допуск, ±мм"), (S + "/valve_max_s", "Налив/слив, с"),
+        (S + "/sensor_zero_ma", "Датчик: ноль, мА"), (S + "/sensor_mm_per_ma", "Датчик: мм на мА"),
+        (S + "/sensor_offset_mm", "Датчик: смещение, мм")]),
+    w("shl_par_power", "Питание", [
+        (S + "/battery_poweroff", "Выкл. от батареи"), (S + "/battery_poweroff_s", "Выкл. через, с")]),
 ]
-ids = {x["id"] for x in W}
-c["widgets"] = [x for x in c.get("widgets", []) if x["id"] not in ids] + W
-D = [{"id": "shluses", "name": "Шлюз", "widgets": ["shl_main", "shl_chamber", "shl_hi_gate", "shl_lo_gate"]},
-     {"id": "shluses_par", "name": "Шлюз — настройки", "widgets": ["shl_chamber_par", "shl_sensor_par", "shl_common_par", "shl_hi_gate_par", "shl_lo_gate_par"]}]
-dids = {d["id"] for d in D}
+D = [
+    {"id": "shluz", "name": "Шлюз", "widgets": ["shl_main", "shl_view"]},
+    {"id": "shluz_service", "name": "Шлюз — наладка",
+     "widgets": ["shl_manual", "shl_meas", "shl_par_gates", "shl_par_chamber", "shl_par_power"]},
+]
+OLD = {"shluses", "shluses_par"}          # панели прежней версии правил
+
+wids = {x["id"] for x in W}
+c["widgets"] = [x for x in c.get("widgets", []) if x["id"] not in wids and not x["id"].startswith("shl_")] + W
+dids = {d["id"] for d in D} | OLD
 c["dashboards"] = [d for d in c.get("dashboards", []) if d["id"] not in dids] + D
+c["defaultDashboardId"] = "shluz"
 json.dump(c, open(P, "w"), ensure_ascii=False, indent=2)
-print("dashboards:", [d["name"] for d in c["dashboards"]], "widgets:", len(c["widgets"]))
+print("панели:", [d["name"] for d in c["dashboards"]], "по умолчанию:", c["defaultDashboardId"])
