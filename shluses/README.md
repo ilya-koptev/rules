@@ -38,8 +38,8 @@
 ## Установка
 
 ```bash
-scp shluses.js add-dashboards.py root@192.168.1.50:/root/
-ssh root@192.168.1.50 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/add-dashboards.py'
+scp shluses.js add-dashboards.py root@192.168.хх.хх:/root/
+ssh root@192.168.хх.хх 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/add-dashboards.py'
 ```
 
 `add-dashboards.py` дописывает в веб-интерфейс панели «Шлюз» (для пользователя, она же
@@ -96,36 +96,36 @@ ssh root@192.168.1.50 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/add-d
 
 ### Примеры
 
-В примерах контроллер шлюза — `192.168.1.50`, подставьте свой адрес. Брокер Wiren Board по
-умолчанию пускает без пароля, команды можно слать с любой машины в той же сети.
+`192.168.хх.хх` — адрес контроллера шлюза. Брокер Wiren Board по умолчанию пускает без пароля,
+команды можно слать с любой машины в той же сети.
 
 Смотреть всё, что отдаёт шлюз:
 
 ```bash
-mosquitto_sub -h 192.168.1.50 -v -t '/devices/shluz/controls/+'
+mosquitto_sub -h 192.168.хх.хх -v -t '/devices/shluz/controls/+'
 ```
 
 Только состояние и шаг:
 
 ```bash
-mosquitto_sub -h 192.168.1.50 -v -t /devices/shluz/controls/status -t /devices/shluz/controls/step
+mosquitto_sub -h 192.168.хх.хх -v -t /devices/shluz/controls/status -t /devices/shluz/controls/step
 ```
 
 Прочитать текущее состояние один раз:
 
 ```bash
-mosquitto_sub -h 192.168.1.50 -C 1 -t /devices/shluz/controls/status
+mosquitto_sub -h 192.168.хх.хх -C 1 -t /devices/shluz/controls/status
 ```
 
 Команды:
 
 ```bash
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz/controls/open_upstream/on   -m 1
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz/controls/open_downstream/on -m 1
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz/controls/close_gates/on     -m 1
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz/controls/stop/on            -m 1
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz/controls/reset/on           -m 1
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz/controls/init/on            -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz/controls/open_upstream/on   -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz/controls/open_downstream/on -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz/controls/close_gates/on     -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz/controls/stop/on            -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz/controls/reset/on           -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz/controls/init/on            -m 1
 ```
 
 Как выглядит цикл «закрыть ворота» в подписке на `status` и `step` (ворота уже закрыты):
@@ -141,7 +141,7 @@ mosquitto_pub -h 192.168.1.50 -t /devices/shluz/controls/init/on            -m 1
 Дождаться конца цикла в скрипте:
 
 ```bash
-H=192.168.1.50
+H=192.168.хх.хх
 mosquitto_pub -h $H -t /devices/shluz/controls/open_upstream/on -m 1
 sleep 2
 until s=$(mosquitto_sub -h $H -C 1 -t /devices/shluz/controls/status); [ "$s" != busy ]; do sleep 2; done
@@ -151,10 +151,10 @@ echo "готово: $s"     # upstream_open — успех, error — смотр
 Наладка: ворота и клапаны вручную, параметр:
 
 ```bash
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz_service/controls/upper_close/on -m 1
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz_service/controls/valves_off/on  -m 1
-mosquitto_pub -h 192.168.1.50 -t /devices/shluz_service/controls/crack_s/on     -m 3
-mosquitto_sub -h 192.168.1.50 -C 1 -t /devices/shluz_service/controls/last_block
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz_service/controls/upper_close/on -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz_service/controls/valves_off/on  -m 1
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz_service/controls/crack_s/on     -m 3
+mosquitto_sub -h 192.168.хх.хх -C 1 -t /devices/shluz_service/controls/last_block
 ```
 
 ### `shluz_service` — наладка
