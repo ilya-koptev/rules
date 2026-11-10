@@ -132,7 +132,15 @@ defineVirtualDevice(SRV, {
 
     // --- питание ---
     battery_poweroff:   { title: "Выключать контроллер от батареи", type: "switch", value: false, order: 50 },
-    battery_poweroff_s: { title: "…через, с", type: "value", value: 60, readonly: false, order: 51 }
+    battery_poweroff_s: { title: "…через, с", type: "value", value: 60, readonly: false, order: 51 },
+
+    // --- заливочные насосы: питание клапанов идёт через реле на другом контроллере ---
+    // Реле там и K1/K2 здесь включены последовательно: вода идёт, только когда включены оба.
+    // Пусто — не используется.
+    pump_host:   { title: "Контроллер реле заливочных насосов (адрес)", type: "text", value: "", readonly: false, order: 60 },
+    pump_fill:   { title: "Топик реле налива", type: "text", value: "", readonly: false, order: 61 },
+    pump_drain:  { title: "Топик реле слива", type: "text", value: "", readonly: false, order: 62 },
+    pump_river:  { title: "Топик реле наполнения русла (выключать при сливе)", type: "text", value: "", readonly: false, order: 63 }
   }
 });
 
@@ -159,9 +167,54 @@ function reading(topic, maxAbs) {
 // Писать в топик только при изменении — иначе каждый такт уходит лишняя публикация.
 function put(topic, v) { if (dev[topic] !== v) { dev[topic] = v; } }
 
+// --- реле заливочных насосов на другом контроллере, по MQTT ---
+function txt(cell) { var v = dev[SRV + "/" + cell]; return v ? String(v) : ""; }
+function q(x) { return "'" + String(x).replace(/'/g, "") + "'"; }
+var remoteSent = {};          // топик → что последним отправили
+var riverWasOn = false;       // наполнение русла было включено до слива
+
+function remoteSet(cell, on) {
+  var host = txt("pump_host"), topic = txt(cell);
+  if (!host || !topic) { return; }
+  if (remoteSent[topic] === on) { return; }
+  remoteSent[topic] = on;
+  runShellCommand("mosquitto_pub -h " + q(host) + " -t " + q(topic + "/on") + " -m " + (on ? "1" : "0"), {
+    captureOutput: true, captureErrorOutput: true,
+    exitCallback: function (code) {
+      if (code !== 0) { delete remoteSent[topic]; blockMsg("pump relay " + topic + " on " + host + ": mosquitto_pub exit " + code); }
+    }
+  });
+}
+
+// Слив начался — запомнить и выключить наполнение русла; кончился — вернуть.
+function riverOnDrain(draining) {
+  var host = txt("pump_host"), topic = txt("pump_river");
+  if (!host || !topic) { return; }
+  if (draining) {
+    runShellCommand("mosquitto_sub -h " + q(host) + " -C 1 -W 3 -t " + q(topic), {
+      captureOutput: true,
+      exitCallback: function (code, out) {
+        if (!drainOn) { return; }                        // слив уже кончился
+        riverWasOn = code === 0 && String(out).replace(/\s/g, "") === "1";
+        if (riverWasOn) { delete remoteSent[topic]; remoteSet("pump_river", false); }
+      }
+    });
+  } else if (riverWasOn) {
+    riverWasOn = false;
+    delete remoteSent[topic];
+    remoteSet("pump_river", true);
+  }
+}
+
+var drainOn = false;
 function valves(fill, drain) {          // пишем в реле только при изменении
-  if (!!dev[VALVE_FILL] !== !!fill)   { dev[VALVE_FILL] = !!fill; }
-  if (!!dev[VALVE_DRAIN] !== !!drain) { dev[VALVE_DRAIN] = !!drain; }
+  fill = !!fill; drain = !!drain;
+  // закрываем — сначала здесь, потом питание; открываем — наоборот
+  if (!fill)  { if (!!dev[VALVE_FILL])  { dev[VALVE_FILL] = false; }  remoteSet("pump_fill", false); }
+  if (!drain) { if (!!dev[VALVE_DRAIN]) { dev[VALVE_DRAIN] = false; } remoteSet("pump_drain", false); }
+  if (fill)   { remoteSet("pump_fill", true);  if (!dev[VALVE_FILL])  { dev[VALVE_FILL] = true; } }
+  if (drain)  { remoteSet("pump_drain", true); if (!dev[VALVE_DRAIN]) { dev[VALVE_DRAIN] = true; } }
+  if (drain !== drainOn) { drainOn = drain; riverOnDrain(drain); }
 }
 
 function blockMsg(msg) {

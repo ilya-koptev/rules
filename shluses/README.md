@@ -177,8 +177,26 @@ mosquitto_sub -h 192.168.хх.хх -C 1 -t /devices/shluz_service/controls/last_
 | `empty_mm`, `full_mm`, `tolerance_mm` | параметр | уровни пустой/полной камеры и допуск |
 | `sensor_zero_ma`, `sensor_mm_per_ma`, `sensor_offset_mm` | параметр | калибровка датчика: мм = (мА − ноль) × мм_на_мА + смещение |
 | `battery_poweroff`, `battery_poweroff_s` | параметр | выключать контроллер при работе от батареи |
+| `pump_host` | параметр | адрес контроллера, на котором реле питания заливочных насосов; пусто — не используется |
+| `pump_fill`, `pump_drain` | параметр | топики реле налива и слива на том контроллере, например `/devices/wb-mr6c_10/controls/K5` |
+| `pump_river` | параметр | топик реле наполнения русла: на время слива выключается, после — возвращается, если было включено |
 
 Параметры сохраняются на контроллере, у каждого шлюза свои.
+
+## Заливочные насосы на другом контроллере
+
+Клапан с заливочным насосом может питаться через реле на другом контроллере. Это реле и K1/K2
+на MRM2-mini шлюза включены последовательно: вода идёт, только когда включены оба. Правило
+само включает удалённое реле по MQTT (`mosquitto_pub -h <pump_host>`) вместе со своим K1/K2:
+открывая — сначала питание, закрывая — сначала свой клапан. На время слива выключается реле
+наполнения русла (`pump_river`), чтобы потоки не мешали друг другу.
+
+```bash
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz_service/controls/pump_host/on  -m 192.168.хх.хх
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz_service/controls/pump_fill/on  -m /devices/wb-mr6c_10/controls/K5
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz_service/controls/pump_drain/on -m /devices/wb-mr6c_10/controls/K6
+mosquitto_pub -h 192.168.хх.хх -t /devices/shluz_service/controls/pump_river/on -m /devices/wb-mr6c_10/controls/K4
+```
 
 ## Защиты
 

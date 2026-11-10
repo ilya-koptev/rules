@@ -46,13 +46,16 @@ W = [
         (S + "/crack_s", "Приоткрыть ворота, с"),
         (S + "/sensor_zero_ma", "Датчик: ноль, мА"), (S + "/sensor_mm_per_ma", "Датчик: мм на мА"),
         (S + "/sensor_offset_mm", "Датчик: смещение, мм")]),
+    w("shl_par_pumps", "Заливочные насосы", [
+        (S + "/pump_host", "Контроллер реле"), (S + "/pump_fill", "Реле налива"),
+        (S + "/pump_drain", "Реле слива"), (S + "/pump_river", "Реле русла (выкл. при сливе)")]),
     w("shl_par_power", "Питание", [
         (S + "/battery_poweroff", "Выкл. от батареи"), (S + "/battery_poweroff_s", "Выкл. через, с")]),
 ]
 D = [
     {"id": "shluz", "name": "Шлюз", "widgets": ["shl_main", "shl_view"]},
     {"id": "shluz_service", "name": "Шлюз — наладка",
-     "widgets": ["shl_manual", "shl_meas", "shl_par_gates", "shl_par_chamber", "shl_par_power"]},
+     "widgets": ["shl_manual", "shl_meas", "shl_par_gates", "shl_par_chamber", "shl_par_pumps", "shl_par_power"]},
 ]
 OLD = {"shluses", "shluses_par"}          # панели прежней версии правил
 
