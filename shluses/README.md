@@ -94,10 +94,67 @@ ssh root@<контроллер> 'cp /root/shluses.js /etc/wb-rules/ && python3 /
 Новая команда посреди цикла прерывает его и начинает свою. При ошибке команды не
 принимаются, пока её не сбросят.
 
+### Примеры
+
+Брокер контроллера шлюза пускает без пароля, команды можно слать с любой машины в сети объекта
+(проверено 10.11.2026 с соседнего контроллера: команда `close_gates` отработала).
+
+Смотреть всё, что отдаёт шлюз:
+
 ```bash
-mosquitto_sub -h <контроллер> -t '/devices/shluz/controls/status' -v
-mosquitto_pub -h <контроллер> -t /devices/shluz/controls/open_upstream/on -m 1
+mosquitto_sub -h <контроллер> -v -t '/devices/shluz/controls/+'
+```
+
+Только состояние и шаг:
+
+```bash
+mosquitto_sub -h <контроллер> -v -t /devices/shluz/controls/status -t /devices/shluz/controls/step
+```
+
+Прочитать текущее состояние один раз:
+
+```bash
+mosquitto_sub -h <контроллер> -C 1 -t /devices/shluz/controls/status
+```
+
+Команды:
+
+```bash
+mosquitto_pub -h <контроллер> -t /devices/shluz/controls/open_upstream/on   -m 1
 mosquitto_pub -h <контроллер> -t /devices/shluz/controls/open_downstream/on -m 1
+mosquitto_pub -h <контроллер> -t /devices/shluz/controls/close_gates/on     -m 1
+mosquitto_pub -h <контроллер> -t /devices/shluz/controls/stop/on            -m 1
+mosquitto_pub -h <контроллер> -t /devices/shluz/controls/reset/on           -m 1
+mosquitto_pub -h <контроллер> -t /devices/shluz/controls/init/on            -m 1
+```
+
+Как выглядит цикл «закрыть ворота» в подписке на `status` и `step` (ворота уже закрыты):
+
+```
+/devices/shluz/controls/status closed
+/devices/shluz/controls/step closing
+/devices/shluz/controls/status busy
+/devices/shluz/controls/step
+/devices/shluz/controls/status closed
+```
+
+Дождаться конца цикла в скрипте:
+
+```bash
+H=<контроллер>
+mosquitto_pub -h $H -t /devices/shluz/controls/open_upstream/on -m 1
+sleep 2
+until s=$(mosquitto_sub -h $H -C 1 -t /devices/shluz/controls/status); [ "$s" != busy ]; do sleep 2; done
+echo "готово: $s"     # upstream_open — успех, error — смотреть /devices/shluz/controls/error
+```
+
+Наладка: ворота и клапаны вручную, параметр:
+
+```bash
+mosquitto_pub -h <контроллер> -t /devices/shluz_service/controls/upper_close/on -m 1
+mosquitto_pub -h <контроллер> -t /devices/shluz_service/controls/valves_off/on  -m 1
+mosquitto_pub -h <контроллер> -t /devices/shluz_service/controls/crack_s/on     -m 3
+mosquitto_sub -h <контроллер> -C 1 -t /devices/shluz_service/controls/last_block
 ```
 
 ### `shluz_service` — наладка

@@ -156,6 +156,9 @@ function reading(topic, maxAbs) {
   return v;
 }
 
+// Писать в топик только при изменении — иначе каждый такт уходит лишняя публикация.
+function put(topic, v) { if (dev[topic] !== v) { dev[topic] = v; } }
+
 function valves(fill, drain) {          // пишем в реле только при изменении
   if (!!dev[VALVE_FILL] !== !!fill)   { dev[VALVE_FILL] = !!fill; }
   if (!!dev[VALVE_DRAIN] !== !!drain) { dev[VALVE_DRAIN] = !!drain; }
@@ -296,7 +299,7 @@ Object.keys(GATES).forEach(function (k) {
 
 var cycle = null;
 
-function setStep(s) { dev[API + "/step"] = s; }
+function setStep(s) { put(API + "/step", s); }
 
 function fail(reason) {
   dev[API + "/error"] = reason;
@@ -490,7 +493,7 @@ defineRule("shluz_valve_drain_state", { whenChanged: VALVE_DRAIN, then: function
 function tick() {
   Object.keys(GATES).forEach(function (k) {
     var cur = reading(GATES[k].current, 100);
-    dev[SRV + "/" + k + "_current"] = cur === null ? 0 : cur;
+    put(SRV + "/" + k + "_current", cur === null ? 0 : cur);
     var age = (now() - gate[k].startedAt) / 1000;
     if (!motorOn(k)) {
       // команду дали, а мотор так и не пошёл (модуль не ответил)
@@ -507,10 +510,10 @@ function tick() {
   if ((dev[VALVE_FILL] || dev[VALVE_DRAIN]) && !bothClosed()) { valves(false, false); blockMsg("valves closed: gates not closed"); }
 
   var ma = reading(LEVEL_MA, 30), lvl = levelMm(), tol = par("tolerance_mm");
-  dev[SRV + "/level_ma"] = ma === null ? 0 : ma;
-  dev[API + "/level_mm"] = lvl === null ? 0 : Math.round(lvl);
-  dev[API + "/chamber"] = lvl === null ? "no_sensor"
-    : lvl >= par("full_mm") - tol ? "full" : lvl <= par("empty_mm") + tol ? "empty" : "between";
+  put(SRV + "/level_ma", ma === null ? 0 : ma);
+  put(API + "/level_mm", lvl === null ? 0 : Math.round(lvl));
+  put(API + "/chamber", lvl === null ? "no_sensor"
+    : lvl >= par("full_mm") - tol ? "full" : lvl <= par("empty_mm") + tol ? "empty" : "between");
 
   runCycle();
 
@@ -522,7 +525,7 @@ function tick() {
   else if (u === "closed" && l === "closed") { st = "closed"; }
   else if (moving("upper") || moving("lower")) { st = "busy"; }
   else { st = "unknown"; }
-  if (dev[API + "/status"] !== st) { dev[API + "/status"] = st; }
+  put(API + "/status", st);
 }
 
 // -----------------------------------------------------------------------------
