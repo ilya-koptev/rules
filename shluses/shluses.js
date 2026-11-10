@@ -163,7 +163,7 @@ function valves(fill, drain) {          // пишем в реле только �
 
 function blockMsg(msg) {
   dev[SRV + "/last_block"] = msg;
-  log.warning("[шлюз] " + msg);
+  log.warning("[shluz] " + msg);
 }
 
 // -----------------------------------------------------------------------------
@@ -197,28 +197,28 @@ function motorOff(k) {
 function gateFail(k, reason) {
   motorOff(k);
   setState(k, "error");
-  fail(GATES[k].title + ": " + reason);
+  fail(k + " gate: " + reason);
 }
 
 // Почему открывать нельзя ("" — можно).
 function openForbidden(k) {
   var o = other(k);
   if (gate[o].state !== "closed") {
-    return GATES[o].title.toLowerCase() + " не подтверждены закрытыми (" + gate[o].state + ")";
+    return o + " gate not closed (" + gate[o].state + ")";
   }
-  if (dev[VALVE_FILL])  { return "открыт клапан налива"; }
-  if (dev[VALVE_DRAIN]) { return "открыт клапан слива"; }
+  if (dev[VALVE_FILL])  { return "fill valve open"; }
+  if (dev[VALVE_DRAIN]) { return "drain valve open"; }
   return "";
 }
 
 // Пустить ворота. Возвращает "" или причину отказа.
 function moveGate(k, opening) {
-  if (gate[k].state === "error") { return GATES[k].title + ": ошибка, сначала сбросить"; }
+  if (gate[k].state === "error") { return k + " gate: error, reset first"; }
   if (opening && gate[k].state === "open")    { return ""; }
   if (!opening && gate[k].state === "closed") { return ""; }
   if (opening) {
     var why = openForbidden(k);
-    if (why) { return GATES[k].title + " не открыты: " + why; }
+    if (why) { return k + " gate open refused: " + why; }
   }
   motorOff(k);
   dev[ctl(k, "Channel 2 Switch")] = opening ? DIR_OPEN : !DIR_OPEN;
@@ -246,7 +246,7 @@ function check(k) {
   if (why) {
     motorOff(k);
     setState(k, "stopped");
-    blockMsg(GATES[k].title + " остановлены: " + why);
+    blockMsg(k + " gate stopped: " + why);
     return;
   }
   if (gate[k].state !== "opening") { gate[k].startedAt = now(); setState(k, "opening"); }
@@ -302,7 +302,7 @@ function fail(reason) {
   dev[API + "/error"] = reason;
   if (cycle) { valves(false, false); cycle = null; }
   setStep("");
-  log.error("[шлюз] " + reason);
+  log.error("[shluz] " + reason);
 }
 
 function stopAll(why) {
@@ -319,13 +319,13 @@ function hasError() {
 
 // Ручная команда наладки прерывает автоматику.
 function manual(fn) {
-  if (cycle) { stopAll("прервано ручной командой"); }
+  if (cycle) { stopAll("interrupted_manual"); }
   var r = fn();
   if (r) { blockMsg(r); }
 }
 
 function startCycle(kind) {
-  if (hasError()) { blockMsg("команда не принята: ошибка, сначала сбросить"); return; }
+  if (hasError()) { blockMsg("command refused: error, reset first"); return; }
   stopAll("");
   cycle = { kind: kind, phase: "close", phaseAt: now() };
 }
@@ -368,8 +368,8 @@ function runCycle() {
       }
     });
     if (!cycle) { return; }
-    if (phaseAge() > Math.max(par("upper_timeout_s"), par("lower_timeout_s")) + 15) { fail("ворота не закрылись"); return; }
-    setStep(cycle.kind === "init" ? "инициализация: закрываю ворота" : "закрываю ворота");
+    if (phaseAge() > Math.max(par("upper_timeout_s"), par("lower_timeout_s")) + 15) { fail("gates did not close"); return; }
+    setStep(cycle.kind === "init" ? "init_closing" : "closing");
     if (gate.upper.state === "closed" && gate.lower.state === "closed") { phase(target ? "water" : "done"); }
     return;
   }
@@ -382,16 +382,16 @@ function runCycle() {
     if (!useLevel) {                            // без датчика — по времени
       if (phaseAge() > par("valve_max_s")) { valves(false, false); phase("open"); return; }
       valves(up, down);
-      setStep(up ? "наливаю камеру" : "сливаю камеру");
+      setStep(up ? "filling" : "draining");
       return;
     }
-    if (lvl === null) { valves(false, false); fail("нет показаний датчика уровня"); return; }
+    if (lvl === null) { valves(false, false); fail("no level sensor reading"); return; }
     if (reached) { valves(false, false); phase("open"); return; }
     // через клапан не идёт (уровень не сдвинулся) или идёт слишком долго —
     // пустить воду через приоткрытые ворота с той же стороны
     if (levelMoved(lvl, up) === false || phaseAge() > par("valve_max_s")) { valves(false, false); phase("crack"); return; }
     valves(up, down);
-    setStep(up ? "наливаю камеру" : "сливаю камеру");
+    setStep(up ? "filling" : "draining");
     return;
   }
 
@@ -401,7 +401,7 @@ function runCycle() {
       r = moveGate(target, true);
       if (r) { fail(r); return; }
       cycle.cracked = true;
-      setStep("через клапан не идёт — приоткрываю " + (up ? "верхние" : "нижние") + " ворота");
+      setStep(up ? "crack_upper" : "crack_lower");
       return;
     }
     if (!cycle.crackDone) {
@@ -414,7 +414,7 @@ function runCycle() {
     }
     // ворота приоткрыты: ждём, пока уровень дойдёт до порога или выровняется
     if (lvl === null || reached || levelMoved(lvl, up) === false || phaseAge() > par("valve_max_s")) { phase("open"); return; }
-    setStep((up ? "наливаю" : "сливаю") + " через приоткрытые ворота");
+    setStep(up ? "filling_through_gate" : "draining_through_gate");
     return;
   }
 
@@ -425,7 +425,7 @@ function runCycle() {
       r = moveGate(target, true);
       if (r) { fail(r); return; }
     }
-    setStep(up ? "открываю верхние ворота" : "открываю нижние ворота");
+    setStep(up ? "opening_upper" : "opening_lower");
     return;
   }
 
@@ -435,7 +435,7 @@ function runCycle() {
 defineRule("shluz_cmd_upstream",   { whenChanged: API + "/open_upstream",   then: function () { startCycle("upstream"); } });
 defineRule("shluz_cmd_downstream", { whenChanged: API + "/open_downstream", then: function () { startCycle("downstream"); } });
 defineRule("shluz_cmd_close",      { whenChanged: API + "/close_gates",     then: function () { startCycle("close"); } });
-defineRule("shluz_cmd_stop",       { whenChanged: API + "/stop",            then: function () { stopAll("остановлено кнопкой"); } });
+defineRule("shluz_cmd_stop",       { whenChanged: API + "/stop",            then: function () { stopAll("stopped"); } });
 defineRule("shluz_cmd_reset", {
   whenChanged: API + "/reset",
   then: function () {
@@ -465,7 +465,7 @@ defineRule("shluz_btn_fill", {
   whenChanged: SRV + "/fill",
   then: function () {
     manual(function () {
-      if (!bothClosed()) { return "налив запрещён: ворота не закрыты"; }
+      if (!bothClosed()) { return "fill refused: gates not closed"; }
       valves(true, false); return "";
     });
   }
@@ -474,7 +474,7 @@ defineRule("shluz_btn_drain", {
   whenChanged: SRV + "/drain",
   then: function () {
     manual(function () {
-      if (!bothClosed()) { return "слив запрещён: ворота не закрыты"; }
+      if (!bothClosed()) { return "drain refused: gates not closed"; }
       valves(false, true); return "";
     });
   }
@@ -498,19 +498,19 @@ function tick() {
       return;
     }
     if (now() - gate[k].limitAt < LIMIT_HOLD_MS) { return; }   // модуль гасит мотор на концевике
-    if (age > par(k + "_timeout_s")) { gateFail(k, "не доехали до концевика за " + par(k + "_timeout_s") + " с"); return; }
+    if (age > par(k + "_timeout_s")) { gateFail(k, "no limit switch within " + par(k + "_timeout_s") + " s"); return; }
     var maxI = par("max_current");
-    if (maxI > 0 && cur !== null && age > 1.5 && Math.abs(cur) > maxI) { gateFail(k, "ток " + cur + " выше порога " + maxI); }
+    if (maxI > 0 && cur !== null && age > 1.5 && Math.abs(cur) > maxI) { gateFail(k, "motor current " + cur + " above " + maxI); }
   });
 
   // налив и слив — только при закрытых обоих воротах
-  if ((dev[VALVE_FILL] || dev[VALVE_DRAIN]) && !bothClosed()) { valves(false, false); blockMsg("клапаны закрыты: ворота не закрыты"); }
+  if ((dev[VALVE_FILL] || dev[VALVE_DRAIN]) && !bothClosed()) { valves(false, false); blockMsg("valves closed: gates not closed"); }
 
   var ma = reading(LEVEL_MA, 30), lvl = levelMm(), tol = par("tolerance_mm");
   dev[SRV + "/level_ma"] = ma === null ? 0 : ma;
   dev[API + "/level_mm"] = lvl === null ? 0 : Math.round(lvl);
-  dev[API + "/chamber"] = lvl === null ? "нет датчика"
-    : lvl >= par("full_mm") - tol ? "полная" : lvl <= par("empty_mm") + tol ? "пустая" : "между";
+  dev[API + "/chamber"] = lvl === null ? "no_sensor"
+    : lvl >= par("full_mm") - tol ? "full" : lvl <= par("empty_mm") + tol ? "empty" : "between";
 
   runCycle();
 
@@ -530,7 +530,7 @@ function tick() {
 // -----------------------------------------------------------------------------
 
 function emergency(why) {
-  log.warning("[шлюз] " + why + " — закрываю ворота");
+  log.warning("[shluz] " + why + ": closing gates");
   dev[API + "/error"] = "";
   Object.keys(GATES).forEach(function (k) { if (gate[k].state === "error") { setState(k, "unknown"); } });
   stopAll(why);
@@ -541,7 +541,7 @@ defineRule("shluz_battery", {
   whenChanged: "power_status/working on battery",
   then: function (v) {
     if (!v) { return; }
-    emergency("работа от батареи");
+    emergency("on_battery");
     if (dev[SRV + "/battery_poweroff"]) {
       setTimeout(function () {
         if (dev["power_status/working on battery"]) { runShellCommand("poweroff"); }
@@ -552,7 +552,7 @@ defineRule("shluz_battery", {
 
 defineRule("shluz_network", {
   whenChanged: "network/Ethernet IP Connection Enabled",
-  then: function (v) { if (!v) { emergency("пропал Ethernet"); } }
+  then: function (v) { if (!v) { emergency("ethernet_lost"); } }
 });
 
 // -----------------------------------------------------------------------------
@@ -568,5 +568,5 @@ setTimeout(function () {
   valves(false, false);
   if (dev[SRV + "/init_on_start"]) { cycle = { kind: "init", phase: "close", phaseAt: now() }; }
   setInterval(tick, TICK_MS);
-  log.info("[шлюз] запущен");
+  log.info("[shluz] started");
 }, 5000);
