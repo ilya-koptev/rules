@@ -121,6 +121,9 @@ defineVirtualDevice(SRV, {
     full_mm:      { title: "Полная камера, мм", type: "value", value: 140, readonly: false, order: 32 },
     tolerance_mm: { title: "Допуск уровня, ±мм", type: "value", value: 15, readonly: false, order: 33 },
     valve_max_s:  { title: "Налив/слив: время (без датчика) или предел, с", type: "value", value: 60, readonly: false, order: 34 },
+    level_check_s:{ title: "Уровень проверять каждые, с", type: "value", value: 10, readonly: false, order: 35 },
+    level_min_mm: { title: "Уровень должен сдвинуться хотя бы на, мм", type: "value", value: 3, readonly: false, order: 36 },
+    crack_s:      { title: "Не идёт через клапан — приоткрыть ворота на, с хода", type: "value", value: 2, readonly: false, order: 37 },
 
     // --- датчик уровня: мм = (мА − ноль) × мм_на_мА + смещение ---
     sensor_zero_ma:   { title: "Датчик: ток на воздухе, мА", type: "value", value: 4.0, readonly: false, order: 40 },
@@ -327,7 +330,20 @@ function startCycle(kind) {
   cycle = { kind: kind, phase: "close", phaseAt: now() };
 }
 
-function phase(p) { cycle.phase = p; cycle.phaseAt = now(); }
+function phase(p) {
+  cycle.phase = p; cycle.phaseAt = now();
+  cycle.winAt = 0; cycle.winLvl = null; cycle.cracked = false; cycle.crackDone = false;
+}
+
+// Сдвинулся ли уровень в нужную сторону за окно level_check_s.
+// Возвращает null, пока окно не кончилось; иначе true/false и начинает новое окно.
+function levelMoved(lvl, up) {
+  if (!cycle.winAt) { cycle.winAt = now(); cycle.winLvl = lvl; return null; }
+  if ((now() - cycle.winAt) / 1000 < par("level_check_s")) { return null; }
+  var moved = up ? lvl - cycle.winLvl : cycle.winLvl - lvl;
+  cycle.winAt = now(); cycle.winLvl = lvl;
+  return moved >= par("level_min_mm");
+}
 function phaseAge() { return (now() - cycle.phaseAt) / 1000; }
 
 function levelMm() {
@@ -358,19 +374,47 @@ function runCycle() {
     return;
   }
 
+  var useLevel = !!dev[SRV + "/use_level"], lvl = levelMm();
+  var goal = up ? par("full_mm") : par("empty_mm"), tol = par("tolerance_mm");
+  var reached = lvl !== null && (up ? lvl >= goal - tol : lvl <= goal + tol);
+
   if (cycle.phase === "water") {
-    var useLevel = !!dev[SRV + "/use_level"], lvl = levelMm();
-    var goal = up ? par("full_mm") : par("empty_mm"), tol = par("tolerance_mm");
-    if (useLevel && lvl === null) { valves(false, false); fail("нет показаний датчика уровня"); return; }
-    if (useLevel && (up ? lvl >= goal - tol : lvl <= goal + tol)) { valves(false, false); phase("open"); return; }
-    if (phaseAge() > par("valve_max_s")) {
-      valves(false, false);
-      if (useLevel) { fail((up ? "налив" : "слив") + " не дошёл до уровня за " + par("valve_max_s") + " с"); return; }
-      phase("open");                            // без датчика — по времени
+    if (!useLevel) {                            // без датчика — по времени
+      if (phaseAge() > par("valve_max_s")) { valves(false, false); phase("open"); return; }
+      valves(up, down);
+      setStep(up ? "наливаю камеру" : "сливаю камеру");
       return;
     }
+    if (lvl === null) { valves(false, false); fail("нет показаний датчика уровня"); return; }
+    if (reached) { valves(false, false); phase("open"); return; }
+    // через клапан не идёт (уровень не сдвинулся) или идёт слишком долго —
+    // пустить воду через приоткрытые ворота с той же стороны
+    if (levelMoved(lvl, up) === false || phaseAge() > par("valve_max_s")) { valves(false, false); phase("crack"); return; }
     valves(up, down);
     setStep(up ? "наливаю камеру" : "сливаю камеру");
+    return;
+  }
+
+  if (cycle.phase === "crack") {
+    if (!cycle.cracked) {
+      if (phaseAge() < 1.5) { return; }         // дать реле клапана отпасть
+      r = moveGate(target, true);
+      if (r) { fail(r); return; }
+      cycle.cracked = true;
+      setStep("через клапан не идёт — приоткрываю " + (up ? "верхние" : "нижние") + " ворота");
+      return;
+    }
+    if (!cycle.crackDone) {
+      if (gate[target].state === "open") { phase("done"); return; }
+      if (now() - gate[target].startedAt < par("crack_s") * 1000 + DIR_BEFORE_MOTOR_MS) { return; }
+      motorOff(target);
+      cycle.crackDone = true;
+      cycle.winAt = 0;
+      return;
+    }
+    // ворота приоткрыты: ждём, пока уровень дойдёт до порога или выровняется
+    if (lvl === null || reached || levelMoved(lvl, up) === false || phaseAge() > par("valve_max_s")) { phase("open"); return; }
+    setStep((up ? "наливаю" : "сливаю") + " через приоткрытые ворота");
     return;
   }
 
