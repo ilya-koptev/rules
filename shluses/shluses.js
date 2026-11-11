@@ -90,7 +90,8 @@ defineVirtualDevice(API, {
     upper_pos:       { title: "Верхние ворота открыты, % (−1 — неизвестно)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 24 },
     lower_pos:       { title: "Нижние ворота открыты, % (−1 — неизвестно)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 25 },
     level_mm:        { title: "Уровень в камере", type: "value", units: "mm", value: 0, readonly: true, forceDefault: true, order: 22 },
-    chamber:         { title: "Камера", type: "text", value: "", readonly: true, forceDefault: true, order: 23 }
+    chamber:         { title: "Камера", type: "text", value: "", readonly: true, forceDefault: true, order: 23 },
+    chamber_pct:     { title: "Камера заполнена, % (−1 — нет датчика)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 26 }
   }
 });
 
@@ -435,6 +436,14 @@ function levelMoved(lvl, up) {
 }
 function phaseAge() { return (now() - cycle.phaseAt) / 1000; }
 
+// Заполнение камеры, %: 0 — порог «слито», 100 — порог «залито». null — нет датчика.
+function chamberPct() {
+  var l = levelMm(), e = par("empty_mm"), f = par("full_mm");
+  if (l === null || !(f > e)) { return null; }
+  return Math.max(0, Math.min(100, (l - e) * 100 / (f - e)));
+}
+function cpct() { var p = chamberPct(); return p === null ? "?%" : Math.round(p) + "%"; }
+
 function levelMm() {
   var ma = reading(LEVEL_MA, 30);
   if (ma === null || ma < SENSOR_BROKEN_MA) { return null; }
@@ -474,7 +483,7 @@ function runCycle() {
     if (!useLevel) {                            // без датчика — по времени
       if (phaseAge() > par("valve_max_s")) { valves(false, false); phase("open"); return; }
       valves(up, down);
-      setStep(up ? "filling" : "draining");
+      setStep((up ? "filling " : "draining ") + cpct());
       return;
     }
     if (lvl === null) { valves(false, false); fail("no level sensor reading"); return; }
@@ -490,7 +499,7 @@ function runCycle() {
       return;
     }
     valves(up, down);
-    setStep(up ? "filling" : "draining");
+    setStep((up ? "filling " : "draining ") + cpct());
     return;
   }
 
@@ -612,6 +621,8 @@ function tick() {
   var ma = reading(LEVEL_MA, 30), lvl = levelMm(), tol = par("tolerance_mm");
   put(SRV + "/level_ma", ma === null ? 0 : ma);
   put(API + "/level_mm", lvl === null ? 0 : Math.round(lvl));
+  var cp = chamberPct();
+  put(API + "/chamber_pct", cp === null ? -1 : Math.round(cp));
   put(API + "/chamber", lvl === null ? "no_sensor"
     : lvl >= par("full_mm") - tol ? "full" : lvl <= par("empty_mm") + tol ? "empty" : "between");
 

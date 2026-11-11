@@ -70,6 +70,7 @@ ssh root@192.168.хх.хх 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/
 | `upper_gate`, `lower_gate` | чт. | `closed` / `open` / `opening` / `closing` / `stopped` / `unknown` / `error` |
 | `upper_pos`, `lower_pos` | чт. | насколько открыты ворота, %: 0 — закрыты, 100 — открыты, −1 — неизвестно (до первого концевика) |
 | `level_mm` | чт. | уровень в камере, мм |
+| `chamber_pct` | чт. | заполнение камеры, %: 0 — порог «слито», 100 — порог «залито», −1 — нет датчика |
 | `chamber` | чт. | `full` — залита, `empty` — слита, `between` — между, `no_sensor` — нет показаний датчика |
 
 Налив и слив идут до порогов уровня «залито» / «слито», заданных на панели наладки; не дошли
@@ -83,7 +84,7 @@ ssh root@192.168.хх.хх 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/
 | Код | Что делает |
 |---|---|
 | `closing_upper N%`, `closing_lower N%` | закрывает ворота (обе сразу — через пробел); при инициализации то же, `status` = `init` |
-| `filling` / `draining` | наливает / сливает камеру через клапан |
+| `filling N%` / `draining N%` | наливает / сливает камеру через клапан, N — заполнение камеры |
 | `crack_upper N%` / `crack_lower N%` | через клапан не идёт — приоткрывает верхние / нижние ворота |
 | `filling_through_gate N%` / `draining_through_gate N%` | наливает / сливает через приоткрытые ворота |
 | `opening_upper N%` / `opening_lower N%` | открывает верхние / нижние ворота |
