@@ -87,10 +87,7 @@ defineVirtualDevice(API, {
     init:            { title: "Инициализация", type: "pushbutton", order: 15 },
     upper_gate:      { title: "Верхние ворота", type: "text", value: "unknown", readonly: true, forceDefault: true, order: 20 },
     lower_gate:      { title: "Нижние ворота", type: "text", value: "unknown", readonly: true, forceDefault: true, order: 21 },
-    upper_pos:       { title: "Верхние ворота открыты, % (−1 — неизвестно)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 24 },
-    lower_pos:       { title: "Нижние ворота открыты, % (−1 — неизвестно)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 25 },
-    chamber:         { title: "Камера", type: "text", value: "", readonly: true, forceDefault: true, order: 23 },
-    chamber_pct:     { title: "Камера заполнена, % (−1 — нет датчика)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 26 }
+    chamber:         { title: "Камера, % заполнения", type: "text", value: "", readonly: true, forceDefault: true, order: 23 }
   }
 });
 
@@ -115,8 +112,8 @@ defineVirtualDevice(SRV, {
     // --- ворота ---
     upper_timeout_s: { title: "Верхние: таймаут хода, с", type: "value", value: 30, readonly: false, order: 20 },
     lower_timeout_s: { title: "Нижние: таймаут хода, с", type: "value", value: 50, readonly: false, order: 21 },
-    upper_pulses:    { title: "Верхние: импульсов на полный ход (уточняется само)", type: "value", value: 3240, readonly: false, order: 25 },
-    lower_pulses:    { title: "Нижние: импульсов на полный ход (уточняется само)", type: "value", value: 17090, readonly: false, order: 26 },
+    upper_pulses:    { title: "Верхние: импульсов на полный ход", type: "value", value: 3226, readonly: false, order: 25 },
+    lower_pulses:    { title: "Нижние: импульсов на полный ход", type: "value", value: 17090, readonly: false, order: 26 },
     max_current:     { title: "Порог тока мотора (0 — не следить)", type: "value", value: 0, readonly: false, order: 22 },
     init_on_start:   { title: "Закрывать ворота после старта", type: "switch", value: true, order: 23 },
 
@@ -125,8 +122,8 @@ defineVirtualDevice(SRV, {
     empty_mm:     { title: "Пустая камера, мм", type: "value", value: 70, readonly: false, order: 31 },
     full_mm:      { title: "Полная камера, мм", type: "value", value: 140, readonly: false, order: 32 },
     tolerance_mm: { title: "Допуск уровня, ±мм", type: "value", value: 15, readonly: false, order: 33 },
-    pct0_mm:      { title: "Заполнение камеры 0 % при, мм", type: "value", value: 70, readonly: false, order: 38 },
-    pct100_mm:    { title: "Заполнение камеры 100 % при, мм", type: "value", value: 140, readonly: false, order: 39 },
+    pct0_mm:      { title: "Камера 0 % при, мм", type: "value", value: 70, readonly: false, order: 38 },
+    pct100_mm:    { title: "Камера 100 % при, мм", type: "value", value: 140, readonly: false, order: 39 },
     valve_max_s:  { title: "Налив/слив: время (без датчика) или предел, с", type: "value", value: 60, readonly: false, order: 34 },
     level_check_s:{ title: "Уровень проверять каждые, с", type: "value", value: 10, readonly: false, order: 35 },
     level_min_mm: { title: "Уровень должен сдвинуться хотя бы на, мм", type: "value", value: 3, readonly: false, order: 36 },
@@ -237,32 +234,25 @@ function blockMsg(msg) {
 // error — сработала защита (таймаут, ток), причина в «Ошибка».
 
 var gate = {
-  upper: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null, calFrom: null, calCnt: 0 },
-  lower: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null, calFrom: null, calCnt: 0 }
+  upper: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null },
+  lower: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null }
 };
 
-// Положение ворот, %: 0 — закрыты, 100 — открыты. Ставится на концевике, между
-// концевиками считается по импульсам мотора (MCM8) от последнего концевика.
+// Насколько открыты ворота, %: на концевике 0 / 100, между ними — по импульсам мотора (MCM8).
 function setState(k, s) {
-  var g = gate[k];
-  g.state = s;
-  if (s === "closed") { g.pos = 0; }
-  if (s === "open") { g.pos = 100; }
-  if (s === "unknown") { g.pos = null; }
-  if (s === "stopped" || s === "error" || s === "unknown") { g.calFrom = null; }   // ход прерван — не калибровать
+  gate[k].state = s;
+  if (s === "closed") { gate[k].pos = 0; }
+  if (s === "open") { gate[k].pos = 100; }
+  if (s === "unknown") { gate[k].pos = null; }
   dev[API + "/" + k + "_gate"] = s;
 }
 function pct(k) { return gate[k].pos === null ? "?%" : Math.round(gate[k].pos) + "%"; }
-
-// Импульсы с прошлого такта → положение. После концевика (отскок) не считаем.
 function trackPos(k) {
   var g = gate[k], c = reading(GATES[k].pulses, 1e12);
   if (c === null) { return; }
   if (g.lastCnt !== null && g.pos !== null && now() - g.limitAt >= LIMIT_HOLD_MS) {
     var d = c - g.lastCnt, full = par(k + "_pulses");
-    if (d > 0 && full > 0) {
-      g.pos = Math.max(0, Math.min(100, g.pos + (dirOpening(k) ? 1 : -1) * d * 100 / full));
-    }
+    if (d > 0 && full > 0) { g.pos = Math.max(0, Math.min(100, g.pos + (dirOpening(k) ? 1 : -1) * d * 100 / full)); }
   }
   g.lastCnt = c;
 }
@@ -357,17 +347,9 @@ Object.keys(GATES).forEach(function (k) {
     whenChanged: [ctl(k, LIM_OPEN), ctl(k, LIM_CLOSED)],
     then: function (v, devName, cellName) {
       if (!v) { return; }
-      var g = gate[k], at = cellName === LIM_CLOSED ? "closed" : "open";
-      g.limitAt = now();
-      // прошли от концевика до концевика без остановки — уточнить импульсы на полный ход
-      var c = reading(GATES[k].pulses, 1e12);
-      if (c !== null && g.calFrom && g.calFrom !== at) {
-        var n = Math.abs(c - g.calCnt), was = par(k + "_pulses");
-        if (n > 0 && (!(was > 0) || (n > was / 2 && n < was * 2))) { dev[SRV + "/" + k + "_pulses"] = n; }
-      }
-      if (c !== null) { g.calFrom = at; g.calCnt = c; g.lastCnt = c; }
-      if (g.state === "error") { return; }
-      setState(k, at);
+      gate[k].limitAt = now();
+      if (gate[k].state === "error") { return; }
+      setState(k, cellName === LIM_CLOSED ? "closed" : "open");
     }
   });
   // ручные кнопки наладки
@@ -438,14 +420,6 @@ function levelMoved(lvl, up) {
 }
 function phaseAge() { return (now() - cycle.phaseAt) / 1000; }
 
-// Заполнение камеры, %: 0 — pct0_mm (70), 100 — pct100_mm (140). null — нет датчика.
-function chamberPct() {
-  var l = levelMm(), e = par("pct0_mm"), f = par("pct100_mm");
-  if (l === null || !(f > e)) { return null; }
-  return Math.max(0, Math.min(100, (l - e) * 100 / (f - e)));
-}
-function cpct() { var p = chamberPct(); return p === null ? "?%" : Math.round(p) + "%"; }
-
 function levelMm() {
   var ma = reading(LEVEL_MA, 30);
   if (ma === null || ma < SENSOR_BROKEN_MA) { return null; }
@@ -469,10 +443,8 @@ function runCycle() {
     });
     if (!cycle) { return; }
     if (phaseAge() > Math.max(par("upper_timeout_s"), par("lower_timeout_s")) + 15) { fail("gates did not close"); return; }
-    // закрываются — пишем, что едет: closing_upper 60% (обе — через пробел)
-    var cl = ["upper", "lower"].filter(function (k) { return gate[k].state !== "closed"; })
-      .map(function (k) { return "closing_" + k + " " + pct(k); });
-    setStep(cl.join(" "));
+    setStep(["upper", "lower"].filter(function (k) { return gate[k].state !== "closed"; })
+      .map(function (k) { return "closing_" + k + " " + pct(k); }).join(" "));
     if (gate.upper.state === "closed" && gate.lower.state === "closed") { phase(target ? "water" : "done"); }
     return;
   }
@@ -485,7 +457,7 @@ function runCycle() {
     if (!useLevel) {                            // без датчика — по времени
       if (phaseAge() > par("valve_max_s")) { valves(false, false); phase("open"); return; }
       valves(up, down);
-      setStep((up ? "filling " : "draining ") + cpct());
+      setStep(up ? "filling" : "draining");
       return;
     }
     if (lvl === null) { valves(false, false); fail("no level sensor reading"); return; }
@@ -501,7 +473,7 @@ function runCycle() {
       return;
     }
     valves(up, down);
-    setStep((up ? "filling " : "draining ") + cpct());
+    setStep(up ? "filling" : "draining");
     return;
   }
 
@@ -524,7 +496,7 @@ function runCycle() {
     }
     // ворота приоткрыты: ждём, пока уровень дойдёт до порога или выровняется
     if (lvl === null || reached || levelMoved(lvl, up) === false || phaseAge() > par("valve_max_s")) { phase("open"); return; }
-    setStep((up ? "filling_through_gate " : "draining_through_gate ") + pct(target));
+    setStep(up ? "filling_through_gate" : "draining_through_gate");
     return;
   }
 
@@ -597,12 +569,9 @@ defineRule("shluz_valve_drain_state", { whenChanged: VALVE_DRAIN, then: function
 //  Такт: защиты, показания, автоматика, состояние
 // -----------------------------------------------------------------------------
 
-var manualStep = false;   // в step сейчас ход ворот без цикла (ручная кнопка, внешняя команда)
-
 function tick() {
   Object.keys(GATES).forEach(function (k) {
     trackPos(k);
-    put(API + "/" + k + "_pos", gate[k].pos === null ? -1 : Math.round(gate[k].pos));
     var cur = reading(GATES[k].current, 100);
     put(SRV + "/" + k + "_current", cur === null ? 0 : cur);
     var age = (now() - gate[k].startedAt) / 1000;
@@ -623,19 +592,11 @@ function tick() {
   var ma = reading(LEVEL_MA, 30), lvl = levelMm(), tol = par("tolerance_mm");
   put(SRV + "/level_ma", ma === null ? 0 : ma);
   put(SRV + "/level_mm", lvl === null ? 0 : Math.round(lvl));
-  var cp = chamberPct();
-  put(API + "/chamber_pct", cp === null ? -1 : Math.round(cp));
-  put(API + "/chamber", lvl === null ? "no_sensor"
-    : lvl >= par("full_mm") - tol ? "full" : lvl <= par("empty_mm") + tol ? "empty" : "between");
+  var p0 = par("pct0_mm"), p1 = par("pct100_mm");
+  put(API + "/chamber", lvl === null || !(p1 > p0) ? "no_sensor"
+    : Math.round(Math.max(0, Math.min(100, (lvl - p0) * 100 / (p1 - p0)))) + "%");
 
   runCycle();
-
-  // ворота едут без цикла — тоже писать, что делают и на сколько открыты
-  if (!cycle) {
-    var mv = moving("upper") ? "upper" : moving("lower") ? "lower" : null;
-    if (mv) { setStep(gate[mv].state + "_" + mv + " " + pct(mv)); manualStep = true; }
-    else if (manualStep) { setStep(""); manualStep = false; }
-  }
 
   var u = gate.upper.state, l = gate.lower.state, st;
   if (hasError()) { st = "error"; }
