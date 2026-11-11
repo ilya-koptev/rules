@@ -69,7 +69,6 @@ ssh root@192.168.хх.хх 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/
 | `error` | чт. | причина ошибки, текст латиницей, например `upper gate: no limit switch within 30 s` |
 | `upper_gate`, `lower_gate` | чт. | `closed` / `open` / `opening` / `closing` / `stopped` / `unknown` / `error` |
 | `upper_pos`, `lower_pos` | чт. | насколько открыты ворота, %: 0 — закрыты, 100 — открыты, −1 — неизвестно (до первого концевика) |
-| `level_mm` | чт. | уровень в камере, мм |
 | `chamber_pct` | чт. | заполнение камеры, %: 0 — 70 мм, 100 — 140 мм (шкала задаётся на панели наладки), −1 — нет датчика |
 | `chamber` | чт. | `full` — залита, `empty` — слита, `between` — между, `no_sensor` — нет показаний датчика |
 

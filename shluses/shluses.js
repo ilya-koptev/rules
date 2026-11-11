@@ -89,7 +89,6 @@ defineVirtualDevice(API, {
     lower_gate:      { title: "Нижние ворота", type: "text", value: "unknown", readonly: true, forceDefault: true, order: 21 },
     upper_pos:       { title: "Верхние ворота открыты, % (−1 — неизвестно)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 24 },
     lower_pos:       { title: "Нижние ворота открыты, % (−1 — неизвестно)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 25 },
-    level_mm:        { title: "Уровень в камере", type: "value", units: "mm", value: 0, readonly: true, forceDefault: true, order: 22 },
     chamber:         { title: "Камера", type: "text", value: "", readonly: true, forceDefault: true, order: 23 },
     chamber_pct:     { title: "Камера заполнена, % (−1 — нет датчика)", type: "value", units: "%", value: -1, readonly: true, forceDefault: true, order: 26 }
   }
@@ -110,6 +109,7 @@ defineVirtualDevice(SRV, {
     valve_fill:    { title: "Клапан налива открыт", type: "switch", value: false, readonly: true, forceDefault: true, order: 10 },
     valve_drain:   { title: "Клапан слива открыт", type: "switch", value: false, readonly: true, forceDefault: true, order: 11 },
     level_ma:      { title: "Датчик уровня, мА", type: "value", value: 0, readonly: true, forceDefault: true, order: 12 },
+    level_mm:      { title: "Уровень в камере, мм", type: "value", units: "mm", value: 0, readonly: true, forceDefault: true, order: 12 },
     last_block:    { title: "Последний запрет", type: "text", value: "", readonly: true, forceDefault: true, order: 13 },
 
     // --- ворота ---
@@ -622,7 +622,7 @@ function tick() {
 
   var ma = reading(LEVEL_MA, 30), lvl = levelMm(), tol = par("tolerance_mm");
   put(SRV + "/level_ma", ma === null ? 0 : ma);
-  put(API + "/level_mm", lvl === null ? 0 : Math.round(lvl));
+  put(SRV + "/level_mm", lvl === null ? 0 : Math.round(lvl));
   var cp = chamberPct();
   put(API + "/chamber_pct", cp === null ? -1 : Math.round(cp));
   put(API + "/chamber", lvl === null ? "no_sensor"
