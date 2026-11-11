@@ -115,6 +115,7 @@ defineVirtualDevice(SRV, {
     upper_pulses:    { title: "Верхние: импульсов на полный ход", type: "value", value: 3226, readonly: false, order: 25 },
     lower_pulses:    { title: "Нижние: импульсов на полный ход", type: "value", value: 17090, readonly: false, order: 26 },
     max_current:     { title: "Порог тока мотора (0 — не следить)", type: "value", value: 0, readonly: false, order: 22 },
+    no_pulse_s:      { title: "Нет импульсов — ошибка через, с (0 — не следить)", type: "value", value: 3, readonly: false, order: 24 },
     init_on_start:   { title: "Закрывать ворота после старта", type: "switch", value: true, order: 23 },
 
     // --- камера ---
@@ -234,8 +235,8 @@ function blockMsg(msg) {
 // error — сработала защита (таймаут, ток), причина в «Ошибка».
 
 var gate = {
-  upper: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null },
-  lower: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null }
+  upper: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null, pulseAt: 0 },
+  lower: { state: "unknown", startedAt: 0, pending: null, limitAt: 0, cmdAt: 0, cmdOpening: false, pos: null, lastCnt: null, pulseAt: 0 }
 };
 
 // Насколько открыты ворота, %: на концевике 0 / 100, между ними — по импульсам мотора (MCM8).
@@ -250,6 +251,7 @@ function pct(k) { return gate[k].pos === null ? "?%" : Math.round(gate[k].pos) +
 function trackPos(k) {
   var g = gate[k], c = reading(GATES[k].pulses, 1e12);
   if (c === null) { return; }
+  if (g.lastCnt !== null && c !== g.lastCnt) { g.pulseAt = now(); }
   if (g.lastCnt !== null && g.pos !== null && now() - g.limitAt >= LIMIT_HOLD_MS) {
     var d = c - g.lastCnt, full = par(k + "_pulses");
     if (d > 0 && full > 0) { g.pos = Math.max(0, Math.min(100, g.pos + (dirOpening(k) ? 1 : -1) * d * 100 / full)); }
@@ -302,6 +304,7 @@ function moveGate(k, opening) {
   setState(k, opening ? "opening" : "closing");
   gate[k].pending = setTimeout(function () {
     gate[k].pending = null;
+    gate[k].pulseAt = now();                 // с этого момента ждём импульсы
     dev[ctl(k, "Channel 1 Switch")] = true;
   }, DIR_BEFORE_MOTOR_MS);
   return "";
@@ -582,6 +585,13 @@ function tick() {
     }
     if (now() - gate[k].limitAt < LIMIT_HOLD_MS) { return; }   // модуль гасит мотор на концевике
     if (age > par(k + "_timeout_s")) { gateFail(k, "no limit switch within " + par(k + "_timeout_s") + " s"); return; }
+    // мотор включён, а импульсы не идут — значит он не крутится: стоп и ошибка
+    var noPulse = par("no_pulse_s");
+    if (noPulse > 0 && reading(GATES[k].pulses, 1e12) !== null && gate[k].pulseAt > 0
+        && (now() - gate[k].pulseAt) / 1000 > noPulse) {
+      gateFail(k, "no pulses within " + noPulse + " s");
+      return;
+    }
     var maxI = par("max_current");
     if (maxI > 0 && cur !== null && age > 1.5 && Math.abs(cur) > maxI) { gateFail(k, "motor current " + cur + " above " + maxI); }
   });
