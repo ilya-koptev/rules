@@ -125,6 +125,8 @@ defineVirtualDevice(SRV, {
     empty_mm:     { title: "Пустая камера, мм", type: "value", value: 70, readonly: false, order: 31 },
     full_mm:      { title: "Полная камера, мм", type: "value", value: 140, readonly: false, order: 32 },
     tolerance_mm: { title: "Допуск уровня, ±мм", type: "value", value: 15, readonly: false, order: 33 },
+    pct0_mm:      { title: "Заполнение камеры 0 % при, мм", type: "value", value: 70, readonly: false, order: 38 },
+    pct100_mm:    { title: "Заполнение камеры 100 % при, мм", type: "value", value: 140, readonly: false, order: 39 },
     valve_max_s:  { title: "Налив/слив: время (без датчика) или предел, с", type: "value", value: 60, readonly: false, order: 34 },
     level_check_s:{ title: "Уровень проверять каждые, с", type: "value", value: 10, readonly: false, order: 35 },
     level_min_mm: { title: "Уровень должен сдвинуться хотя бы на, мм", type: "value", value: 3, readonly: false, order: 36 },
@@ -436,9 +438,9 @@ function levelMoved(lvl, up) {
 }
 function phaseAge() { return (now() - cycle.phaseAt) / 1000; }
 
-// Заполнение камеры, %: 0 — порог «слито», 100 — порог «залито». null — нет датчика.
+// Заполнение камеры, %: 0 — pct0_mm (70), 100 — pct100_mm (140). null — нет датчика.
 function chamberPct() {
-  var l = levelMm(), e = par("empty_mm"), f = par("full_mm");
+  var l = levelMm(), e = par("pct0_mm"), f = par("pct100_mm");
   if (l === null || !(f > e)) { return null; }
   return Math.max(0, Math.min(100, (l - e) * 100 / (f - e)));
 }
