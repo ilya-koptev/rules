@@ -458,7 +458,10 @@ function runCycle() {
     });
     if (!cycle) { return; }
     if (phaseAge() > Math.max(par("upper_timeout_s"), par("lower_timeout_s")) + 15) { fail("gates did not close"); return; }
-    setStep((cycle.kind === "init" ? "init_closing" : "closing") + " upper " + pct("upper") + " lower " + pct("lower"));
+    // закрываются — пишем, что едет: closing_upper 60% (обе — через пробел)
+    var cl = ["upper", "lower"].filter(function (k) { return gate[k].state !== "closed"; })
+      .map(function (k) { return "closing_" + k + " " + pct(k); });
+    setStep(cl.join(" "));
     if (gate.upper.state === "closed" && gate.lower.state === "closed") { phase(target ? "water" : "done"); }
     return;
   }
