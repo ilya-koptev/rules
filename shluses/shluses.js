@@ -123,7 +123,7 @@ defineVirtualDevice(SRV, {
     valve_max_s:  { title: "Налив/слив: время (без датчика) или предел, с", type: "value", value: 60, readonly: false, order: 34 },
     level_check_s:{ title: "Уровень проверять каждые, с", type: "value", value: 10, readonly: false, order: 35 },
     level_min_mm: { title: "Уровень должен сдвинуться хотя бы на, мм", type: "value", value: 3, readonly: false, order: 36 },
-    crack_s:      { title: "Не идёт через клапан — приоткрыть ворота на, с хода", type: "value", value: 2, readonly: false, order: 37 },
+    crack_s:      { title: "Не идёт через клапан — приоткрыть ворота на, с хода (0 — не приоткрывать)", type: "value", value: 0, readonly: false, order: 37 },
 
     // --- датчик уровня: мм = (мА − ноль) × мм_на_мА + смещение ---
     sensor_zero_ma:   { title: "Датчик: ток на воздухе, мА", type: "value", value: 4.0, readonly: false, order: 40 },
@@ -444,8 +444,15 @@ function runCycle() {
     if (lvl === null) { valves(false, false); fail("no level sensor reading"); return; }
     if (reached) { valves(false, false); phase("open"); return; }
     // через клапан не идёт (уровень не сдвинулся) или идёт слишком долго —
-    // пустить воду через приоткрытые ворота с той же стороны
-    if (levelMoved(lvl, up) === false || phaseAge() > par("valve_max_s")) { valves(false, false); phase("crack"); return; }
+    // пустить воду через приоткрытые ворота с той же стороны (crack_s > 0);
+    // при crack_s = 0 приоткрытия нет: не дошли за valve_max_s — ошибка
+    if (par("crack_s") > 0) {
+      if (levelMoved(lvl, up) === false || phaseAge() > par("valve_max_s")) { valves(false, false); phase("crack"); return; }
+    } else if (phaseAge() > par("valve_max_s")) {
+      valves(false, false);
+      fail((up ? "fill" : "drain") + ": level not reached within " + par("valve_max_s") + " s");
+      return;
+    }
     valves(up, down);
     setStep(up ? "filling" : "draining");
     return;
