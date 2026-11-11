@@ -68,6 +68,7 @@ ssh root@192.168.хх.хх 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/
 | `step` | чт. | что сейчас делает (коды ниже) |
 | `error` | чт. | причина ошибки, текст латиницей, например `upper gate: no limit switch within 30 s` |
 | `upper_gate`, `lower_gate` | чт. | `closed` / `open` / `opening` / `closing` / `stopped` / `unknown` / `error` |
+| `upper_pos`, `lower_pos` | чт. | насколько открыты ворота, %: 0 — закрыты, 100 — открыты, −1 — неизвестно (до первого концевика) |
 | `level_mm` | чт. | уровень в камере, мм |
 | `chamber` | чт. | `full` — залита, `empty` — слита, `between` — между, `no_sensor` — нет показаний датчика |
 
@@ -79,16 +80,21 @@ ssh root@192.168.хх.хх 'cp /root/shluses.js /etc/wb-rules/ && python3 /root/
 же стороны (налив — верхние, слив — нижние) приоткрываются на `crack_s` секунд хода, вода идёт
 через щель; уровень дошёл до порога или перестал меняться — ворота открываются до конца.
 
+Положение ворот считается по импульсам мотора (MCM8, вход 1 — верхние, вход 2 — нижние): на
+концевике 0 или 100 %, между концевиками — доля от `upper_pulses` / `lower_pulses`. В `step`
+процент обновляется каждую секунду.
+
 Коды `step`:
 
 | Код | Что делает |
 |---|---|
-| `init_closing` | инициализация: закрывает ворота |
-| `closing` | закрывает ворота |
+| `init_closing upper N% lower M%` | инициализация: закрывает ворота |
+| `closing upper N% lower M%` | закрывает ворота |
 | `filling` / `draining` | наливает / сливает камеру через клапан |
-| `crack_upper` / `crack_lower` | через клапан не идёт — приоткрывает верхние / нижние ворота |
-| `filling_through_gate` / `draining_through_gate` | наливает / сливает через приоткрытые ворота |
-| `opening_upper` / `opening_lower` | открывает верхние / нижние ворота |
+| `crack_upper N%` / `crack_lower N%` | через клапан не идёт — приоткрывает верхние / нижние ворота |
+| `filling_through_gate N%` / `draining_through_gate N%` | наливает / сливает через приоткрытые ворота |
+| `opening_upper N%` / `opening_lower N%` | открывает верхние / нижние ворота |
+| `opening_upper N%`, `closing_lower N%` и т.п. без цикла | ворота едут от ручной кнопки или внешней команды |
 | `stopped` | остановлено кнопкой «Стоп» |
 | `interrupted_manual` | цикл прерван ручной командой наладки |
 | `on_battery` / `ethernet_lost` | сбой: закрывает ворота |
@@ -171,6 +177,7 @@ mosquitto_sub -h 192.168.хх.хх -C 1 -t /devices/shluz_service/controls/last_
 | `level_ma` | чт. | ток датчика уровня, мА |
 | `last_block` | чт. | последний запрет и его причина, латиницей: `upper gate open refused: lower gate not closed (opening)` |
 | `upper_timeout_s`, `lower_timeout_s` | параметр | таймаут хода ворот, с (30 / 50) |
+| `upper_pulses`, `lower_pulses` | параметр | импульсов MCM8 на полный ход; правило само уточняет, когда ворота проходят от концевика до концевика без остановки |
 | `max_current` | параметр | порог тока мотора, 0 — не следить (по умолчанию 0) |
 | `init_on_start` | параметр | закрывать ворота после старта |
 | `use_level` | параметр | налив/слив по датчику уровня; выключено — по времени |
